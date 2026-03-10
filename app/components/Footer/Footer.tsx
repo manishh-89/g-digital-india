@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import styles from "./Footer.module.css"
+import Link from "next/link"
 
 const navLinks = {
 Services: ["SEO","Paid Media","Social Media","Content Marketing","Web Design & CRO","Analytics"],
@@ -21,7 +22,7 @@ export default function Footer(){
 const [email,setEmail] = useState("")
 const [submitted,setSubmitted] = useState(false)
 
-const handleSubmit=(e)=>{
+const handleSubmit = (e: React.FormEvent) => {
 e.preventDefault()
 if(!email.trim()) return
 setSubmitted(true)
@@ -107,9 +108,9 @@ item==="✦"
 
 <div className={styles["ft-brand-col"]}>
 
-<a href="/" className={styles["ft-logo"]}>
+<Link href="/" className={styles["ft-logo"]}>
 <span className={styles["ft-logo-mark"]}>GDI</span>
-<span className={styles["ft-logo-dot"]}/> </a>
+<span className={styles["ft-logo-dot"]}/> </Link>
 
 <p className={styles["ft-brand-tagline"]}>
 We don't just run campaigns.
