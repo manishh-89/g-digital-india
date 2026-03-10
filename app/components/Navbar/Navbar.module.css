@@ -1,0 +1,189 @@
+
+/* Navbar main */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  font-family: "Inter", sans-serif;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Center Links Glass Background */
+.navbar-links {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+
+  background: rgba(255, 255, 255, 0.1); /* transparent white */
+  backdrop-filter: blur(12px); /* blur effect */
+  -webkit-backdrop-filter: blur(12px); /* safari support */
+
+  padding: 20px 25px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Links styling */
+.navbar-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.navbar-links a:hover {
+  color: #ff6600;
+}
+
+/* Agar background video hai to text white karna zaruri hai */
+.navbar {
+  background: transparent;
+}
+
+/* Logo */
+.navbar-logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2c1e1e;
+  letter-spacing: 2px;
+}
+
+/* Buttons */
+.navbar-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+/* Button Styles */
+.btn-outline {
+  padding: 10px 22px;
+  border: 2px solid #c46328;
+  color: #c46328;
+  border-radius: 25px;
+  background: transparent;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-outline:hover {
+  background: #c46328;
+  color: white;
+}
+
+.btn-filled {
+  padding: 15px 40px;
+  border: none;
+  background: #c4833c;
+  color: white;
+  font-weight: bold;
+  border-radius: 25px;
+  font-size: 15px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.btn-filled:hover {
+  background: #a86320;
+  color: #fff;
+}
+
+/* Hamburger Toggler */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Desktop/Mobile Display Controls */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .navbar-logo {
+    width: 145px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .navbar-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    background: #353535;
+    padding: 20px;
+    display: none;
+    animation: slideDown 0.3s ease forwards;
+    border-top: 1px solid #ddd;
+    border-radius: 10px;
+  }
+
+  .navbar-links.open {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-10%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
