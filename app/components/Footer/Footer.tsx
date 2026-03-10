@@ -45,7 +45,7 @@ return(
 Ready to scale? </span>
 
 <h2 className={styles["ft-cta-heading"]}>
-Let's Build Something <br/>
+Let&apos;s Build Something <br/>
 <em>Remarkable.</em>
 </h2>
 
@@ -113,7 +113,7 @@ item==="✦"
 <span className={styles["ft-logo-dot"]}/> </Link>
 
 <p className={styles["ft-brand-tagline"]}>
-We don't just run campaigns.
+We don&apos;t just run campaigns.
 <br/>
 We engineer growth.
 </p>
@@ -151,7 +151,7 @@ Growth insights, weekly.
 
 <div className={styles["ft-nl-success"]}>
 <span className={styles["ft-nl-check"]}>✓</span>
-You're in.
+You&apos;re in.
 </div>
 
 ) : (

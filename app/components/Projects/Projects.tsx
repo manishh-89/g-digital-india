@@ -132,20 +132,17 @@ export default function Projects() {
 
         <div className={styles["pj-grid"]}>
 
-          {pjFiltered.map((p, i) => (
+          {pjFiltered.map((p) => (
 
             <div
               key={p.id}
               className={`${styles["pj-card"]} ${styles[`pj-card-${p.size}`]}`}
-              style={{
-                "--pj-color": p.color,
-                animationDelay: `${i * 0.08}s`,
-              }}
+              
             >
 
               <div className={styles["pj-card-img-wrap"]}>
 
-                <img
+                <Image
                   src={p.img}
                   alt={p.title}
                   width={900}

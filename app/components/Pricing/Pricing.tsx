@@ -141,17 +141,13 @@ export default function Pricing() {
         {/* Pricing Cards */}
         <div className={styles["pr-grid"]}>
 
-          {pricingPlans.map((plan, i) => (
+          {pricingPlans.map((plan) => (
 
             <div
               key={plan.id}
               className={`${styles["pr-card"]} ${
                 plan.popular ? styles["pr-card-popular"] : ""
               }`}
-              style={{
-                "--pr-color": plan.color,
-                animationDelay: `${i * 0.12}s`,
-              }}
             >
 
               {plan.popular && (
@@ -200,7 +196,7 @@ export default function Pricing() {
 
                 <div className={styles["pr-divider"]}>
                 <div className={styles["pr-divider-line"]} />
-                <span className={styles["pr-divider-text"]}>What's included</span>
+                <span className={styles["pr-divider-text"]}>What&apos;s included</span>
                 <div className={styles["pr-divider-line"]} />
               </div>
 

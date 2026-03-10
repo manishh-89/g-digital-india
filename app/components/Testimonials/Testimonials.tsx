@@ -32,7 +32,7 @@ const testimonials = [
   },
 ]
 
-const StarRating = ({ count }) => (
+const StarRating = ({ count }: { count: number }) => (
   <div className={styles["tm-stars"]}>
     {Array.from({ length: count }).map((_, i) => (
       <span key={i} className={styles["tm-star"]}>
@@ -47,7 +47,7 @@ export default function Testimonials() {
   const [animDir, setAnimDir] = useState("next")
   const [animating, setAnimating] = useState(false)
 
-  const autoRef = useRef(null)
+  const autoRef = useRef<number | null>(null)
   const auroraRef = useRef(null)
 
   const next = () => {
@@ -60,7 +60,7 @@ export default function Testimonials() {
     goTo(index, "prev")
   }
 
-  const goTo = (idx, dir) => {
+  const goTo = (idx: number, dir: string) => {
     if (animating || idx === active) return
 
     setAnimDir(dir)
@@ -73,13 +73,15 @@ export default function Testimonials() {
   }
 
   useEffect(() => {
-    autoRef.current = setInterval(next, 5500)
-    return () => clearInterval(autoRef.current)
-  }, [active])
+    autoRef.current = setInterval(next, 5500) as unknown as number
+    return () => {
+      if (autoRef.current) clearInterval(autoRef.current)
+    }
+  }, [active, next])
 
   const resetTimer = () => {
-    clearInterval(autoRef.current)
-    autoRef.current = setInterval(next, 5500)
+    if (autoRef.current) clearInterval(autoRef.current)
+    autoRef.current = setInterval(next, 5500) as unknown as number
   }
 
   const t = testimonials[active]
@@ -99,7 +101,7 @@ export default function Testimonials() {
           </div>
 
           <h2 className={styles["tm-title"]}>
-            Don't Take Our
+            Don&apos;t Take Our
             <br />
             <em>Word For It.</em>
           </h2>
@@ -128,9 +130,9 @@ export default function Testimonials() {
                 ? styles[`tm-card-out-${animDir}`]
                 : styles[`tm-card-in-${animDir}`]
             }`}
-            style={{ "--tm-color": t.color }}
+            style={{ "--tm-color": t.color } as React.CSSProperties}
           >
-            <div className={styles["tm-quote-mark"]}>"</div>
+            <div className={styles["tm-quote-mark"]}>&quot;</div>
 
             <div className={styles["tm-metric"]}>
               <span className={styles["tm-metric-val"]}>{t.metric.val}</span>
@@ -139,7 +141,7 @@ export default function Testimonials() {
 
             <StarRating count={t.rating} />
 
-            <p className={styles["tm-short"]}>"{t.short}"</p>
+            <p className={styles["tm-short"]}>&quot;{t.short}&quot;</p>
 
             <p className={styles["tm-text"]}>{t.text}</p>
 
@@ -190,7 +192,7 @@ export default function Testimonials() {
               className={`${styles["tm-dot"]} ${
                 i === active ? styles["tm-dot-active"] : ""
               }`}
-              style={{ "--tm-color": item.color }}
+              style={{ "--tm-color": item.color } as React.CSSProperties}
               onClick={() => {
                 goTo(i, i > active ? "next" : "prev")
                 resetTimer()
@@ -207,7 +209,7 @@ export default function Testimonials() {
               className={`${styles["tm-mini"]} ${
                 i === active ? styles["tm-mini-active"] : ""
               }`}
-              style={{ "--tm-color": item.color }}
+              style={{ "--tm-color": item.color } as React.CSSProperties}
               onClick={() => {
                 goTo(i, i > active ? "next" : "prev")
                 resetTimer()
