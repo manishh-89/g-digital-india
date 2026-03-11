@@ -22,7 +22,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className={`${styles["navbar-links"]} ${menuOpen ? "open" : ""}`}>
+        <div className={`${styles["navbar-links"]} ${menuOpen ? styles.open : ""}`}>
           <Link href="/">Home</Link>
           <Link href="/about">About Us</Link>
           <Link href="/services">Services</Link>
