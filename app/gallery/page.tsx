@@ -111,9 +111,11 @@ export default function Gallery() {
                 }`}
                 onClick={() => setLightboxItem(item)}
               >
-                <img
+                <Image
                   src={item.src}
                   alt={item.title}
+                  width={900}
+                  height={600}
                   sizes="(max-width: 768px) 100vw, 33vw"
                   style={{ objectFit: "cover" }}
                 />
@@ -151,7 +153,7 @@ export default function Gallery() {
             >
               ✕
             </button>
-            <img
+            <Image
               src={lightboxItem.src}
               alt={lightboxItem.title}
               width={900}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import styles from "./Testimonials.module.css"
 
 const testimonials = [
@@ -35,32 +35,22 @@ const testimonials = [
 const StarRating = ({ count }: { count: number }) => (
   <div className={styles["tm-stars"]}>
     {Array.from({ length: count }).map((_, i) => (
-      <span key={i} className={styles["tm-star"]}>
-        ★
-      </span>
+      <span key={i} className={styles["tm-star"]}>★</span>
     ))}
   </div>
 )
 
 export default function Testimonials() {
+
   const [active, setActive] = useState(0)
   const [animDir, setAnimDir] = useState("next")
   const [animating, setAnimating] = useState(false)
 
-  const autoRef = useRef<number | null>(null)
-  const auroraRef = useRef(null)
+  const autoRef = useRef<NodeJS.Timeout | null>(null)
+  const auroraRef = useRef<HTMLCanvasElement | null>(null)
 
-  const next = () => {
-    const index = (active + 1) % testimonials.length
-    goTo(index, "next")
-  }
+  const goTo = useCallback((idx: number, dir: string) => {
 
-  const prev = () => {
-    const index = (active - 1 + testimonials.length) % testimonials.length
-    goTo(index, "prev")
-  }
-
-  const goTo = (idx: number, dir: string) => {
     if (animating || idx === active) return
 
     setAnimDir(dir)
@@ -70,29 +60,45 @@ export default function Testimonials() {
       setActive(idx)
       setAnimating(false)
     }, 320)
-  }
+
+  }, [animating, active])
+
+  const next = useCallback(() => {
+    const index = (active + 1) % testimonials.length
+    goTo(index, "next")
+  }, [active, goTo])
+
+  const prev = useCallback(() => {
+    const index = (active - 1 + testimonials.length) % testimonials.length
+    goTo(index, "prev")
+  }, [active, goTo])
 
   useEffect(() => {
-    autoRef.current = setInterval(next, 5500) as unknown as number
+
+    autoRef.current = setInterval(next, 5500)
+
     return () => {
       if (autoRef.current) clearInterval(autoRef.current)
     }
-  }, [active, next])
+
+  }, [next])
 
   const resetTimer = () => {
+
     if (autoRef.current) clearInterval(autoRef.current)
-    autoRef.current = setInterval(next, 5500) as unknown as number
+    autoRef.current = setInterval(next, 5500)
+
   }
 
   const t = testimonials[active]
 
   return (
     <section className={styles.tm}>
-      {/* Aurora Background */}
+
       <canvas ref={auroraRef} className={styles["tm-aurora-canvas"]} />
 
       <div className={styles["tm-wrap"]}>
-        {/* Header */}
+
         <div className={styles["tm-header"]}>
           <div className={styles["tm-eyebrow"]}>
             <div className={styles["tm-eyebrow-line"]} />
@@ -101,8 +107,7 @@ export default function Testimonials() {
           </div>
 
           <h2 className={styles["tm-title"]}>
-            Don&apos;t Take Our
-            <br />
+            Don&apos;t Take Our <br />
             <em>Word For It.</em>
           </h2>
 
@@ -111,8 +116,8 @@ export default function Testimonials() {
           </p>
         </div>
 
-        {/* Main testimonial */}
         <div className={styles["tm-stage"]}>
+
           <button
             className={`${styles["tm-nav"]} ${styles["tm-nav-prev"]}`}
             onClick={() => {
@@ -123,7 +128,6 @@ export default function Testimonials() {
             ←
           </button>
 
-          {/* Card */}
           <div
             className={`${styles["tm-card"]} ${
               animating
@@ -132,6 +136,7 @@ export default function Testimonials() {
             }`}
             style={{ "--tm-color": t.color } as React.CSSProperties}
           >
+
             <div className={styles["tm-quote-mark"]}>&quot;</div>
 
             <div className={styles["tm-metric"]}>
@@ -146,10 +151,9 @@ export default function Testimonials() {
             <p className={styles["tm-text"]}>{t.text}</p>
 
             <div className={styles["tm-author"]}>
+
               <div className={styles["tm-avatar"]}>
-                <span className={styles["tm-avatar-initials"]}>
-                  {t.avatar}
-                </span>
+                <span className={styles["tm-avatar-initials"]}>{t.avatar}</span>
                 <div className={styles["tm-avatar-ring"]} />
               </div>
 
@@ -168,9 +172,11 @@ export default function Testimonials() {
               <div className={styles["tm-company-badge"]}>
                 <span>{t.company}</span>
               </div>
+
             </div>
 
             <div className={styles["tm-card-glow"]} />
+
           </div>
 
           <button
@@ -182,9 +188,9 @@ export default function Testimonials() {
           >
             →
           </button>
+
         </div>
 
-        {/* Dots */}
         <div className={styles["tm-dots"]}>
           {testimonials.map((item, i) => (
             <button
@@ -201,7 +207,6 @@ export default function Testimonials() {
           ))}
         </div>
 
-        {/* Mini row */}
         <div className={styles["tm-mini-row"]}>
           {testimonials.map((item, i) => (
             <button
@@ -215,6 +220,7 @@ export default function Testimonials() {
                 resetTimer()
               }}
             >
+
               <div className={styles["tm-mini-avatar"]}>
                 <span>{item.avatar}</span>
               </div>
@@ -227,9 +233,11 @@ export default function Testimonials() {
               <div className={styles["tm-mini-metric"]}>
                 <span>{item.metric.val}</span>
               </div>
+
             </button>
           ))}
         </div>
+
       </div>
     </section>
   )

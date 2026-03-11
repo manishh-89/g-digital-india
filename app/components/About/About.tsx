@@ -37,11 +37,13 @@ export default function AboutSection() {
 
       <div className={styles["ab-bg"]}>
 
-        <img
-          src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800"
-          alt="about"
-          className={styles["ab-bg-img"]}
-        />
+      <Image
+        src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800"
+        alt="about"
+        width={800}
+        height={600}
+        className={styles["ab-bg-img"]}
+      />
 
         <div className={styles["ab-bg-overlay"]} />
         <div className={`${styles["ab-orb"]} ${styles["ab-orb-1"]}`} />
@@ -97,7 +99,7 @@ export default function AboutSection() {
           <div className={styles["ab-content"]}>
 
             <p className={styles["ab-para"]}>
-              We're not a typical agency. We're a <strong>growth partner</strong> — obsessed
+              We are not a typical agency. We are a <strong>growth partner</strong> — obsessed
               with data, driven by creativity, and relentless in our pursuit of results that
               actually move the needle.
             </p>

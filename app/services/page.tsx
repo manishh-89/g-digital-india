@@ -70,7 +70,7 @@ const services = [
 
 export default function Services() {
 
-  const canvasRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [active, setActive] = useState(0)
   const [animating, setAnimating] = useState(false)
@@ -141,7 +141,7 @@ export default function Services() {
   }, [active])
 
 
-  const handleSelect = (idx) => {
+  const handleSelect = (idx: number) => {
 
     if (idx === active) return
 
@@ -211,7 +211,7 @@ export default function Services() {
 
             <div className={styles["sv-detail-img-wrap"]}>
 
-              <img
+              <Image
                 src={svc.img}
                 alt={svc.title}
                 width={600}

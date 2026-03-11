@@ -49,7 +49,7 @@ export default function Clients() {
 
           <p className={styles["cl-desc"]}>
             From emerging startups to established enterprises — these are the brands
-            we've helped dominate their markets.
+            we helped dominate their markets.
           </p>
         </div>
 

@@ -189,7 +189,7 @@ export default function ServiceDetailPage() {
             comprehensive SEO solutions that propel your business towards greater visibility and long-term success.
           </p>
 
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=900&q=80"
             alt="SEO Services G Digital India"
             width={900} height={320}
@@ -252,7 +252,7 @@ export default function ServiceDetailPage() {
           {/* Quick Enquiry Form */}
           <div className={styles.sideForm}>
             <h3 className={styles.sideFormTitle}>Get Free Consultation</h3>
-            <p className={styles.sideFormSub}>Tell us about your project — we'll get back within 24 hours.</p>
+            <p className={styles.sideFormSub}>Tell us about your project — we all get back within 24 hours.</p>
             <div className={styles.formGroup}>
               <input className={styles.formInput} type="text" placeholder="Your Name *" />
             </div>
@@ -317,7 +317,7 @@ export default function ServiceDetailPage() {
           <div className={styles.relatedGrid}>
             {relatedServices.map((r) => (
               <Link key={r.title} href={r.href} className={styles.relatedCard}>
-                <img src={r.img} alt={r.title} width={600} height={160} className={styles.relatedCardImg} />
+                <Image src={r.img} alt={r.title} width={600} height={160} className={styles.relatedCardImg} />
                 <div className={styles.relatedCardBody}>
                   <span className={styles.relatedCardTag}>{r.tag}</span>
                   <h3 className={styles.relatedCardTitle}>{r.title}</h3>

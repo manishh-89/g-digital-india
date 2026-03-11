@@ -229,7 +229,7 @@ export default function AboutPage() {
             <p className={styles.sectionText}>
               At G Digital India, we are determined to provide the best-in-class Website
               Development, Social Media Marketing, and all types of IT solutions for
-              businesses. We don't just deliver a product — we believe in building
+              businesses. We dont just deliver a product — we believe in building
               long-term relationships with our clients.
             </p>
             <p className={styles.sectionText}>
@@ -237,7 +237,7 @@ export default function AboutPage() {
               marketing services. From Google Ads and SEO to custom CRM software,
               our experts use creativity and proven strategies to grow your business online.
             </p>
-            <div className={styles.motto}>" We Commit, We Deliver "</div>
+            <div className={styles.motto}>We Commit, We Deliver</div>
             <div className={styles.servicesList}>
               {services.map((s) => (
                 <div key={s} className={styles.serviceTag}>
@@ -249,13 +249,13 @@ export default function AboutPage() {
           </div>
 
           <div className={styles.imageStack}>
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80"
               alt="G Digital India Team"
               width={620} height={310}
               className={styles.imgMain}
             />
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80"
               alt="Digital Marketing"
               width={300} height={190}
@@ -341,7 +341,7 @@ export default function AboutPage() {
         <div className={styles.ctaSection}>
           <h3 className={styles.ctaTitle}>Ready to Grow Your Business Online?</h3>
           <p className={styles.ctaDesc}>
-            Let's build something great together. Our team is ready to help you
+            Lets build something great together. Our team is ready to help you
             dominate the digital space.
           </p>
           <Link href="/contact" className={styles.ctaBtn}>

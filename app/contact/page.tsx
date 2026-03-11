@@ -79,11 +79,11 @@ export default function ContactPage() {
             <div className={styles.heroLeft}>
               <div className={styles.eyebrow}><span className={styles.dot} /> Get In Touch</div>
               <h1 className={styles.heroTitle}>
-                Let's Build Something<br /><em>Great Together</em>
+                Lets Build Something<br /><em>Great Together</em>
               </h1>
               <p className={styles.heroDesc}>
                 Have a project in mind? Want to grow your business online? Our team at
-                G Digital India is ready to help. Fill in the form and we'll get back to
+                G Digital India is ready to help. Fill in the form and well get back to
                 you within 24 hours.
               </p>
             </div>

@@ -210,7 +210,7 @@ export default function Services() {
 
             <div className={styles["sv-detail-img-wrap"]}>
 
-              <img
+              <Image
                 src={svc.img}
                 alt={svc.title}
                 width={600}

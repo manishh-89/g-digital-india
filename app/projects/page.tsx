@@ -240,7 +240,7 @@ export default function ProjectsPage() {
 
               {/* Thumbnail */}
               <div className={styles.cardThumb} onClick={() => setLightboxId(project.id)}>
-                <img
+                <Image
                   src={project.img}
                   alt={project.title}
                   fill
@@ -299,7 +299,7 @@ export default function ProjectsPage() {
         <div className={styles.ctaInner}>
           <h2 className={styles.ctaTitle}>Want Results Like These?</h2>
           <p className={styles.ctaDesc}>
-            Let's discuss your project. Our team is ready to build something
+            Lets discuss your project. Our team is ready to build something
             great for your business too.
           </p>
           <Link href="/contact" className={styles.ctaBtn}>
@@ -322,7 +322,7 @@ export default function ProjectsPage() {
               <IcX />
             </button>
 
-            <img
+            <Image
               src={lbProject.img}
               alt={lbProject.title}
               width={1020}
