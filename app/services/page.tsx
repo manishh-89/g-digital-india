@@ -83,7 +83,8 @@ export default function Services() {
     if (!canvas) return
 
     const ctx = canvas.getContext("2d")
-    let animId
+    if (!ctx) return
+    let animId: number
 
     const resize = () => {
       canvas.width = canvas.offsetWidth
@@ -188,7 +189,7 @@ export default function Services() {
                 key={s.id}
                 className={`${styles["sv-item"]} ${i === active ? styles["sv-item-active"] : ""}`}
                 onClick={() => handleSelect(i)}
-                style={{ "--svc-color": s.color }}
+                style={{ "--svc-color": s.color } as React.CSSProperties}
               >
 
                 <span className={styles["sv-item-num"]}>{s.id}</span>
@@ -206,7 +207,7 @@ export default function Services() {
             className={`${styles["sv-detail"]} ${
               animating ? styles["sv-detail-out"] : styles["sv-detail-in"]
             }`}
-            style={{ "--svc-color": svc.color }}
+            style={{ "--svc-color": svc.color } as React.CSSProperties}
           >
 
             <div className={styles["sv-detail-img-wrap"]}>
