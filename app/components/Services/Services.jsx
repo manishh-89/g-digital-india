@@ -2,79 +2,58 @@
 
 import { useRef, useEffect, useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import styles from "./Services.module.css"
 
-const services = [
+const defaultServices = [
   {
     id: "01",
-    title: "Search Engine Optimization",
-    short: "SEO",
-    desc: "Dominate Google rankings with technical SEO, content strategy, and link-building that drives compounding organic traffic — month after month.",
-    highlight: "Avg. 340% increase in organic traffic within 6 months",
-    tags: ["Technical SEO", "Link Building", "Content Clusters", "Core Web Vitals"],
+    _id: "loading",
+    slug: "loading",
+    title: "Loading Services...",
+    short: "...",
+    desc: "Fetching services from the database...",
+    highlight: "",
+    tags: [],
     img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop",
     color: "#e8b86d",
-  },
-  {
-    id: "02",
-    title: "Paid Media & Performance Ads",
-    short: "PPC",
-    desc: "Google Ads, Meta, LinkedIn — we run hyper-targeted campaigns that convert.",
-    highlight: "Clients see 8x ROAS on average within 90 days",
-    tags: ["Google Ads", "Meta Ads", "Retargeting", "Conversion Tracking"],
-    img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&auto=format&fit=crop",
-    color: "#6d9fe8",
-  },
-  {
-    id: "03",
-    title: "Social Media Management",
-    short: "SMM",
-    desc: "We build communities, not just followers.",
-    highlight: "2M+ impressions generated for clients monthly",
-    tags: ["Instagram", "LinkedIn", "Reels & Shorts", "Community Growth"],
-    img: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=600&auto=format&fit=crop",
-    color: "#e86d9f",
-  },
-  {
-    id: "04",
-    title: "Content Marketing & Copywriting",
-    short: "COPY",
-    desc: "Words that sell. Blog posts, landing pages, email sequences.",
-    highlight: "65% higher engagement vs industry average",
-    tags: ["Blog Strategy", "Email Funnels", "Landing Pages", "Brand Voice"],
-    img: "https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=600&auto=format&fit=crop",
-    color: "#6de8b8",
-  },
-  {
-    id: "05",
-    title: "Web Design & CRO",
-    short: "WEB",
-    desc: "Beautiful websites that actually convert.",
-    highlight: "Average 220% boost in conversion rate post-redesign",
-    tags: ["UI/UX Design", "CRO", "Speed Optimisation", "A/B Testing"],
-    img: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&auto=format&fit=crop",
-    color: "#b86de8",
-  },
-  {
-    id: "06",
-    title: "Analytics & Growth Strategy",
-    short: "DATA",
-    desc: "Data is only powerful when you can read it.",
-    highlight: "Full-funnel visibility from Day 1",
-    tags: ["GA4 Setup", "Funnel Analysis", "Monthly Reports", "Growth Consulting"],
-    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop",
-    color: "#e8d06d",
-  },
+  }
 ]
+
+const colors = ["#e8b86d", "#6d9fe8", "#e86d9f", "#6de8b8", "#b86de8", "#e8d06d"]
 
 export default function Services() {
 
   const canvasRef = useRef(null)
 
+  const [services, setServices] = useState(defaultServices)
   const [active, setActive] = useState(0)
   const [animating, setAnimating] = useState(false)
 
-  const svc = services[active]
+  useEffect(() => {
+    fetch('/api/services')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped = data.map((s, i) => ({
+            id: (i + 1).toString().padStart(2, '0'),
+            _id: s._id,
+            slug: s.slug || s._id,
+            title: s.title || 'Untitled Service',
+            short: s.short || 'SRV',
+            desc: s.description || '',
+            highlight: s.highlight || '',
+            tags: s.tags || [],
+            img: s.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop",
+            color: colors[i % colors.length]
+          }))
+          setServices(mapped)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
+  const svc = services[active] || services[0]
 
   useEffect(() => {
 
@@ -137,7 +116,7 @@ export default function Services() {
       window.removeEventListener("resize", resize)
     }
 
-  }, [active])
+  }, [active, services])
 
 
   const handleSelect = (idx) => {
@@ -172,7 +151,7 @@ export default function Services() {
           </div>
 
           <p className={styles["sv-header-desc"]}>
-            Six core services. One unified goal — to make your brand the most recognisable.
+            Our core services. One unified goal — to make your brand the most recognisable.
           </p>
 
         </div>
@@ -184,7 +163,7 @@ export default function Services() {
             {services.map((s, i) => (
 
               <button
-                key={s.id}
+                key={s._id}
                 className={`${styles["sv-item"]} ${i === active ? styles["sv-item-active"] : ""}`}
                 onClick={() => handleSelect(i)}
                 style={{ "--svc-color": s.color }}
@@ -226,12 +205,14 @@ export default function Services() {
 
               <h3 className={styles["sv-detail-title"]}>{svc.title}</h3>
 
-              <p className={styles["sv-detail-desc"]}>{svc.desc}</p>
+              <div className={styles["sv-detail-desc"]} dangerouslySetInnerHTML={{ __html: svc.desc }} />
 
-              <div className={styles["sv-highlight"]}>
-                <span className={styles["sv-highlight-bar"]} />
-                  <span className={styles["sv-highlight-text"]}>{svc.highlight}</span>
-              </div>
+              {svc.highlight && (
+                <div className={styles["sv-highlight"]}>
+                  <span className={styles["sv-highlight-bar"]} />
+                    <span className={styles["sv-highlight-text"]}>{svc.highlight}</span>
+                </div>
+              )}
 
               <div className={styles["sv-tags"]}>
                 {svc.tags.map((t) => (
@@ -241,9 +222,9 @@ export default function Services() {
                 ))}
               </div>
 
-              <button className={styles["sv-cta"]}>
+              <Link href={`/services/${svc.slug}`} className={styles["sv-cta"]}>
                 Get Started →
-              </button>
+              </Link>
 
             </div>
 

@@ -45,6 +45,7 @@ const PHONES = [
 export default function ContactPage() {
   const [budget, setBudget]     = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "", email: "", phone: "", company: "", service: "", message: "",
   });
@@ -53,10 +54,28 @@ export default function ContactPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your form submission logic here (API call, emailjs, etc.)
-    setSubmitted(true);
+    setLoading(true);
+    
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, budget }),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        const data = await res.json();
+        alert(data.error || "Kuch galat ho gaya, phir se koshish karein.");
+      }
+    } catch (err) {
+      alert("Network error, please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -229,8 +248,8 @@ export default function ContactPage() {
                 />
               </div>
 
-              <button type="submit" className={styles.submitBtn}>
-                Send Message <IcArrow />
+              <button type="submit" className={styles.submitBtn} disabled={loading}>
+                {loading ? "Sending..." : "Send Message"} <IcArrow />
               </button>
               <p className={styles.formNote}>
                 We never share your information. 100% private & secure.

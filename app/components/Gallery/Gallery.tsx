@@ -1,72 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./Gallery.module.css";
 
-// Gallery ke liye sample data - apne actual images se replace karo
-const galleryItems = [
-  {
-    id: 1,
-    title: "Digital India Summit 2024",
-    category: "Events",
-    src: "/images/gallery-img-1.jpeg",
-    tags: ["events"],
-  },
-  {
-    id: 2,
-    title: "Tech Innovation Hub",
-    category: "Infrastructure",
-    src: "/images/gallery-img-2.jpeg",
-    tags: ["infrastructure"],
-  },
-  {
-    id: 3,
-    title: "Smart City Project",
-    category: "Projects",
-    src: "/images/gallery-img-3.jpeg",
-    tags: ["projects"],
-  },
-  {
-    id: 4,
-    title: "Digital Literacy Drive",
-    category: "Events",
-    src: "/images/gallery-img-4.jpeg",
-    tags: ["events"],
-  },
-  {
-    id: 5,
-    title: "Broadband Connectivity",
-    category: "Infrastructure",
-    src: "/images/gallery-img-5.jpeg",
-    tags: ["infrastructure"],
-  },
-  {
-    id: 6,
-    title: "E-Governance Portal",
-    category: "Projects",
-    src: "/images/gallery-img-6.jpeg",
-    tags: ["projects"],
-  },
-  {
-    id: 7,
-    title: "Women in Tech Program",
-    category: "Events",
-    src: "/images/gallery-img-7.jpeg",
-    tags: ["events"],
-  },
-];
-
-const filters = ["All", "Events", "Infrastructure", "Projects"];
-
 export default function Gallery() {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [lightboxItem, setLightboxItem] = useState<(typeof galleryItems)[0] | null>(null);
+  const [items, setItems] = useState<any[]>([]);
+  const [lightboxItem, setLightboxItem] = useState<any | null>(null);
 
-  const filtered =
-    activeFilter === "All"
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === activeFilter);
+  useEffect(() => {
+    fetch('/api/gallery')
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) return;
+        // Transform the data to match expected frontend structure
+        const mappedData = data.map(img => ({
+          id: img._id,
+          title: img.title || 'Gallery Image',
+          src: img.url,
+        }));
+        
+        setItems(mappedData);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <section className={styles.gallerySection} id="gallery">
@@ -78,29 +35,13 @@ export default function Gallery() {
             Moments That <span>Define Us</span>
           </h2>
           <p className={styles.subtitle}>
-            Digital India ki journey ke kuch khaas pal — events, projects aur
-            milestones jo hamari pehchaan banate hain.
+            A curated gallery showcasing our finest work, creativity, and moments that reflect quality, innovation, and visual excellence.
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className={styles.filterTabs}>
-          {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => setActiveFilter(f)}
-              className={`${styles.filterBtn} ${
-                activeFilter === f ? styles.filterBtnActive : ""
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
         {/* Masonry Grid */}
-        <div className={styles.grid}>
-          {filtered.map((item, index) => {
+        <div className={styles.grid} style={{ marginTop: '40px' }}>
+          {items.map((item: any, index: number) => {
             const isTall = index % 3 === 0;
             const isWide = index === 4;
             return (
@@ -121,7 +62,6 @@ export default function Gallery() {
                 />
                 <div className={styles.overlay}>
                   <div className={styles.overlayContent}>
-                    <span className={styles.itemCategory}>{item.category}</span>
                     <h3 className={styles.itemTitle}>{item.title}</h3>
                     <button className={styles.viewBtn}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -164,7 +104,6 @@ export default function Gallery() {
             <div className={styles.lightboxInfo}>
               <div>
                 <h3 className={styles.lightboxTitle}>{lightboxItem.title}</h3>
-                <p className={styles.lightboxCategory}>{lightboxItem.category}</p>
               </div>
             </div>
           </div>

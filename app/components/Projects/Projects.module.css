@@ -203,7 +203,7 @@
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--pj-color);
+  color: #fff;
   font-weight: 600;
 }
 
@@ -242,7 +242,7 @@
   font-size: 9px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--pj-color);
+  color: #fff;
   margin-bottom: 8px;
   font-weight: 600;
 }
@@ -305,7 +305,7 @@
   font-size: 11px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--pj-color);
+  color: #fff;
   background: transparent;
   border: none;
   padding: 0;

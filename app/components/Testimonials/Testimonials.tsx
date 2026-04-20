@@ -3,51 +3,59 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import styles from "./Testimonials.module.css"
 
-const testimonials = [
-  {
-    id: "01",
-    name: "Arjun Mehta",
-    role: "Founder",
-    company: "FreshCart",
-    industry: "D2C / Grocery",
-    avatar: "AM",
-    color: "#6de8b8",
-    rating: 5,
-    short: "Revenue doubled in 5 months.",
-    text: "Before them, we were invisible on Google. They restructured our entire SEO strategy...",
-    metric: { val: "420%", label: "Traffic Growth" },
-  },
-  {
-    id: "02",
-    name: "Priya Nair",
-    role: "CMO",
-    company: "NovaPay",
-    industry: "Fintech",
-    avatar: "PN",
-    color: "#6d9fe8",
-    rating: 5,
-    short: "9x ROAS in the first quarter.",
-    text: "We had tried three agencies before...",
-    metric: { val: "9x", label: "ROAS Achieved" },
-  },
-]
+interface TestimonialData {
+  _id: string
+  name: string
+  role: string
+  company: string
+  review: string
+  rating?: number
+  metric?: string | { val: string; label: string }
+  avatar?: string
+  initials?: string
+  industry?: string
+  short?: string
+  color?: string
+}
+
+const COLORS = ["#6de8b8", "#6d9fe8", "#e86db7", "#e8b26d", "#a36de8"]
 
 const StarRating = ({ count }: { count: number }) => (
   <div className={styles["tm-stars"]}>
-    {Array.from({ length: count }).map((_, i) => (
+    {Array.from({ length: Math.min(5, Math.max(0, count)) }).map((_, i) => (
       <span key={i} className={styles["tm-star"]}>★</span>
     ))}
   </div>
 )
 
 export default function Testimonials() {
-
+  const [testimonials, setTestimonials] = useState<TestimonialData[]>([])
+  const [loading, setLoading] = useState(true)
   const [active, setActive] = useState(0)
   const [animDir, setAnimDir] = useState("next")
   const [animating, setAnimating] = useState(false)
 
   const autoRef = useRef<NodeJS.Timeout | null>(null)
   const auroraRef = useRef<HTMLCanvasElement | null>(null)
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const res = await fetch('/api/testimonials')
+        if (res.ok) {
+          const data = await res.json()
+          if (data && data.length > 0) {
+            setTestimonials(data)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch testimonials:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchTestimonials()
+  }, [])
 
   const goTo = useCallback((idx: number, dir: string) => {
 
@@ -75,22 +83,47 @@ export default function Testimonials() {
 
   useEffect(() => {
 
+    if (testimonials.length === 0) return
+
     autoRef.current = setInterval(next, 5500)
 
     return () => {
       if (autoRef.current) clearInterval(autoRef.current)
     }
 
-  }, [next])
+  }, [next, testimonials.length])
 
   const resetTimer = () => {
 
     if (autoRef.current) clearInterval(autoRef.current)
-    autoRef.current = setInterval(next, 5500)
+    if (testimonials.length > 0) autoRef.current = setInterval(next, 5500)
 
   }
 
-  const t = testimonials[active]
+  if (loading) return (
+    <div className={styles.tm} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
+      <p style={{ color: 'white', fontSize: '1.2rem' }}>Loading Stories...</p>
+    </div>
+  )
+
+  if (testimonials.length === 0) return null
+
+  // Ensure active is always within valid bounds
+  const currentIndex = isNaN(active) || active >= testimonials.length ? 0 : active
+  const t = testimonials[currentIndex]
+  
+  if (!t) return null
+
+  const tColor = t.color || COLORS[currentIndex % COLORS.length]
+  const tInitials = t.initials || t.name?.split(' ').map(n => n[0]).join('').toUpperCase() || '?'
+  
+  // Metric parsing: Robustly handle "Val Label" strings or objects
+  const tMetric = typeof t.metric === 'string'
+    ? { val: t.metric.split(' ')[0], label: t.metric.split(' ').slice(1).join(' ') }
+    : t.metric || { val: "100%", label: "Satisfaction" }
+
+  const tShort = t.short || (t.review?.length > 60 ? t.review.substring(0, 60) + "..." : t.review) || ""
+  const tIndustry = t.industry || "Technology"
 
   return (
     <section className={styles.tm}>
@@ -134,26 +167,30 @@ export default function Testimonials() {
                 ? styles[`tm-card-out-${animDir}`]
                 : styles[`tm-card-in-${animDir}`]
             }`}
-            style={{ "--tm-color": t.color } as React.CSSProperties}
+            style={{ "--tm-color": tColor } as React.CSSProperties}
           >
 
             <div className={styles["tm-quote-mark"]}>&quot;</div>
 
             <div className={styles["tm-metric"]}>
-              <span className={styles["tm-metric-val"]}>{t.metric.val}</span>
-              <span className={styles["tm-metric-lbl"]}>{t.metric.label}</span>
+              <span className={styles["tm-metric-val"]}>{tMetric.val}</span>
+              <span className={styles["tm-metric-lbl"]}>{tMetric.label}</span>
             </div>
 
-            <StarRating count={t.rating} />
+            <StarRating count={t.rating || 5} />
 
-            <p className={styles["tm-short"]}>&quot;{t.short}&quot;</p>
+            <p className={styles["tm-short"]}>&quot;{tShort}&quot;</p>
 
-            <p className={styles["tm-text"]}>{t.text}</p>
+            <div className={styles["tm-text"]} dangerouslySetInnerHTML={{ __html: t.review }} />
 
             <div className={styles["tm-author"]}>
 
               <div className={styles["tm-avatar"]}>
-                <span className={styles["tm-avatar-initials"]}>{t.avatar}</span>
+                {t.avatar ? (
+                  <img src={t.avatar} alt={t.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                ) : (
+                  <span className={styles["tm-avatar-initials"]}>{tInitials}</span>
+                )}
                 <div className={styles["tm-avatar-ring"]} />
               </div>
 
@@ -165,7 +202,7 @@ export default function Testimonials() {
                 </span>
 
                 <span className={styles["tm-author-industry"]}>
-                  {t.industry}
+                  {tIndustry}
                 </span>
               </div>
 
@@ -194,13 +231,13 @@ export default function Testimonials() {
         <div className={styles["tm-dots"]}>
           {testimonials.map((item, i) => (
             <button
-              key={item.id}
+              key={item._id}
               className={`${styles["tm-dot"]} ${
-                i === active ? styles["tm-dot-active"] : ""
+                i === currentIndex ? styles["tm-dot-active"] : ""
               }`}
-              style={{ "--tm-color": item.color } as React.CSSProperties}
+              style={{ "--tm-color": item.color || COLORS[i % COLORS.length] } as React.CSSProperties}
               onClick={() => {
-                goTo(i, i > active ? "next" : "prev")
+                goTo(i, i > currentIndex ? "next" : "prev")
                 resetTimer()
               }}
             />
@@ -208,34 +245,45 @@ export default function Testimonials() {
         </div>
 
         <div className={styles["tm-mini-row"]}>
-          {testimonials.map((item, i) => (
-            <button
-              key={item.id}
-              className={`${styles["tm-mini"]} ${
-                i === active ? styles["tm-mini-active"] : ""
-              }`}
-              style={{ "--tm-color": item.color } as React.CSSProperties}
-              onClick={() => {
-                goTo(i, i > active ? "next" : "prev")
-                resetTimer()
-              }}
-            >
+          {testimonials.map((item, i) => {
+            const m = typeof item.metric === 'string'
+              ? { val: item.metric.split(' ')[0] }
+              : item.metric || { val: "100%" }
+            const ini = item.initials || item.name.split(' ').map(n => n[0]).join('').toUpperCase()
+            
+            return (
+              <button
+                key={item._id}
+                className={`${styles["tm-mini"]} ${
+                  i === currentIndex ? styles["tm-mini-active"] : ""
+                }`}
+                style={{ "--tm-color": item.color || COLORS[i % COLORS.length] } as React.CSSProperties}
+                onClick={() => {
+                  goTo(i, i > currentIndex ? "next" : "prev")
+                  resetTimer()
+                }}
+              >
 
-              <div className={styles["tm-mini-avatar"]}>
-                <span>{item.avatar}</span>
-              </div>
+                <div className={styles["tm-mini-avatar"]}>
+                  {item.avatar ? (
+                    <img src={item.avatar} alt={item.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    <span>{ini}</span>
+                  )}
+                </div>
 
-              <div className={styles["tm-mini-info"]}>
-                <span className={styles["tm-mini-name"]}>{item.name}</span>
-                <span className={styles["tm-mini-co"]}>{item.company}</span>
-              </div>
+                <div className={styles["tm-mini-info"]}>
+                  <span className={styles["tm-mini-name"]}>{item.name}</span>
+                  <span className={styles["tm-mini-co"]}>{item.company}</span>
+                </div>
 
-              <div className={styles["tm-mini-metric"]}>
-                <span>{item.metric.val}</span>
-              </div>
+                <div className={styles["tm-mini-metric"]}>
+                  <span>{m.val}</span>
+                </div>
 
-            </button>
-          ))}
+              </button>
+            )
+          })}
         </div>
 
       </div>

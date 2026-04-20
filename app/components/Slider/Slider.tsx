@@ -3,22 +3,79 @@
 import { useRef, useEffect, useState } from "react";
 import styles from "./slider.module.css";
 
+interface SliderData {
+  tag: string;
+  headline: string;
+  sub: string;
+  mediaUrl: string;
+  isVideo: boolean;
+}
+
 export default function Slider() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [visible, setVisible] = useState(false);
+  const [sliderData, setSliderData] = useState<SliderData | null>(null);
 
   useEffect(() => {
-    videoRef.current?.play().catch(() => {});
+    // Fetch slider data
+    const fetchSlider = async () => {
+      try {
+        const res = await fetch('/api/slider');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setSliderData(data[0]);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch slider data:", err);
+      }
+    };
+    fetchSlider();
+
     const t = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    // If it's a video and the ref is available, play it
+    if (sliderData?.isVideo && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, [sliderData]);
+
+  // Fallback defaults if DB is empty so the frontend doesn't break
+  const displayData = sliderData || {
+    tag: "",
+    headline: "",
+    sub: "",
+    mediaUrl: "",
+    isVideo: true,
+  };
+
+  // Convert the headline to safely allow our accent class if they use <span class="accent"> or similar in the headline. 
+  // For simplicity, let's keep the existing structure but if they don't provide HTML we just render it. 
+  // The original design had: Building the <span className={styles["accent"]}>Future</span><br />Together
+  // Let's just create a safe HTML rendering block for the headline only so they can use simple HTML if needed like <br/>
+  const createMarkup = (htmlStr: string) => {
+    return { __html: htmlStr };
+  };
+
   return (
     <section className={styles.slider}>
       <div className={`${styles["sl-wrap"]} ${visible ? styles.in : ""}`}>
-        <video autoPlay loop muted playsInline className={styles["sl-video"]}>
-          <source src="/videos/company-slider-2.mp4" type="video/mp4" />
-        </video>
+        
+        {displayData.mediaUrl ? (
+          displayData.isVideo ? (
+            <video key={displayData.mediaUrl} ref={videoRef} autoPlay loop muted playsInline className={styles["sl-video"]}>
+              <source src={displayData.mediaUrl} />
+            </video>
+          ) : (
+            <img src={displayData.mediaUrl} alt="Hero Slider" className={styles["sl-video"]} style={{ objectFit: 'cover' }} />
+          )
+        ) : (
+          <div className={styles["sl-video"]} style={{ background: '#000' }} />
+        )}
 
         <div className={styles["sl-overlay"]}></div>
         <div className={`${styles["sl-corner"]} ${styles["sl-corner-tl"]}`}></div>
@@ -26,17 +83,13 @@ export default function Slider() {
         <div className={`${styles["sl-corner"]} ${styles["sl-corner-bl"]}`}></div>
         <div className={`${styles["sl-corner"]} ${styles["sl-corner-br"]}`}></div>
         <div className={styles["sl-content"]}>
-          <span className={styles["sl-tag"]}>Innovation · Design · Growth</span>
+          <span className={styles["sl-tag"]}>{displayData.tag}</span>
 
-          <h1 className={styles["sl-headline"]}>
-            Building the <span className={styles["accent"]}>Future</span>
-            <br />
-            Together
-          </h1>
+          {/* Render headline safely to preserve <br> and span accent formatting if users type them */}
+          <h1 className={styles["sl-headline"]} dangerouslySetInnerHTML={createMarkup(displayData.headline)} />
 
           <p className={styles["sl-sub"]}>
-            We craft bold strategies and powerful solutions that help businesses
-            grow, scale, and leave a lasting impact.
+            {displayData.sub}
           </p>
 
           <div className={styles["sl-btns"]}>

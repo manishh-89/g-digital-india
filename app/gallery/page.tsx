@@ -78,8 +78,7 @@ export default function Gallery() {
             Moments That <span>Define Us</span>
           </h2>
           <p className={styles.subtitle}>
-            Digital India ki journey ke kuch khaas pal — events, projects aur
-            milestones jo hamari pehchaan banate hain.
+           A curated gallery showcasing our finest work, creativity, and moments that reflect quality, innovation, and visual excellence.
           </p>
         </div>
 

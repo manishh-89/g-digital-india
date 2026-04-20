@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./ProjectsPage.module.css";
@@ -14,149 +14,43 @@ const IcEye = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" 
 const IcX = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
 const IcExLink = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>;
 
-// ── Projects Data ──────────────────────────────────────────
-const PROJECTS = [
-  {
-    id: 1,
-    title: "Battery Nearby",
-    category: "Website Design",
-    industry: "Automotive",
-    img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80",
-    desc: "A clean and conversion-focused website for an automotive battery service business, built to drive local leads and walk-in customers.",
-    tags: ["UI/UX Design", "Responsive", "Lead Gen"],
-    liveUrl: "#",
-  },
-  {
-    id: 2,
-    title: "Roopji Caterers",
-    category: "Website Design",
-    industry: "Food & Catering",
-    img: "https://images.unsplash.com/photo-1555244162-803834f70033?w=900&q=80",
-    desc: "A warm and appetizing website for a premium catering brand, showcasing their menu, event packages, and booking process seamlessly.",
-    tags: ["Web Design", "Branding", "Menu Showcase"],
-    liveUrl: "#",
-  },
-  {
-    id: 3,
-    title: "Find My Place",
-    category: "Website Design",
-    industry: "Real Estate",
-    img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=80",
-    desc: "A property listing and lead capture website for a real estate firm, complete with search filters, property showcases, and agent contact flows.",
-    tags: ["Real Estate", "Property Listing", "Lead Forms"],
-    liveUrl: "#",
-  },
-  {
-    id: 4,
-    title: "Star Car Care Solutions",
-    category: "Website Design",
-    industry: "Automotive",
-    img: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=900&q=80",
-    desc: "A professional service portal website for an auto care company, designed to build trust and make booking service appointments effortless.",
-    tags: ["Web Design", "Service Portal", "Booking UX"],
-    liveUrl: "#",
-  },
-  {
-    id: 5,
-    title: "Genix Fertility Care",
-    category: "Website Design",
-    industry: "Healthcare",
-    img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&q=80",
-    desc: "A sensitive, patient-first website for a fertility care clinic — balancing professional credibility with warmth and ease of appointment booking.",
-    tags: ["Healthcare", "Patient UX", "Trust Design"],
-    liveUrl: "#",
-  },
-  {
-    id: 6,
-    title: "Maruti Creation",
-    category: "Website Design",
-    industry: "Manufacturing",
-    img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&q=80",
-    desc: "A bold corporate website for a manufacturing brand, showcasing their product range, capabilities, and manufacturing process with clarity.",
-    tags: ["Corporate", "Product Catalog", "B2B Design"],
-    liveUrl: "#",
-  },
-  {
-    id: 7,
-    title: "Kanvas Kidz",
-    category: "Website Design",
-    industry: "Education",
-    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&q=80",
-    desc: "A vibrant, child-friendly website for an education brand, designed to engage parents while clearly communicating programs, fees, and admissions.",
-    tags: ["Education", "Child-Friendly UI", "Admissions"],
-    liveUrl: "#",
-  },
-  {
-    id: 8,
-    title: "Sangam Sweet",
-    category: "Website Design",
-    industry: "Food & Retail",
-    img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=900&q=80",
-    desc: "An appetizing e-commerce style website for a sweet shop brand, driving online orders and showcasing their traditional product range beautifully.",
-    tags: ["E-Commerce Design", "Food Brand", "Product Showcase"],
-    liveUrl: "#",
-  },
-  {
-    id: 9,
-    title: "Sparsh Ortho",
-    category: "Website Design",
-    industry: "Healthcare",
-    img: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=900&q=80",
-    desc: "A trust-focused orthopaedic clinic website with specialist profiles, treatment pages, and a frictionless appointment booking experience for patients.",
-    tags: ["Healthcare", "Clinic Website", "Doctor Profiles"],
-    liveUrl: "#",
-  },
-  {
-    id: 10,
-    title: "SEO Growth Campaign",
-    category: "Digital Marketing",
-    industry: "E-Commerce",
-    img: "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=900&q=80",
-    desc: "A comprehensive SEO campaign that tripled organic traffic for an e-commerce brand within 6 months through on-page fixes, content, and link-building.",
-    tags: ["SEO", "Content Strategy", "Link Building"],
-    liveUrl: "#",
-  },
-  {
-    id: 11,
-    title: "Meta & Google Ads Drive",
-    category: "Digital Marketing",
-    industry: "Real Estate",
-    img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=900&q=80",
-    desc: "A full-funnel paid advertising campaign combining Meta Ads and Google Ads to generate qualified real estate leads at a dramatically reduced cost-per-lead.",
-    tags: ["Meta Ads", "Google Ads", "Performance Marketing"],
-    liveUrl: "#",
-  },
-  {
-    id: 12,
-    title: "Lead Management CRM",
-    category: "CRM & Software",
-    industry: "Technology",
-    img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=80",
-    desc: "A custom lead management CRM built for a sales team — with pipeline tracking, follow-up reminders, call logs, and a reporting dashboard.",
-    tags: ["CRM", "Custom Software", "Sales Automation"],
-    liveUrl: "#",
-  },
-];
+
 
 const FILTERS = ["All", "Website Design", "Digital Marketing", "CRM & Software"];
 
 // ── Component ──────────────────────────────────────────────
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState<any[]>([]);
   const [activeFilter, setActiveFilter] = useState("All");
-  const [lightboxId, setLightboxId]     = useState<number | null>(null);
+  const [lightboxId, setLightboxId]     = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) setProjects(await res.json());
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
 
   const filtered = useMemo(() =>
     activeFilter === "All"
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.category === activeFilter),
-    [activeFilter]
+      ? projects
+      : projects.filter((p) => p.category === activeFilter),
+    [activeFilter, projects]
   );
 
-  const lbIdx     = lightboxId !== null ? filtered.findIndex((p) => p.id === lightboxId) : -1;
+  const lbIdx     = lightboxId !== null ? filtered.findIndex((p: any) => p._id === lightboxId) : -1;
   const lbProject = lbIdx >= 0 ? filtered[lbIdx] : null;
 
-  const goPrev = () => lbIdx > 0 && setLightboxId(filtered[lbIdx - 1].id);
-  const goNext = () => lbIdx < filtered.length - 1 && setLightboxId(filtered[lbIdx + 1].id);
+  const goPrev = () => lbIdx > 0 && setLightboxId(filtered[lbIdx - 1]._id);
+  const goNext = () => lbIdx < filtered.length - 1 && setLightboxId(filtered[lbIdx + 1]._id);
 
   // keyboard nav in lightbox
   const handleKey = (e: React.KeyboardEvent) => {
@@ -234,14 +128,15 @@ export default function ProjectsPage() {
         </div>
 
         {/* Project List */}
+        {loading ? <div style={{ padding: '40px', textAlign: 'center' }}>Loading Projects...</div> : (
         <div className={styles.projectList}>
-          {filtered.map((project, i) => (
-            <div key={project.id} className={styles.card}>
+          {filtered.map((project: any, i: number) => (
+            <div key={project._id} className={styles.card}>
 
               {/* Thumbnail */}
-              <div className={styles.cardThumb} onClick={() => setLightboxId(project.id)}>
+              <div className={styles.cardThumb} onClick={() => setLightboxId(project._id)}>
                 <Image
-                  src={project.img}
+                  src={project.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600"}
                   alt={project.title}
                   fill
                   sizes="(max-width:700px) 100vw, 340px"
@@ -258,40 +153,43 @@ export default function ProjectsPage() {
               <div className={styles.cardBody}>
                 <div className={styles.cardTop}>
                   <div className={styles.cardMeta}>
-                    <span className={styles.cardIndustry}>{project.industry}</span>
+                    <span className={styles.cardIndustry}>{project.industry || 'Business'}</span>
                     <span className={styles.cardNum}>{String(i + 1).padStart(2, "0")}</span>
                   </div>
                   <h2 className={styles.cardTitle}>{project.title}</h2>
-                  <p className={styles.cardDesc}>{project.desc}</p>
+                  <p className={styles.cardDesc}>{project.description}</p>
                 </div>
 
                 <div className={styles.cardBottom}>
                   <div className={styles.cardTags}>
-                    {project.tags.map((t) => (
+                    {project.technologies?.slice(0, 3).map((t: string) => (
                       <span key={t} className={styles.cardTag}>{t}</span>
                     ))}
                   </div>
                   <div className={styles.cardActions}>
-                    <button
+                    <Link
+                      href={`/projects/${project.slug || project._id}`}
                       className={styles.viewBtn}
-                      onClick={() => setLightboxId(project.id)}
                     >
-                      <IcEye /> View Preview
-                    </button>
-                    <a
-                      href={project.liveUrl}
-                      className={styles.previewBtn}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <IcExLink /> Live Site
-                    </a>
+                      <IcEye /> Details
+                    </Link>
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        className={styles.previewBtn}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <IcExLink /> Live Site
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
+        )}
       </main>
 
       {/* ═══ CTA ═══ */}
@@ -323,7 +221,7 @@ export default function ProjectsPage() {
             </button>
 
             <Image
-              src={lbProject.img}
+              src={lbProject.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1020"}
               alt={lbProject.title}
               width={1020}
               height={600}
@@ -336,7 +234,7 @@ export default function ProjectsPage() {
                 <p className={styles.lbCategory}>{lbProject.category} · {lbProject.industry}</p>
                 <h3 className={styles.lbTitle}>{lbProject.title}</h3>
                 <div className={styles.lbTags}>
-                  {lbProject.tags.map((t) => (
+                  {lbProject.technologies?.map((t: string) => (
                     <span key={t} className={styles.lbTag}>{t}</span>
                   ))}
                 </div>

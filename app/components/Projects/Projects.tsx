@@ -1,79 +1,63 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import styles from "./Projects.module.css"
 import Link from "next/link"
 
-const projects = [
-  {
-    id: "01",
-    size: "large",
-    title: "FreshCart — 420% Organic Growth in 8 Months",
-    category: "SEO",
-    desc: "Complete SEO overhaul for a D2C grocery brand.",
-    img: "/images/project-img-1.jpg",
-    color: "#6de8b8",
-    stats: [
-      { val: "420%", label: "Traffic Growth" },
-      { val: "1.2K", label: "Backlinks Built" },
-      { val: "#1", label: "Google Rank" },
-    ],
-    tags: ["SEO"],
-  },
-  {
-    id: "02",
-    size: "small",
-    title: "NovaPay — 9x ROAS on Google Ads",
-    category: "Paid Ads",
-    desc: "Performance campaign for a fintech startup.",
-    img: "/images/project-img-2.jpg",
-    color: "#6d9fe8",
-    stats: [
-      { val: "9x", label: "ROAS" },
-      { val: "₹2Cr+", label: "Revenue" },
-    ],
-    tags: ["Paid Ads"],
-  },
-  {
-    id: "03",
-    size: "small",
-    title: "LuxeWear — Instagram to ₹1Cr/Month",
-    category: "Social Media",
-    desc: "Built a 180K+ engaged community.",
-    img: "/images/project-img-3.jpg",
-    color: "#e86d9f",
-    stats: [
-      { val: "180K+", label: "Followers" },
-      { val: "₹1Cr", label: "Monthly Rev" },
-    ],
-    tags: ["Social Media"],
-  },
-  {
-    id: "04",
-    size: "small",
-    title: "BuildRight — 310% More Leads via CRO",
-    category: "Web Design",
-    desc: "Redesigned construction website with CRO.",
-    img: "/images/project-img-4.jpg",
-    color: "#b86de8",
-    stats: [
-      { val: "310%", label: "More Leads" },
-      { val: "60", label: "Days" },
-    ],
-    tags: ["Web Design"],
-  },
-  
-]
+const colors = ["#6de8b8", "#6d9fe8", "#e86d9f", "#b86de8"]
 
 export default function Projects() {
-
   const [pjFilter, setPjFilter] = useState("All")
+  const [projects, setProjects] = useState<any[]>([])
+  const [categories, setCategories] = useState<string[]>(["All"])
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) return;
+        
+        const mappedData = data.map((p, i) => {
+          const displayId = (i + 1).toString().padStart(2, '0');
+          // e.g. 0 is large, 1,2,3 are small
+          const size = i % 4 === 0 ? 'large' : 'small';
+          const color = colors[i % colors.length];
+
+          const stats = Array.isArray(p.stats) 
+            ? p.stats.map((s: any) => ({ val: s.value || '', label: s.label || '' })) 
+            : [];
+            
+          const tags = Array.isArray(p.technologies) && p.technologies.length > 0
+            ? p.technologies
+            : [p.category || 'General'];
+
+          return {
+            _originalId: p._id,
+            id: displayId,
+            size,
+            title: p.title || 'Untitled Project',
+            category: p.category || 'General',
+            desc: p.description || '',
+            img: p.image || '/images/project-img-1.jpg',
+            color,
+            stats,
+            tags,
+          }
+        });
+        
+        setProjects(mappedData);
+
+        const cats = new Set(mappedData.map(item => item.category));
+        setCategories(["All", ...Array.from(cats) as string[]]);
+      })
+      .catch(console.error);
+  }, []);
 
   const pjFiltered =
     pjFilter === "All"
       ? projects
-      : projects.filter((p) => p.tags.includes(pjFilter))
+      : projects.filter((p) => p.category === pjFilter || p.tags.includes(pjFilter))
 
   return (
     <section className={styles.pj}>
@@ -93,7 +77,9 @@ export default function Projects() {
 
           <div className={styles["pj-header-top"]}>
             <span className={styles["pj-eyebrow"]}>— Our Work</span>
-            <span className={styles["pj-count"]}>04 Projects</span>
+            <span className={styles["pj-count"]}>
+              {projects.length < 10 ? `0${projects.length}` : projects.length} Projects
+            </span>
           </div>
 
           <div className={styles["pj-header-bottom"]}>
@@ -112,7 +98,7 @@ export default function Projects() {
 
         <div className={styles["pj-filters"]}>
 
-          {["All", "SEO", "Paid Ads", "Social Media", "Web Design"].map((f) => (
+          {categories.map((f) => (
 
             <button
               key={f}
@@ -135,7 +121,7 @@ export default function Projects() {
           {pjFiltered.map((p) => (
 
             <div
-              key={p.id}
+              key={p._originalId}
               className={`${styles["pj-card"]} ${styles[`pj-card-${p.size}`]}`}
               
             >
@@ -148,6 +134,7 @@ export default function Projects() {
                   width={900}
                   height={600}
                   className={styles["pj-card-img"]}
+                  style={{ objectFit: 'cover' }}
                 />
 
                 <div className={styles["pj-card-img-overlay"]} />
@@ -167,13 +154,13 @@ export default function Projects() {
 
                   <h3 className={styles["pj-card-title"]}>{p.title}</h3>
 
-                  <p className={styles["pj-card-desc"]}>{p.desc}</p>
+                  <div className={styles["pj-card-desc"]} dangerouslySetInnerHTML={{ __html: p.desc }} />
 
                   <div className={styles["pj-card-stats"]}>
 
-                    {p.stats.map((s) => (
+                    {p.stats.slice(0, 3).map((s: any, idx: number) => (
 
-                      <div key={s.label} className={styles["pj-stat"]}>
+                      <div key={idx} className={styles["pj-stat"]}>
                         <span className={styles["pj-stat-val"]}>{s.val}</span>
                         <span className={styles["pj-stat-lbl"]}>{s.label}</span>
                       </div>

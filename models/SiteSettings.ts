@@ -1,0 +1,32 @@
+import mongoose from 'mongoose'
+
+const CounterSchema = new mongoose.Schema({
+  label: { type: String, required: true },
+  value: { type: String, required: true },
+  icon:  { type: String, default: '🏆' },
+})
+
+const SiteSettingsSchema = new mongoose.Schema({
+  phone:   { type: String, default: '+91 98765 43210' },
+  phone2:  { type: String, default: '' },
+  email:   { type: String, default: 'info@greendigitalindia.com' },
+  address: { type: String, default: 'New Delhi, India' },
+  counters: { 
+    type: [CounterSchema], 
+    default: [
+      { label: 'Happy Clients',      value: '500+', icon: '😊' },
+      { label: 'Projects Completed', value: '300+', icon: '✅' },
+      { label: 'Years Experience',   value: '10+',  icon: '📅' },
+      { label: 'Team Members',       value: '50+',  icon: '👥' },
+    ]
+  },
+  updatedAt: { type: Date, default: Date.now },
+}, { 
+  timestamps: true,
+  bufferCommands: true, // Explicitly enable for this model
+  collection: 'sitesettings' // Force specific collection name
+})
+
+const SiteSettings = mongoose.models.SiteSettings || mongoose.model('SiteSettings', SiteSettingsSchema)
+
+export default SiteSettings

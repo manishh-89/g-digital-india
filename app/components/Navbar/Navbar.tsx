@@ -18,7 +18,7 @@ const Navbar = () => {
       <header className={styles.navbar}>
         <div className={styles["navbar-logo"]}>
           <Link href="/">
-            <Image src={logo} alt="logo" />
+            <Image src={logo} alt="logo" priority />
           </Link>
         </div>
 

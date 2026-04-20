@@ -1,32 +1,67 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styles from "./Footer.module.css"
 import Link from "next/link"
 
 const navLinks = {
-Services: ["SEO","Paid Media","Social Media","Content Marketing","Web Design & CRO","Analytics"],
-Company: ["About Us","Our Work","Pricing","Careers","Blog","Contact"],
-Legal: ["Privacy Policy","Terms of Service","Cookie Policy","Refund Policy"]
+  Services: [
+    { label: "SEO Services", href: "/services" },
+    { label: "Web Design", href: "/services" },
+    { label: "Social Media", href: "/services" },
+    { label: "Paid Ads", href: "/services" },
+    { label: "Content Marketing", href: "/services" },
+    { label: "Graphic Design", href: "/services" }
+  ],
+  Company: [
+    { label: "About Us", href: "/about" },
+    { label: "Our Portfolio", href: "/projects" },
+    { label: "Gallery", href: "/gallery" },
+    { label: "Expertise", href: "/services" },
+    { label: "Contact Us", href: "/contact" }
+  ],
+  Legal: [
+    { label: "Privacy Policy", href: "#" },
+    { label: "Terms of Use", href: "#" },
+    { label: "Refund Policy", href: "#" }
+  ]
 }
 
 const socials = [
-{ label: "IN", name: "LinkedIn", href: "#" },
-{ label: "IG", name: "Instagram", href: "#" },
-{ label: "TW", name: "Twitter", href: "#" },
-{ label: "YT", name: "YouTube", href: "#" }
+  { label: "FB", name: "Facebook", href: "https://facebook.com" },
+  { label: "IG", name: "Instagram", href: "https://instagram.com" },
+  { label: "LI", name: "LinkedIn", href: "https://linkedin.com" },
+  { label: "TW", name: "Twitter", href: "https://twitter.com" }
 ]
 
 export default function Footer(){
 
 const [email,setEmail] = useState("")
 const [submitted,setSubmitted] = useState(false)
+const [settings, setSettings] = useState({
+  phone: "+91 98765 43210",
+  email: "hello@gdigitalindia.com",
+  address: "Jaipur, Rajasthan, India"
+})
+
+useEffect(() => {
+  fetch("/api/settings", { cache: 'no-store' })
+    .then(res => res.json())
+    .then(data => {
+      if (data) setSettings({
+        phone: data.phone || settings.phone,
+        email: data.email || settings.email,
+        address: data.address || settings.address
+      })
+    })
+    .catch(err => console.error("Footer settings fetch error:", err))
+}, [])
 
 const handleSubmit = (e: React.FormEvent) => {
-e.preventDefault()
-if(!email.trim()) return
-setSubmitted(true)
-setEmail("")
+  e.preventDefault()
+  if(!email.trim()) return
+  setSubmitted(true)
+  setEmail("")
 }
 
 return(
@@ -34,274 +69,150 @@ return(
 <footer className={styles.ft}>
 
 {/* CTA */}
-
 <div className={styles["ft-cta-band"]}>
-
-<div className={styles["ft-cta-inner"]}>
-
-<div className={styles["ft-cta-left"]}>
-
-<span className={styles["ft-cta-label"]}>
-Ready to scale? </span>
-
-<h2 className={styles["ft-cta-heading"]}>
-Let&apos;s Build Something <br/>
-<em>Remarkable.</em>
-</h2>
-
-</div>
-
-<div className={styles["ft-cta-right"]}>
-
-<p className={styles["ft-cta-desc"]}>
-Book a free 30-min strategy call.
-<br/>
-Just honest advice on how to grow your brand.
-</p>
-
-<button className={styles["ft-cta-btn"]}>
-Book a Free Call
-<span className={styles["ft-cta-btn-arrow"]}>↗</span> </button>
-
-</div>
-
-</div>
-
-<div className={styles["ft-cta-line"]}/>
-
+  <div className={styles["ft-cta-inner"]}>
+    <div className={styles["ft-cta-left"]}>
+      <span className={styles["ft-cta-label"]}>Ready to scale? </span>
+      <h2 className={styles["ft-cta-heading"]}>
+        Let&apos;s Build Something <br/>
+        <em>Remarkable.</em>
+      </h2>
+    </div>
+    <div className={styles["ft-cta-right"]}>
+      <p className={styles["ft-cta-desc"]}>
+        Book a free strategy call today.
+        <br/>
+        Our experts are ready to help your brand grow.
+      </p>
+      <Link href="/contact" style={{ textDecoration: 'none' }}>
+        <button className={styles["ft-cta-btn"]}>
+          Start Your Project
+          <span className={styles["ft-cta-btn-arrow"]}>↗</span> 
+        </button>
+      </Link>
+    </div>
+  </div>
+  <div className={styles["ft-cta-line"]}/>
 </div>
 
 {/* Ticker */}
-
 <div className={styles["ft-ticker"]}>
-
-<div className={styles["ft-ticker-track"]}>
-
-{[
-"SEO","✦","Paid Ads","✦","Social Media","✦","Content","✦",
-"Web Design","✦","Analytics","✦","Growth Strategy","✦","Branding",
-].map((item,i)=>(
-<span
-key={i}
-className={
-item==="✦"
-? styles["ft-tick-dot"]
-: styles["ft-tick-item"]
-}
-
->
-
-{item} </span>
-))}
-
-</div>
-
+  <div className={styles["ft-ticker-track"]}>
+    {[
+      "SEO","✦","Paid Ads","✦","Social Media","✦","Branding","✦",
+      "Web Design","✦","Performance","✦","Growth","✦","Creativity",
+    ].map((item,i)=>(
+      <span key={i} className={item==="✦" ? styles["ft-tick-dot"] : styles["ft-tick-item"]}>
+        {item} 
+      </span>
+    ))}
+    {/* Duplicate for infinite loop */}
+    {[
+      "SEO","✦","Paid Ads","✦","Social Media","✦","Branding","✦",
+      "Web Design","✦","Performance","✦","Growth","✦","Creativity",
+    ].map((item,i)=>(
+      <span key={i+'dup'} className={item==="✦" ? styles["ft-tick-dot"] : styles["ft-tick-item"]}>
+        {item} 
+      </span>
+    ))}
+  </div>
 </div>
 
 {/* BODY */}
-
 <div className={styles["ft-body"]}>
+  <div className={styles["ft-body-inner"]}>
+    {/* BRAND */}
+    <div className={styles["ft-brand-col"]}>
+      <Link href="/" className={styles["ft-logo"]}>
+        <span className={styles["ft-logo-mark"]}>GDI</span>
+        <span className={styles["ft-logo-dot"]}/> 
+      </Link>
+      <p className={styles["ft-brand-tagline"]}>
+        Transforming brands with data-driven <br/>
+        digital marketing and premium design.
+      </p>
+      <div className={styles["ft-socials"]}>
+        {socials.map((s)=>(
+          <a key={s.name} href={s.href} className={styles["ft-social"]} target="_blank" rel="noopener noreferrer">
+            <span className={styles["ft-social-label"]}>{s.label} </span>
+            <span className={styles["ft-social-name"]}>{s.name} </span>
+          </a>
+        ))}
+      </div>
 
-<div className={styles["ft-body-inner"]}>
+      <div className={styles["ft-newsletter"]}>
+        <p className={styles["ft-nl-label"]}>Get weekly growth tips</p>
+        {submitted ? (
+          <div className={styles["ft-nl-success"]}>
+            <span className={styles["ft-nl-check"]}>✓</span>
+            You&apos;re subscribed.
+          </div>
+        ) : (
+          <div className={styles["ft-nl-form"]}>
+            <input type="email" className={styles["ft-nl-input"]} placeholder="your@email.com"
+              value={email} onChange={(e)=>setEmail(e.target.value)} />
+            <button className={styles["ft-nl-btn"]} onClick={handleSubmit}>→</button>
+          </div>
+        )}
+      </div>
+    </div>
 
-{/* BRAND */}
+    {/* NAV COLS */}
+    {Object.entries(navLinks).map(([col,links])=>(
+      <div key={col} className={styles["ft-nav-col"]}>
+        <h4 className={styles["ft-nav-heading"]}>{col}</h4>
+        <ul className={styles["ft-nav-list"]}>
+          {links.map((item)=>(
+            <li key={item.label}>
+              <Link href={item.href} className={styles["ft-nav-link"]}>
+                <span className={styles["ft-nav-link-bar"]}/>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
 
-<div className={styles["ft-brand-col"]}>
-
-<Link href="/" className={styles["ft-logo"]}>
-<span className={styles["ft-logo-mark"]}>GDI</span>
-<span className={styles["ft-logo-dot"]}/> </Link>
-
-<p className={styles["ft-brand-tagline"]}>
-We don&apos;t just run campaigns.
-<br/>
-We engineer growth.
-</p>
-
-<div className={styles["ft-socials"]}>
-
-{socials.map((s)=>(
-<a
-key={s.name}
-href={s.href}
-className={styles["ft-social"]}
-
->
-
-<span className={styles["ft-social-label"]}>
-{s.label} </span>
-
-<span className={styles["ft-social-name"]}>
-{s.name} </span>
-
-</a>
-))}
-
-</div>
-
-{/* Newsletter */}
-
-<div className={styles["ft-newsletter"]}>
-
-<p className={styles["ft-nl-label"]}>
-Growth insights, weekly.
-</p>
-
-{submitted ? (
-
-<div className={styles["ft-nl-success"]}>
-<span className={styles["ft-nl-check"]}>✓</span>
-You&apos;re in.
-</div>
-
-) : (
-
-<div className={styles["ft-nl-form"]}>
-
-<input
-type="email"
-className={styles["ft-nl-input"]}
-placeholder="[your@email.com](mailto:your@email.com)"
-value={email}
-onChange={(e)=>setEmail(e.target.value)}
-/>
-
-<button
-className={styles["ft-nl-btn"]}
-onClick={handleSubmit}
-
->
-
-→ </button>
-
-</div>
-
-)}
-
-</div>
-
-</div>
-
-{/* NAV COLS */}
-
-{Object.entries(navLinks).map(([col,links])=>(
-
-<div key={col} className={styles["ft-nav-col"]}>
-
-<h4 className={styles["ft-nav-heading"]}>
-{col}
-</h4>
-
-<ul className={styles["ft-nav-list"]}>
-
-{links.map((link)=>(
-
-<li key={link}>
-
-<a
-href="#"
-className={styles["ft-nav-link"]}
-
->
-
-<span className={styles["ft-nav-link-bar"]}/>
-
-{link}
-
-</a>
-
-</li>
-))}
-
-</ul>
-
-</div>
-
-))}
-
-{/* CONTACT */}
-
-<div className={styles["ft-contact-col"]}>
-
-<h4 className={styles["ft-nav-heading"]}>
-Contact
-</h4>
-
-<div className={styles["ft-contact-list"]}>
-
-<a
-href="mailto:hello@gdi.agency"
-className={styles["ft-contact-item"]}
-
->
-
-<span className={styles["ft-contact-icon"]}>✉</span> <span>[hello@gdi.agency](mailto:hello@gdi.agency)</span> </a>
-
-<a
-href="tel:+919876543210"
-className={styles["ft-contact-item"]}
-
->
-
-<span className={styles["ft-contact-icon"]}>✆</span> <span>+91 98765 43210</span> </a>
-
-<div className={styles["ft-contact-item"]}>
-<span className={styles["ft-contact-icon"]}>◎</span>
-<span>Jaipur · Mumbai · Delhi</span>
-</div>
-
-</div>
-
-<div className={styles["ft-available"]}>
-<span className={styles["ft-available-dot"]}/>
-<span>Currently taking new clients</span>
-</div>
-
-</div>
-
-</div>
-
+    {/* CONTACT */}
+    <div className={styles["ft-contact-col"]}>
+      <h4 className={styles["ft-nav-heading"]}>Reach Us</h4>
+      <div className={styles["ft-contact-list"]}>
+        <a href={`mailto:${settings.email}`} className={styles["ft-contact-item"]}>
+          <span className={styles["ft-contact-icon"]}>✉</span> <span>{settings.email}</span> 
+        </a>
+        <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className={styles["ft-contact-item"]}>
+          <span className={styles["ft-contact-icon"]}>✆</span> <span>{settings.phone}</span> 
+        </a>
+        <div className={styles["ft-contact-item"]}>
+          <span className={styles["ft-contact-icon"]}>◎</span>
+          <span>{settings.address}</span>
+        </div>
+      </div>
+      <div className={styles["ft-available"]}>
+        <span className={styles["ft-available-dot"]}/>
+        <span>Currently taking new projects</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 {/* WORDMARK */}
-
 <div className={styles["ft-wordmark-wrap"]}>
-<div className={styles["ft-wordmark"]}>
-G-DIGITAL INDIA
-</div>
+  <div className={styles["ft-wordmark"]}>G-DIGITAL INDIA</div>
 </div>
 
 {/* BOTTOM */}
-
 <div className={styles["ft-bottom"]}>
-
-<div className={styles["ft-bottom-inner"]}>
-
-<span className={styles["ft-copy"]}>
-© 2025 GDI Agency </span>
-
-<span className={styles["ft-bottom-mid"]}>
-Crafted in 🇮🇳 </span>
-
-<div className={styles["ft-bottom-links"]}>
-
-<a href="#" className={styles["ft-bottom-link"]}>
-Privacy </a>
-
-<span className={styles["ft-bottom-sep"]}>·</span>
-
-<a href="#" className={styles["ft-bottom-link"]}>
-Terms </a>
-
-<span className={styles["ft-bottom-sep"]}>·</span>
-
-<a href="#" className={styles["ft-bottom-link"]}>
-Sitemap </a>
-
-</div>
-
-</div>
-
+  <div className={styles["ft-bottom-inner"]}>
+    <span className={styles["ft-copy"]}>© {new Date().getFullYear()} G-Digital India.</span>
+    <span className={styles["ft-bottom-mid"]}>Made with ♥ in India</span>
+    <div className={styles["ft-bottom-links"]}>
+      <Link href="/" className={styles["ft-bottom-link"]}>Privacy</Link>
+      <span className={styles["ft-bottom-sep"]}>·</span>
+      <Link href="/" className={styles["ft-bottom-link"]}>Terms</Link>
+    </div>
+  </div>
 </div>
 
 </footer>

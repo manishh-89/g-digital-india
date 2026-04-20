@@ -1,6 +1,12 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import styles from "./Clients.module.css"
+
+interface Counter {
+  label: string
+  value: string
+}
 
 const clientLogos = [
   { name: "FreshCart", industry: "D2C / Grocery", icon: "🛒" },
@@ -25,6 +31,24 @@ const clientLogos2 = [
 ]
 
 export default function Clients() {
+  const [stats, setStats] = useState<Counter[]>([
+    { value: "150+", label: "Happy Clients" },
+    { value: "₹50Cr+", label: "Revenue Generated" },
+    { value: "12", label: "Industries Served" },
+    { value: "98%", label: "Retention Rate" }
+  ])
+
+  useEffect(() => {
+    fetch("/api/settings", { cache: 'no-store' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.counters && data.counters.length > 0) {
+          setStats(data.counters)
+        }
+      })
+      .catch(err => console.error("Failed to fetch client stats:", err))
+  }, [])
+
   return (
     <section className={styles.cl}>
 
@@ -55,14 +79,9 @@ export default function Clients() {
 
         {/* Stats */}
         <div className={styles["cl-stats"]}>
-          {[
-            { val: "150+", label: "Happy Clients" },
-            { val: "₹50Cr+", label: "Revenue Generated" },
-            { val: "12", label: "Industries Served" },
-            { val: "98%", label: "Retention Rate" },
-          ].map((s) => (
-            <div className={styles["cl-stat"]} key={s.label}>
-              <span className={styles["cl-stat-val"]}>{s.val}</span>
+          {stats.map((s, i) => (
+            <div className={styles["cl-stat"]} key={i}>
+              <span className={styles["cl-stat-val"]}>{s.value}</span>
               <span className={styles["cl-stat-lbl"]}>{s.label}</span>
             </div>
           ))}

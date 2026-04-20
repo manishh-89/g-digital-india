@@ -5,82 +5,75 @@ import Image from "next/image"
 import styles from "../components/Services/Services.module.css"
 import Link from "next/link"
 
-const services = [
-  {
-    id: "01",
-    title: "Search Engine Optimization",
-    short: "SEO",
-    desc: "Dominate Google rankings with technical SEO, content strategy, and link-building that drives compounding organic traffic — month after month.",
-    highlight: "Avg. 340% increase in organic traffic within 6 months",
-    tags: ["Technical SEO", "Link Building", "Content Clusters", "Core Web Vitals"],
-    img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop",
-    color: "#e8b86d",
-  },
-  {
-    id: "02",
-    title: "Paid Media & Performance Ads",
-    short: "PPC",
-    desc: "Google Ads, Meta, LinkedIn — we run hyper-targeted campaigns that convert.",
-    highlight: "Clients see 8x ROAS on average within 90 days",
-    tags: ["Google Ads", "Meta Ads", "Retargeting", "Conversion Tracking"],
-    img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&auto=format&fit=crop",
-    color: "#6d9fe8",
-  },
-  {
-    id: "03",
-    title: "Social Media Management",
-    short: "SMM",
-    desc: "We build communities, not just followers.",
-    highlight: "2M+ impressions generated for clients monthly",
-    tags: ["Instagram", "LinkedIn", "Reels & Shorts", "Community Growth"],
-    img: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=600&auto=format&fit=crop",
-    color: "#e86d9f",
-  },
-  {
-    id: "04",
-    title: "Content Marketing & Copywriting",
-    short: "COPY",
-    desc: "Words that sell. Blog posts, landing pages, email sequences.",
-    highlight: "65% higher engagement vs industry average",
-    tags: ["Blog Strategy", "Email Funnels", "Landing Pages", "Brand Voice"],
-    img: "https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=600&auto=format&fit=crop",
-    color: "#6de8b8",
-  },
-  {
-    id: "05",
-    title: "Web Design & CRO",
-    short: "WEB",
-    desc: "Beautiful websites that actually convert.",
-    highlight: "Average 220% boost in conversion rate post-redesign",
-    tags: ["UI/UX Design", "CRO", "Speed Optimisation", "A/B Testing"],
-    img: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&auto=format&fit=crop",
-    color: "#b86de8",
-  },
-  {
-    id: "06",
-    title: "Analytics & Growth Strategy",
-    short: "DATA",
-    desc: "Data is only powerful when you can read it.",
-    highlight: "Full-funnel visibility from Day 1",
-    tags: ["GA4 Setup", "Funnel Analysis", "Monthly Reports", "Growth Consulting"],
-    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop",
-    color: "#e8d06d",
-  },
-]
+// Color palette for services
+const colorPalette = ["#e8b86d", "#6d9fe8", "#e86d9f", "#6de8b8", "#b86de8", "#e8d06d"]
+
+interface Service {
+  _id?: string
+  id?: string
+  slug?: string
+  title: string
+  short: string
+  description?: string
+  desc?: string
+  highlight?: string
+  tags?: string[]
+  image?: string
+  img?: string
+  color?: string
+  order?: number
+}
 
 export default function Services() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
+  const [services, setServices] = useState<Service[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [active, setActive] = useState(0)
   const [animating, setAnimating] = useState(false)
 
+  // Fetch services from API
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await fetch("/api/services")
+        if (!res.ok) throw new Error("Failed to fetch services")
+        const data = await res.json()
+        
+        // Transform API data to match component expectations and add colors
+        const transformedData = data.map((service: any, index: number) => ({
+          _id: service._id,
+          id: String(index + 1).padStart(2, "0"),
+          title: service.title,
+          short: service.short,
+          desc: service.description || "",
+          highlight: service.highlight || "",
+          tags: service.tags || [],
+          img: service.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop",
+          color: colorPalette[index % colorPalette.length],
+        }))
+        
+        setServices(transformedData)
+        setLoading(false)
+      } catch (err) {
+        console.error("Error fetching services:", err)
+        setError("Failed to load services")
+        setLoading(false)
+      }
+    }
+
+    fetchServices()
+  }, [])
+
   const svc = services[active]
 
+  // Canvas animation effect
   useEffect(() => {
 
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || !svc) return
 
     const ctx = canvas.getContext("2d")
     if (!ctx) return
@@ -107,7 +100,7 @@ export default function Services() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      const accent = services[active]?.color || "#e8b86d"
+      const accent = svc?.color || "#e8b86d"
 
       particles.forEach((p) => {
 
@@ -174,84 +167,106 @@ export default function Services() {
           </div>
 
           <p className={styles["sv-header-desc"]}>
-            Six core services. One unified goal — to make your brand the most recognisable.
+            {loading ? "Loading services..." : `${services.length} services. One unified goal — to make your brand the most recognisable.`}
           </p>
 
         </div>
 
-        <div className={styles["sv-grid"]}>
+        {error && (
+          <div style={{ color: "red", padding: "20px", textAlign: "center" }}>
+            {error}
+          </div>
+        )}
 
-          <div className={styles["sv-list"]}>
+        {loading ? (
+          <div style={{ padding: "40px", textAlign: "center" }}>
+            <p>Loading services...</p>
+          </div>
+        ) : services.length === 0 ? (
+          <div style={{ padding: "40px", textAlign: "center" }}>
+            <p>No services available</p>
+          </div>
+        ) : (
+          <div className={styles["sv-grid"]}>
 
-            {services.map((s, i) => (
+            <div className={styles["sv-list"]}>
 
-              <button
-                key={s.id}
-                className={`${styles["sv-item"]} ${i === active ? styles["sv-item-active"] : ""}`}
-                onClick={() => handleSelect(i)}
-                style={{ "--svc-color": s.color } as React.CSSProperties}
+              {services.map((s, i) => (
+
+                <button
+                  key={s._id || i}
+                  className={`${styles["sv-item"]} ${i === active ? styles["sv-item-active"] : ""}`}
+                  onClick={() => handleSelect(i)}
+                  style={{ "--svc-color": s.color } as React.CSSProperties}
+                >
+
+                  <span className={styles["sv-item-num"]}>{s.id}</span>
+                  <span className={styles["sv-item-short"]}>{s.short}</span>
+                  <span className={styles["sv-item-name"]}>{s.title}</span>
+                  <span className={styles["sv-item-arrow"]}>→</span>
+
+                </button>
+
+              ))}
+
+            </div>
+
+            {svc && (
+              <div
+                className={`${styles["sv-detail"]} ${
+                  animating ? styles["sv-detail-out"] : styles["sv-detail-in"]
+                }`}
+                style={{ "--svc-color": svc.color } as React.CSSProperties}
               >
 
-                <span className={styles["sv-item-num"]}>{s.id}</span>
-                <span className={styles["sv-item-short"]}>{s.short}</span>
-                <span className={styles["sv-item-name"]}>{s.title}</span>
-                <span className={styles["sv-item-arrow"]}>→</span>
+                <div className={styles["sv-detail-img-wrap"]}>
 
-              </button>
+                  <Image
+                    src={svc.img || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop"}
+                    alt={svc.title}
+                    width={600}
+                    height={400}
+                    className={styles["sv-detail-img"]}
+                  />
 
-            ))}
+                </div>
+
+                <div className={styles["sv-detail-body"]}>
+
+                  <span className={styles["sv-detail-short"]}>{svc.short}</span>
+
+                  <h3 className={styles["sv-detail-title"]}>{svc.title}</h3>
+
+                  <p className={styles["sv-detail-desc"]}>{svc.desc}</p>
+
+                  {svc.highlight && (
+                    <div className={styles["sv-highlight"]}>
+                      <span className={styles["sv-highlight-bar"]} />
+                      <span className={styles["sv-highlight-text"]}>{svc.highlight}</span>
+                    </div>
+                  )}
+
+                  {svc.tags && svc.tags.length > 0 && (
+                    <div className={styles["sv-tags"]}>
+                      {svc.tags.map((t) => (
+                        <span key={t} className={styles["sv-tag"]}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <Link href={`/services/${svc.slug || svc._id}`} className={styles["sv-cta"]}>
+                    Get Started →
+                  </Link>
+
+                </div>
+
+              </div>
+            )}
 
           </div>
-
-          <div
-            className={`${styles["sv-detail"]} ${
-              animating ? styles["sv-detail-out"] : styles["sv-detail-in"]
-            }`}
-            style={{ "--svc-color": svc.color } as React.CSSProperties}
-          >
-
-            <div className={styles["sv-detail-img-wrap"]}>
-
-              <Image
-                src={svc.img}
-                alt={svc.title}
-                width={600}
-                height={400}
-                className={styles["sv-detail-img"]}
-              />
-
-            </div>
-
-            <div className={styles["sv-detail-body"]}>
-
-              <span className={styles["sv-detail-short"]}>{svc.short}</span>
-
-              <h3 className={styles["sv-detail-title"]}>{svc.title}</h3>
-
-              <p className={styles["sv-detail-desc"]}>{svc.desc}</p>
-
-              <div className={styles["sv-highlight"]}>
-                <span className={styles["sv-highlight-bar"]} />
-                  <span className={styles["sv-highlight-text"]}>{svc.highlight}</span>
-              </div>
-
-              <div className={styles["sv-tags"]}>
-                {svc.tags.map((t) => (
-                  <span key={t} className={styles["sv-tag"]}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              <Link href="/service-detail" className={styles["sv-cta"]}>
-                Get Started →
-              </Link>
-
-            </div>
-
-          </div>
-
-        </div>
+        )}
 
       </div>
 
