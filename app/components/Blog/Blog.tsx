@@ -109,7 +109,7 @@ export default function BlogSection() {
 
         {/* Featured post */}
         {featured && (
-            <Link href={`/blog/${featured.slug}`} className={styles["bl-featured"]}>
+            <Link href={`/blogs/${featured.slug}`} className={styles["bl-featured"]}>
             <div className={styles["bl-feat-img-wrap"]}>
                 <Image
                 src={featured.image}
@@ -147,7 +147,7 @@ export default function BlogSection() {
         {/* Grid */}
         <div className={styles["bl-grid-posts"]}>
           {rest.map((post, i) => (
-            <Link href={`/blog/${post.slug}`} key={post.slug} className={styles["bl-card"]}>
+            <Link href={`/blogs/${post.slug}`} key={post.slug} className={styles["bl-card"]}>
               <div className={styles["bl-card-img-wrap"]}>
                 <Image
                   src={post.image}
@@ -178,7 +178,7 @@ export default function BlogSection() {
 
         {/* CTA Button */}
         <div className={styles["bl-cta-wrap"]}>
-          <Link href="/blog" className={styles["bl-btn"]}>
+          <Link href="/blogs" className={styles["bl-btn"]}>
             View All Articles →
           </Link>
         </div>

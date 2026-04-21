@@ -38,6 +38,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div style={{ display: 'flex', gap: '8px', fontSize: '13px', color: '#888', marginBottom: '30px', textTransform: 'uppercase', letterSpacing: '1px' }}>
           <Link href="/" style={{ color: '#aaa', textDecoration: 'none' }}>Home</Link>
           <span>/</span>
+          <Link href="/blogs" style={{ color: '#aaa', textDecoration: 'none' }}>Blogs</Link>
+          <span>/</span>
           <span style={{ color: '#fff' }}>{blog.category}</span>
         </div>
 
