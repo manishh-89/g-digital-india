@@ -35,15 +35,48 @@ export default function AdminSlider() {
   const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return
     setUploading(true)
-    const fd = new FormData(); fd.append('file', file); fd.append('folder', 'sliders')
+    
     try {
-      const res = await fetch('/api/upload', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error('Upload failed')
-      const { url } = await res.json()
-      // very basic check if video
-      const isVideo = file.type.startsWith('video/') || url.match(/\.(mp4|webm|ogg)$/i) !== null
+      // 1. Get signature from our API
+      const timestamp = Math.round(new Date().getTime() / 1000)
+      const folder = 'gdi/sliders'
+      const paramsToSign = { timestamp, folder }
+      
+      const sigRes = await fetch('/api/cloudinary/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paramsToSign })
+      })
+      const { signature } = await sigRes.json()
+
+      // 2. Upload directly to Cloudinary
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('api_key', '129112652416313') // Aapka API Key
+      fd.append('timestamp', timestamp.toString())
+      fd.append('signature', signature)
+      fd.append('folder', folder)
+      
+      const cloudName = 'dpbb27rz4' // Aapka Cloud Name
+      const resourceType = file.type.startsWith('video/') ? 'video' : 'image'
+      
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
+        method: 'POST',
+        body: fd
+      })
+
+      if (!res.ok) {
+        const errData = await res.json()
+        throw new Error(errData.error?.message || 'Upload failed')
+      }
+      
+      const { secure_url: url } = await res.json()
+      const isVideo = resourceType === 'video'
       setFormData((p: any) => ({ ...p, mediaUrl: url, isVideo }))
-    } catch (err) { alert('Upload failed') }
+    } catch (err: any) {
+      console.error(err)
+      alert(err.message || 'Upload failed')
+    }
     setUploading(false)
   }
 
