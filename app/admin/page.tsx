@@ -12,14 +12,21 @@ export default async function AdminDashboard() {
 
   // Fetch all counts concurrently with fallback for DB disconnect
   let counts = [0, 0, 0, 0, 0];
+  let recentEnquiries: any[] = [];
+
   try {
-    counts = await Promise.all([
-      Project.countDocuments().catch(() => 0),
-      Gallery.countDocuments().catch(() => 0),
-      Testimonial.countDocuments().catch(() => 0),
-      Enquiry.countDocuments().catch(() => 0),
-      Service.countDocuments().catch(() => 0)
+    const [c, re] = await Promise.all([
+      Promise.all([
+        Project.countDocuments().catch(() => 0),
+        Gallery.countDocuments().catch(() => 0),
+        Testimonial.countDocuments().catch(() => 0),
+        Enquiry.countDocuments().catch(() => 0),
+        Service.countDocuments().catch(() => 0)
+      ]),
+      Enquiry.find().sort({ createdAt: -1 }).limit(5).catch(() => [])
     ]);
+    counts = c;
+    recentEnquiries = re;
   } catch (err: any) {
     console.warn("⚠️ Dashboard data fetch failed:", err.message);
   }
@@ -79,17 +86,36 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Recent Activity placeholder */}
+      {/* Recent Enquiries */}
       <div className="admin-card">
         <div className="admin-card-header">
-          <h2 className="admin-card-title">📋 Recent Activity</h2>
-          <span className="admin-badge info">Coming Soon</span>
+          <h2 className="admin-card-title">📋 Recent Enquiries</h2>
+          <a href="/admin/enquiries" className="admin-badge info" style={{ textDecoration: 'none' }}>View All</a>
         </div>
-        <div className="admin-empty">
-          <div className="admin-empty-icon">📭</div>
-          <p className="admin-empty-text">No recent activity yet</p>
-          <p className="admin-empty-sub">Start by adding projects or uploading gallery images.</p>
-        </div>
+        
+        {recentEnquiries.length === 0 ? (
+          <div className="admin-empty">
+            <div className="admin-empty-icon">📭</div>
+            <p className="admin-empty-text">No enquiries yet</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {recentEnquiries.map((enq) => (
+              <div key={enq._id} style={{ padding: '15px 0', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p style={{ fontWeight: 600, margin: 0, fontSize: 14 }}>{enq.name}</p>
+                  <p style={{ color: '#64748b', margin: 0, fontSize: 12 }}>{enq.email} • {enq.service || 'General Enquiry'}</p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ margin: 0, fontSize: 11, color: '#94a3b8' }}>
+                    {new Date(enq.createdAt).toLocaleDateString()}
+                  </p>
+                  <a href="/admin/enquiries" style={{ fontSize: 12, color: 'var(--admin-primary)', textDecoration: 'none' }}>View →</a>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
