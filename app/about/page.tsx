@@ -115,6 +115,20 @@ const defaultServices = [
   "SMO Services", "WhatsApp Marketing", "Email Marketing", "Performance Marketing",
 ];
 
+const defaultValues = [
+  { icon: "🤝", title: "Integrity", desc: "We maintain 100% transparency with our clients." },
+  { icon: "💡", title: "Innovation", desc: "Always staying ahead with the latest digital trends." },
+  { icon: "🎯", title: "Results", desc: "We focus on measurable growth and ROI." },
+];
+
+const defaultIndustries = [
+  { name: "Real Estate", emoji: "🏢" },
+  { name: "Education", emoji: "🎓" },
+  { name: "Healthcare", emoji: "🏥" },
+  { name: "E-Commerce", emoji: "🛒" },
+  { name: "Technology", emoji: "💻" },
+];
+
 
 
 /* ─── Stat Card with CountUp ─────────────────────────────── */
