@@ -25,6 +25,7 @@ const SiteSettingsSchema = new mongoose.Schema({
     linkedin:  { type: String, default: '' },
     twitter:   { type: String, default: '' },
     youtube:   { type: String, default: '' },
+    whatsapp:  { type: String, default: '' },
   },
   updatedAt: { type: Date, default: Date.now },
 }, { 

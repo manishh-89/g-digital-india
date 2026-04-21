@@ -19,13 +19,14 @@ interface Settings {
     linkedin: string
     twitter: string
     youtube: string
+    whatsapp: string
   }
 }
 
 const defaultSettings: Settings = {
   phones: [], emails: [], address: '', counters: [],
   socials: {
-    facebook: '', instagram: '', linkedin: '', twitter: '', youtube: ''
+    facebook: '', instagram: '', linkedin: '', twitter: '', youtube: '', whatsapp: ''
   }
 }
 
@@ -181,7 +182,7 @@ export default function AdminSettings() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            {Object.keys(settings.socials).map((platform) => (
+            {Object.keys(settings.socials).filter(p => p !== 'whatsapp').map((platform) => (
               <div className="admin-form-group" key={platform} style={{ margin: 0 }}>
                 <label className="admin-label" style={{ textTransform: 'capitalize' }}>{platform} URL</label>
                 <input className="admin-input" placeholder={`https://${platform}.com/...`}
@@ -189,6 +190,12 @@ export default function AdminSettings() {
                   onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, [platform]: e.target.value } }))} />
               </div>
             ))}
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">WhatsApp Number (with country code)</label>
+              <input className="admin-input" placeholder="e.g. 919876543210"
+                value={settings.socials?.whatsapp}
+                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, whatsapp: e.target.value } }))} />
+            </div>
           </div>
         </div>
 

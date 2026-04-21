@@ -2,6 +2,7 @@
 
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
+import FloatingActions from "./components/FloatingActions/FloatingActions";
 import "./globals.css"
 import { usePathname } from "next/navigation";
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {!isAdmin && <Navbar />}
         {children}
+        {!isAdmin && <FloatingActions />}
         {!isAdmin && <Footer />}
       </body>
     </html>
