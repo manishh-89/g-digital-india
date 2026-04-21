@@ -7,6 +7,7 @@ import Clients from "./components/Clients/Clients";
 import Testimonials from "./components/Testimonials/Testimonials";
 import Gallery from "./components/Gallery/Gallery";
 import BlogSection from "./components/Blog/Blog";
+import Reels from "./components/Reels/Reels";
 
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
       <Gallery />
       <Clients />
       <BlogSection/>
+      <Reels />
       <Testimonials />
 
     </>

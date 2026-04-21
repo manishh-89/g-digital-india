@@ -1,0 +1,105 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
+interface ReelItem {
+  _id: string
+  url: string
+  caption: string
+  order: number
+}
+
+export default function AdminReels() {
+  const [reels, setReels] = useState<ReelItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [url, setUrl] = useState('')
+  const [caption, setCaption] = useState('')
+
+  useEffect(() => { fetchReels() }, [])
+
+  const fetchReels = async () => {
+    try {
+      const res = await fetch('/api/reels')
+      if (res.ok) setReels(await res.json())
+    } catch (e) { console.error(e) }
+    finally { setLoading(false) }
+  }
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!url.trim()) return
+    setSaving(true)
+    try {
+      const res = await fetch('/api/reels', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, caption })
+      })
+      if (res.ok) {
+        setUrl('')
+        setCaption('')
+        fetchReels()
+      }
+    } catch (e) { alert('Failed to add reel') }
+    finally { setSaving(false) }
+  }
+
+  const deleteReel = async (id: string) => {
+    if (!confirm('Delete this reel?')) return
+    const res = await fetch(`/api/reels?id=${id}`, { method: 'DELETE' })
+    if (res.ok) fetchReels()
+  }
+
+  if (loading) return <div className="admin-empty" style={{ marginTop: 80 }}><p>Loading reels...</p></div>
+
+  return (
+    <div>
+      <div className="admin-page-header">
+        <h1 className="admin-page-title">📱 Instagram Reels</h1>
+        <p className="admin-page-subtitle">Manage your Instagram Reels section</p>
+      </div>
+
+      <div className="admin-card" style={{ maxWidth: 600 }}>
+        <h2 className="admin-card-title">➕ Add New Reel</h2>
+        <form onSubmit={handleAdd} style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 20 }}>
+          <div className="admin-form-group">
+            <label className="admin-label">Instagram Reel URL *</label>
+            <input 
+              className="admin-input" 
+              placeholder="e.g. https://www.instagram.com/reels/CzCH..." 
+              required
+              value={url}
+              onChange={e => setUrl(e.target.value)}
+            />
+          </div>
+          <div className="admin-form-group">
+            <label className="admin-label">Caption / Display Title (optional)</label>
+            <input 
+              className="admin-input" 
+              placeholder="e.g. Tips for Digital Growth"
+              value={caption}
+              onChange={e => setCaption(e.target.value)}
+            />
+          </div>
+          <button type="submit" disabled={saving} className="admin-btn-primary" style={{ width: 'max-content', padding: '10px 24px' }}>
+            {saving ? '⏳ Adding...' : '✅ Add Reel'}
+          </button>
+        </form>
+      </div>
+
+      <div style={{ marginTop: 30, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+        {reels.map(r => (
+          <div key={r._id} className="admin-card" style={{ padding: 15 }}>
+            <div style={{ height: 400, background: '#f1f5f9', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: 12 }}>
+               <img src={`https://images.weserv.nl/?url=https://www.instagram.com/reels/info/?url=${encodeURIComponent(r.url)}&errorredirect=https://placehold.co/400x600?text=Insta+Reel`} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <p style={{ fontWeight: 600, fontSize: 14, margin: '0 0 4px 0' }}>{r.caption || 'No caption'}</p>
+            <a href={r.url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: 'var(--admin-primary)', wordBreak: 'break-all' }}>{r.url}</a>
+            <button onClick={() => deleteReel(r._id)} className="admin-btn-danger" style={{ width: '100%', marginTop: 15, fontSize: 12, padding: '8px' }}>🗑️ Delete</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
