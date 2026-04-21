@@ -6,6 +6,7 @@ import styles from "./About.module.css"
 
 export default function AboutSection() {
   const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   
   useEffect(() => {
     const fetchAbout = async () => {
@@ -13,16 +14,21 @@ export default function AboutSection() {
         const res = await fetch('/api/about')
         if (res.ok) {
           const fetchedData = await res.json()
-          if(Object.keys(fetchedData).length > 0) {
+          if(fetchedData && Object.keys(fetchedData).length > 0 && fetchedData.titleHTML) {
             setData(fetchedData)
           }
         }
       } catch (err) {
         console.error("Failed to fetch about data:", err)
+      } finally {
+        setLoading(false)
       }
     }
     fetchAbout()
   }, [])
+
+  if (loading) return null;
+  if (!data) return null; // Hide section if no data configured
 
   const defaultValues = [
     { icon: "◎", title: "Strategy First", desc: "Every campaign starts with deep research & a custom growth blueprint." },
@@ -37,20 +43,7 @@ export default function AboutSection() {
     "Web Design","·","Email Funnels","·","Analytics","·","Brand Identity","·"
   ]
 
-  const content = data || {
-    eyebrow: "Who We Are",
-    titleHTML: "Your Brand Deserves<br />More Than <em>Clicks.</em>",
-    tagline: "We build digital ecosystems that convert attention into revenue.",
-    imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800",
-    bgImageUrl: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800",
-    badgeNum: "7+",
-    badgeText: "Years of <br/> Excellence",
-    para1: "We are not a typical agency. We are a <strong>growth partner</strong> — obsessed with data, driven by creativity, and relentless in our pursuit of results that actually move the needle.",
-    para2: "From startups finding their voice to enterprises scaling globally, we craft strategies that are bold, intentional, and built to last.",
-    btnText: "Discover Our Story →",
-    btnLink: "/about",
-    values: defaultValues
-  }
+  const content = data;
 
   const createMarkup = (htmlStr: string) => {
     return { __html: htmlStr || "" };
