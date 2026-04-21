@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import Link from "next/link";
+import { useEnquiry } from "../../context/EnquiryContext";
 import styles from "./slider.module.css";
 
 interface SliderData {
@@ -43,6 +45,8 @@ export default function Slider() {
       videoRef.current.play().catch(() => {});
     }
   }, [sliderData]);
+
+  const { openModal } = useEnquiry();
 
   // Fallback defaults if DB is empty so the frontend doesn't break
   const displayData = sliderData || {
@@ -93,8 +97,10 @@ export default function Slider() {
           </p>
 
           <div className={styles["sl-btns"]}>
-            <button className={styles["sl-btn-primary"]}>Our Work</button>
-            <button className={styles["sl-btn-secondary"]}>Contact Us</button>
+            <Link href="/projects" style={{ textDecoration: 'none' }}>
+              <button className={styles["sl-btn-primary"]}>Our Work</button>
+            </Link>
+            <button className={styles["sl-btn-secondary"]} onClick={openModal}>Contact Us</button>
           </div>
         </div>
 
