@@ -6,7 +6,6 @@ import styles from "./Reels.module.css"
 interface ReelItem {
   _id: string
   url: string
-  caption: string
 }
 
 export default function Reels() {
@@ -70,7 +69,6 @@ export default function Reels() {
                     frameBorder="0"
                   ></iframe>
                 </div>
-                {reel.caption && <div className={styles.caption}>{reel.caption}</div>}
               </div>
             ))}
           </div>

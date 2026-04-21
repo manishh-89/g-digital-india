@@ -14,7 +14,6 @@ export default function AdminReels() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [url, setUrl] = useState('')
-  const [caption, setCaption] = useState('')
 
   useEffect(() => { fetchReels() }, [])
 
@@ -34,11 +33,10 @@ export default function AdminReels() {
       const res = await fetch('/api/reels', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, caption })
+        body: JSON.stringify({ url })
       })
       if (res.ok) {
         setUrl('')
-        setCaption('')
         fetchReels()
       }
     } catch (e) { alert('Failed to add reel') }
@@ -73,15 +71,6 @@ export default function AdminReels() {
               onChange={e => setUrl(e.target.value)}
             />
           </div>
-          <div className="admin-form-group">
-            <label className="admin-label">Caption / Display Title (optional)</label>
-            <input 
-              className="admin-input" 
-              placeholder="e.g. Tips for Digital Growth"
-              value={caption}
-              onChange={e => setCaption(e.target.value)}
-            />
-          </div>
           <button type="submit" disabled={saving} className="admin-btn-primary" style={{ width: 'max-content', padding: '10px 24px' }}>
             {saving ? '⏳ Adding...' : '✅ Add Reel'}
           </button>
@@ -94,7 +83,6 @@ export default function AdminReels() {
             <div style={{ height: 400, background: '#f1f5f9', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: 12 }}>
                <img src={`https://images.weserv.nl/?url=https://www.instagram.com/reels/info/?url=${encodeURIComponent(r.url)}&errorredirect=https://placehold.co/400x600?text=Insta+Reel`} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
-            <p style={{ fontWeight: 600, fontSize: 14, margin: '0 0 4px 0' }}>{r.caption || 'No caption'}</p>
             <a href={r.url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: 'var(--admin-primary)', wordBreak: 'break-all' }}>{r.url}</a>
             <button onClick={() => deleteReel(r._id)} className="admin-btn-danger" style={{ width: '100%', marginTop: 15, fontSize: 12, padding: '8px' }}>🗑️ Delete</button>
           </div>
