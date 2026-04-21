@@ -20,6 +20,13 @@ const SiteSettingsSchema = new mongoose.Schema({
       { label: 'Team Members',       value: '50+',  icon: '👥' },
     ]
   },
+  socials: {
+    facebook:  { type: String, default: '' },
+    instagram: { type: String, default: '' },
+    linkedin:  { type: String, default: '' },
+    twitter:   { type: String, default: '' },
+    youtube:   { type: String, default: '' },
+  },
   updatedAt: { type: Date, default: Date.now },
 }, { 
   timestamps: true,

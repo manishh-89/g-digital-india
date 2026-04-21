@@ -38,10 +38,17 @@ export default function Footer(){
 
 const [email,setEmail] = useState("")
 const [submitted,setSubmitted] = useState(false)
-const [settings, setSettings] = useState({
+const [settings, setSettings] = useState<any>({
   phone: "+91 98765 43210",
   email: "hello@gdigitalindia.com",
-  address: "Jaipur, Rajasthan, India"
+  address: "Jaipur, Rajasthan, India",
+  socials: {
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    twitter: "",
+    youtube: ""
+  }
 })
 
 useEffect(() => {
@@ -51,11 +58,20 @@ useEffect(() => {
       if (data) setSettings({
         phone: data.phone || settings.phone,
         email: data.email || settings.email,
-        address: data.address || settings.address
+        address: data.address || settings.address,
+        socials: data.socials || settings.socials
       })
     })
     .catch(err => console.error("Footer settings fetch error:", err))
 }, [])
+
+const dynamicSocials = [
+  { label: "FB", name: "Facebook", href: settings.socials?.facebook },
+  { label: "IG", name: "Instagram", href: settings.socials?.instagram },
+  { label: "LI", name: "LinkedIn", href: settings.socials?.linkedin },
+  { label: "TW", name: "Twitter", href: settings.socials?.twitter },
+  { label: "YT", name: "YouTube", href: settings.socials?.youtube }
+].filter(s => s.href); // Only show links that have a URL
 
 const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault()
@@ -132,7 +148,7 @@ return(
         digital marketing and premium design.
       </p>
       <div className={styles["ft-socials"]}>
-        {socials.map((s)=>(
+        {dynamicSocials.map((s)=>(
           <a key={s.name} href={s.href} className={styles["ft-social"]} target="_blank" rel="noopener noreferrer">
             <span className={styles["ft-social-label"]}>{s.label} </span>
             <span className={styles["ft-social-name"]}>{s.name} </span>

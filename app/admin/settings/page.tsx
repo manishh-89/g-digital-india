@@ -14,10 +14,20 @@ interface Settings {
   email: string
   address: string
   counters: Counter[]
+  socials: {
+    facebook: string
+    instagram: string
+    linkedin: string
+    twitter: string
+    youtube: string
+  }
 }
 
 const defaultSettings: Settings = {
-  phone: '', phone2: '', email: '', address: '', counters: []
+  phone: '', phone2: '', email: '', address: '', counters: [],
+  socials: {
+    facebook: '', instagram: '', linkedin: '', twitter: '', youtube: ''
+  }
 }
 
 export default function AdminSettings() {
@@ -202,6 +212,47 @@ export default function AdminSettings() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* ── Social Media Links ── */}
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <h2 className="admin-card-title">🌐 Social Media Links</h2>
+            <span className="admin-badge primary">Links for footer/header</span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Instagram URL</label>
+              <input className="admin-input" placeholder="https://instagram.com/..."
+                value={settings.socials?.instagram}
+                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, instagram: e.target.value } }))} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">LinkedIn URL</label>
+              <input className="admin-input" placeholder="https://linkedin.com/company/..."
+                value={settings.socials?.linkedin}
+                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, linkedin: e.target.value } }))} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Facebook URL</label>
+              <input className="admin-input" placeholder="https://facebook.com/..."
+                value={settings.socials?.facebook}
+                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, facebook: e.target.value } }))} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Twitter / X URL</label>
+              <input className="admin-input" placeholder="https://twitter.com/..."
+                value={settings.socials?.twitter}
+                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, twitter: e.target.value } }))} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">YouTube URL</label>
+              <input className="admin-input" placeholder="https://youtube.com/@..."
+                value={settings.socials?.youtube}
+                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, youtube: e.target.value } }))} />
+            </div>
+          </div>
         </div>
 
         {/* Save button */}
