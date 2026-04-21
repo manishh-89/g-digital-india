@@ -39,8 +39,8 @@ export default function Footer(){
 const [email,setEmail] = useState("")
 const [submitted,setSubmitted] = useState(false)
 const [settings, setSettings] = useState<any>({
-  phone: "+91 98765 43210",
-  email: "hello@gdigitalindia.com",
+  phones: ["+91 98765 43210"],
+  emails: ["hello@gdigitalindia.com"],
   address: "Jaipur, Rajasthan, India",
   socials: {
     facebook: "",
@@ -56,8 +56,8 @@ useEffect(() => {
     .then(res => res.json())
     .then(data => {
       if (data) setSettings({
-        phone: data.phone || settings.phone,
-        email: data.email || settings.email,
+        phones: data.phones || [data.phone].filter(Boolean),
+        emails: data.emails || [data.email].filter(Boolean),
         address: data.address || settings.address,
         socials: data.socials || settings.socials
       })
@@ -194,12 +194,18 @@ return(
     <div className={styles["ft-contact-col"]}>
       <h4 className={styles["ft-nav-heading"]}>Reach Us</h4>
       <div className={styles["ft-contact-list"]}>
-        <a href={`mailto:${settings.email}`} className={styles["ft-contact-item"]}>
-          <span className={styles["ft-contact-icon"]}>✉</span> <span>{settings.email}</span> 
-        </a>
-        <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className={styles["ft-contact-item"]}>
-          <span className={styles["ft-contact-icon"]}>✆</span> <span>{settings.phone}</span> 
-        </a>
+        {/* MULTIPLE EMAILS */}
+        {(settings.emails || []).map((email: string, idx: number) => (
+          <a key={idx} href={`mailto:${email}`} className={styles["ft-contact-item"]}>
+            <span className={styles["ft-contact-icon"]}>✉</span> <span>{email}</span> 
+          </a>
+        ))}
+        {/* MULTIPLE PHONES */}
+        {(settings.phones || []).map((phone: string, idx: number) => (
+          <a key={idx} href={`tel:${phone.replace(/\s/g, "")}`} className={styles["ft-contact-item"]}>
+            <span className={styles["ft-contact-icon"]}>✆</span> <span>{phone}</span> 
+          </a>
+        ))}
         <div className={styles["ft-contact-item"]}>
           <span className={styles["ft-contact-icon"]}>◎</span>
           <span>{settings.address}</span>

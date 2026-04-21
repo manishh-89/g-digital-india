@@ -9,9 +9,8 @@ interface Counter {
 }
 
 interface Settings {
-  phone: string
-  phone2: string
-  email: string
+  phones: string[]
+  emails: string[]
   address: string
   counters: Counter[]
   socials: {
@@ -24,7 +23,7 @@ interface Settings {
 }
 
 const defaultSettings: Settings = {
-  phone: '', phone2: '', email: '', address: '', counters: [],
+  phones: [], emails: [], address: '', counters: [],
   socials: {
     facebook: '', instagram: '', linkedin: '', twitter: '', youtube: ''
   }
@@ -41,7 +40,17 @@ export default function AdminSettings() {
   const fetchSettings = async () => {
     try {
       const res = await fetch('/api/settings', { cache: 'no-store' })
-      if (res.ok) setSettings(await res.json())
+      if (res.ok) {
+        const data = await res.json()
+        setSettings({
+          ...defaultSettings,
+          ...data,
+          // Handle old structure migration if any
+          phones: data.phones || (data.phone ? [data.phone, data.phone2].filter(Boolean) : []),
+          emails: data.emails || (data.email ? [data.email] : []),
+          socials: data.socials || defaultSettings.socials
+        })
+      }
     } catch (e) { console.error(e) }
     finally { setLoading(false) }
   }
@@ -63,15 +72,27 @@ export default function AdminSettings() {
     finally { setSaving(false) }
   }
 
+  // Dynamic Array Helpers
+  const addItem = (field: 'phones' | 'emails') => {
+    setSettings(s => ({ ...s, [field]: [...s[field], ''] }))
+  }
+  const removeItem = (field: 'phones' | 'emails', i: number) => {
+    setSettings(s => ({ ...s, [field]: s[field].filter((_, idx) => idx !== i) }))
+  }
+  const updateItem = (field: 'phones' | 'emails', i: number, val: string) => {
+    setSettings(s => ({
+      ...s,
+      [field]: s[field].map((v, idx) => idx === i ? val : v)
+    }))
+  }
+
   // Counter helpers
   const addCounter = () => {
     setSettings(s => ({ ...s, counters: [...s.counters, { label: '', value: '', icon: '🏆' }] }))
   }
-
   const removeCounter = (i: number) => {
     setSettings(s => ({ ...s, counters: s.counters.filter((_, idx) => idx !== i) }))
   }
-
   const updateCounter = (i: number, field: keyof Counter, val: string) => {
     setSettings(s => ({
       ...s,
@@ -88,11 +109,10 @@ export default function AdminSettings() {
 
   return (
     <div>
-      {/* Page header */}
       <div className="admin-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h1 className="admin-page-title">⚙️ Global Settings</h1>
-          <p className="admin-page-subtitle">Manage site-wide information — contact details and homepage counters</p>
+          <p className="admin-page-subtitle">Manage site-wide information — contact, socials, and counters</p>
         </div>
         {saved && (
           <div className="admin-badge success" style={{ fontSize: 13, padding: '8px 16px', animation: 'fadeIn 0.3s ease' }}>
@@ -104,38 +124,71 @@ export default function AdminSettings() {
       <form onSubmit={handleSave}>
         {/* ── Contact Information ── */}
         <div className="admin-card">
-          <div className="admin-card-header">
-            <h2 className="admin-card-title">📞 Contact Information</h2>
-            <span className="admin-badge info">Shown on website</span>
+          <div className="admin-card-header" style={{ marginBottom: 20 }}>
+            <h2 className="admin-card-title">📞 Contact Details</h2>
+            <span className="admin-badge info">Multiple supported</span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">Primary Phone Number</label>
-              <input className="admin-input" placeholder="+91 98765 43210"
-                value={settings.phone}
-                onChange={e => setSettings(s => ({ ...s, phone: e.target.value }))} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 30 }}>
+            {/* PHONES */}
+            <div>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                 <label className="admin-label" style={{ margin: 0 }}>Phone Numbers</label>
+                 <button type="button" onClick={() => addItem('phones')} className="admin-btn-secondary" style={{ fontSize: 11, padding: '4px 8px' }}>+ Add Phone</button>
+               </div>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                 {settings.phones.map((p, i) => (
+                   <div key={i} style={{ display: 'flex', gap: 8 }}>
+                     <input className="admin-input" placeholder="+91 98765 43210" value={p} onChange={e => updateItem('phones', i, e.target.value)} />
+                     <button type="button" onClick={() => removeItem('phones', i)} className="admin-btn-danger" style={{ padding: '8px 12px' }}>🗑️</button>
+                   </div>
+                 ))}
+                 {settings.phones.length === 0 && <p style={{ fontSize: 12, color: '#666' }}>No phone numbers added</p>}
+               </div>
             </div>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">Secondary Phone (optional)</label>
-              <input className="admin-input" placeholder="+91 87654 32109"
-                value={settings.phone2}
-                onChange={e => setSettings(s => ({ ...s, phone2: e.target.value }))} />
+
+            {/* EMAILS */}
+            <div>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                 <label className="admin-label" style={{ margin: 0 }}>Email Addresses</label>
+                 <button type="button" onClick={() => addItem('emails')} className="admin-btn-secondary" style={{ fontSize: 11, padding: '4px 8px' }}>+ Add Email</button>
+               </div>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                 {settings.emails.map((m, i) => (
+                   <div key={i} style={{ display: 'flex', gap: 8 }}>
+                     <input className="admin-input" type="email" placeholder="info@company.com" value={m} onChange={e => updateItem('emails', i, e.target.value)} />
+                     <button type="button" onClick={() => removeItem('emails', i)} className="admin-btn-danger" style={{ padding: '8px 12px' }}>🗑️</button>
+                   </div>
+                 ))}
+                 {settings.emails.length === 0 && <p style={{ fontSize: 12, color: '#666' }}>No email addresses added</p>}
+               </div>
             </div>
           </div>
 
-          <div className="admin-form-group" style={{ marginTop: 16 }}>
-            <label className="admin-label">Email Address</label>
-            <input className="admin-input" type="email" placeholder="info@yoursite.com"
-              value={settings.email}
-              onChange={e => setSettings(s => ({ ...s, email: e.target.value }))} />
-          </div>
-
-          <div className="admin-form-group">
+          <div className="admin-form-group" style={{ marginTop: 24 }}>
             <label className="admin-label">Office Address</label>
-            <textarea className="admin-textarea" rows={2} placeholder="123, MG Road, New Delhi - 110001"
+            <textarea className="admin-textarea" rows={2} placeholder="123, MG Road, New Delhi..."
               value={settings.address}
               onChange={e => setSettings(s => ({ ...s, address: e.target.value }))} />
+          </div>
+        </div>
+
+        {/* ── Social Media Links ── */}
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <h2 className="admin-card-title">🌐 Social Media Links</h2>
+            <span className="admin-badge primary">Dynamic Links</span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            {Object.keys(settings.socials).map((platform) => (
+              <div className="admin-form-group" key={platform} style={{ margin: 0 }}>
+                <label className="admin-label" style={{ textTransform: 'capitalize' }}>{platform} URL</label>
+                <input className="admin-input" placeholder={`https://${platform}.com/...`}
+                  value={(settings.socials as any)[platform]}
+                  onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, [platform]: e.target.value } }))} />
+              </div>
+            ))}
           </div>
         </div>
 
@@ -148,117 +201,29 @@ export default function AdminSettings() {
               ➕ Add Counter
             </button>
           </div>
-
-          <p style={{ fontSize: 13, color: 'var(--admin-text-secondary)', marginBottom: 18 }}>
-            These stats/numbers appear on your homepage (e.g. Happy Clients, Projects Completed).
-          </p>
-
-          {settings.counters.length === 0 ? (
-            <div className="admin-empty" style={{ padding: '32px 0' }}>
-              <div className="admin-empty-icon">📊</div>
-              <p className="admin-empty-text">No counters yet</p>
-              <p className="admin-empty-sub">Click "Add Counter" to add homepage stats</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {settings.counters.map((counter, i) => (
-                <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1fr auto', gap: 12,
-                  alignItems: 'end', padding: '14px 16px', background: 'var(--admin-body-bg)',
-                  borderRadius: 10, border: '1px solid var(--admin-border)' }}>
-                  <div>
-                    <label className="admin-label" style={{ fontSize: 11 }}>Icon (emoji)</label>
-                    <input className="admin-input" placeholder="🏆" maxLength={4}
-                      value={counter.icon}
-                      onChange={e => updateCounter(i, 'icon', e.target.value)}
-                      style={{ padding: '8px 10px', fontSize: 20, textAlign: 'center' }} />
-                  </div>
-                  <div>
-                    <label className="admin-label" style={{ fontSize: 11 }}>Label</label>
-                    <input className="admin-input" required placeholder="Happy Clients"
-                      value={counter.label}
-                      onChange={e => updateCounter(i, 'label', e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="admin-label" style={{ fontSize: 11 }}>Value</label>
-                    <input className="admin-input" required placeholder="500+"
-                      value={counter.value}
-                      onChange={e => updateCounter(i, 'value', e.target.value)} />
-                  </div>
-                  <button type="button" onClick={() => removeCounter(i)} className="admin-btn-danger"
-                    style={{ marginBottom: 0, padding: '10px 12px' }}>
-                    🗑️
-                  </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
+            {settings.counters.map((counter, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1fr auto', gap: 12, alignItems: 'end', padding: '14px 16px', background: 'var(--admin-body-bg)', borderRadius: 10, border: '1px solid var(--admin-border)' }}>
+                <div>
+                  <label className="admin-label" style={{ fontSize: 11 }}>Icon</label>
+                  <input className="admin-input" value={counter.icon} onChange={e => updateCounter(i, 'icon', e.target.value)} style={{ fontSize: 20, textAlign: 'center' }} />
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* Preview */}
-          {settings.counters.length > 0 && (
-            <div style={{ marginTop: 20, padding: '16px', background: '#f8fafc', borderRadius: 10,
-              border: '1px dashed var(--admin-border)' }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--admin-text-secondary)',
-                textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 14 }}>
-                📱 Preview
-              </p>
-              <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-                {settings.counters.map((c, i) => (
-                  <div key={i} style={{ textAlign: 'center', minWidth: 100 }}>
-                    <div style={{ fontSize: 28 }}>{c.icon}</div>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--admin-primary)' }}>{c.value || '??'}</div>
-                    <div style={{ fontSize: 12, color: 'var(--admin-text-secondary)' }}>{c.label || 'Label'}</div>
-                  </div>
-                ))}
+                <div>
+                  <label className="admin-label" style={{ fontSize: 11 }}>Label</label>
+                  <input className="admin-input" value={counter.label} onChange={e => updateCounter(i, 'label', e.target.value)} />
+                </div>
+                <div>
+                  <label className="admin-label" style={{ fontSize: 11 }}>Value</label>
+                  <input className="admin-input" value={counter.value} onChange={e => updateCounter(i, 'value', e.target.value)} />
+                </div>
+                <button type="button" onClick={() => removeCounter(i)} className="admin-btn-danger" style={{ padding: '10px 12px' }}>🗑️</button>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* ── Social Media Links ── */}
-        <div className="admin-card">
-          <div className="admin-card-header">
-            <h2 className="admin-card-title">🌐 Social Media Links</h2>
-            <span className="admin-badge primary">Links for footer/header</span>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">Instagram URL</label>
-              <input className="admin-input" placeholder="https://instagram.com/..."
-                value={settings.socials?.instagram}
-                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, instagram: e.target.value } }))} />
-            </div>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">LinkedIn URL</label>
-              <input className="admin-input" placeholder="https://linkedin.com/company/..."
-                value={settings.socials?.linkedin}
-                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, linkedin: e.target.value } }))} />
-            </div>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">Facebook URL</label>
-              <input className="admin-input" placeholder="https://facebook.com/..."
-                value={settings.socials?.facebook}
-                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, facebook: e.target.value } }))} />
-            </div>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">Twitter / X URL</label>
-              <input className="admin-input" placeholder="https://twitter.com/..."
-                value={settings.socials?.twitter}
-                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, twitter: e.target.value } }))} />
-            </div>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">YouTube URL</label>
-              <input className="admin-input" placeholder="https://youtube.com/@..."
-                value={settings.socials?.youtube}
-                onChange={e => setSettings(s => ({ ...s, socials: { ...s.socials, youtube: e.target.value } }))} />
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Save button */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 32 }}>
-          <button type="submit" className="admin-btn-primary" disabled={saving}
-            style={{ padding: '12px 32px', fontSize: 15 }}>
+          <button type="submit" className="admin-btn-primary" disabled={saving} style={{ padding: '12px 32px', fontSize: 15 }}>
             {saving ? '⏳ Saving...' : '💾 Save All Settings'}
           </button>
         </div>

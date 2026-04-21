@@ -7,10 +7,9 @@ const CounterSchema = new mongoose.Schema({
 })
 
 const SiteSettingsSchema = new mongoose.Schema({
-  phone:   { type: String, default: '+91 98765 43210' },
-  phone2:  { type: String, default: '' },
-  email:   { type: String, default: 'info@greendigitalindia.com' },
-  address: { type: String, default: 'New Delhi, India' },
+  phones:  { type: [String], default: ['+91 98765 43210'] },
+  emails:  { type: [String], default: ['info@greendigitalindia.com'] },
+  address: { type: String,   default: 'New Delhi, India' },
   counters: { 
     type: [CounterSchema], 
     default: [
