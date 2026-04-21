@@ -5,57 +5,8 @@ import Image from "next/image";
 import styles from "../components/Gallery/Gallery.module.css";
 
 // Gallery ke liye sample data - apne actual images se replace karo
-const galleryItems = [
-  {
-    id: 1,
-    title: "Digital India Summit 2024",
-    category: "Events",
-    src: "/images/gallery-img-1.jpeg",
-    tags: ["events"],
-  },
-  {
-    id: 2,
-    title: "Tech Innovation Hub",
-    category: "Infrastructure",
-    src: "/images/gallery-img-2.jpeg",
-    tags: ["infrastructure"],
-  },
-  {
-    id: 3,
-    title: "Smart City Project",
-    category: "Projects",
-    src: "/images/gallery-img-3.jpeg",
-    tags: ["projects"],
-  },
-  {
-    id: 4,
-    title: "Digital Literacy Drive",
-    category: "Events",
-    src: "/images/gallery-img-4.jpeg",
-    tags: ["events"],
-  },
-  {
-    id: 5,
-    title: "Broadband Connectivity",
-    category: "Infrastructure",
-    src: "/images/gallery-img-5.jpeg",
-    tags: ["infrastructure"],
-  },
-  {
-    id: 6,
-    title: "E-Governance Portal",
-    category: "Projects",
-    src: "/images/gallery-img-6.jpeg",
-    tags: ["projects"],
-  },
-  {
-    id: 7,
-    title: "Women in Tech Program",
-    category: "Events",
-    src: "/images/gallery-img-7.jpeg",
-    tags: ["events"],
-  },
-];
+// Gallery ka data ab khali hai, aap admin se upload kar sakte hain (ya main API integrate kar sakta hoon)
+const galleryItems: any[] = [];
 
 const filters = ["All", "Events", "Infrastructure", "Projects"];
 

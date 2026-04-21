@@ -298,29 +298,15 @@ export default function AboutPage() {
 
               <div
                 className={styles.whoText}
-                dangerouslySetInnerHTML={{ __html: para1Content }}
+                dangerouslySetInnerHTML={{ __html: para1Content || "<p>Welcome to G Digital India. We are a leading digital marketing agency.</p>" }}
               />
               <div
                 className={styles.whoText}
-                dangerouslySetInnerHTML={{ __html: para2Content }}
+                dangerouslySetInnerHTML={{ __html: para2Content || "" }}
               />
 
-              {/* <div className={styles.whoBanner}>
-                <span className={styles.whoBannerIcon}>💡</span>
-                <span>We Commit, We Deliver</span>
-              </div> */}
-
-              {/* <div className={styles.serviceGrid}>
-                {serviceList.slice(0, 8).map((s: string) => (
-                  <div key={s} className={styles.serviceChip}>
-                    <span className={styles.chipCheck}><IconCheck /></span>
-                    {s}
-                  </div>
-                ))}
-              </div> */}
-
-              <Link href={data?.btnLink} className={styles.whoBtn}>
-                {data?.btnText} <IconArrow />
+              <Link href={data?.btnLink || "/contact"} className={styles.whoBtn}>
+                {data?.btnText || "Contact Us"} <IconArrow />
               </Link>
             </div>
           </div>
@@ -341,7 +327,7 @@ export default function AboutPage() {
                 <div className={styles.statIconWrap}>{s.icon}</div>
                 <div className={styles.statNumber}>
                   {statsVisible ? (
-                    <AnimatedNumber target={s.number} suffix={s.suffix ?? ""} />
+                    <AnimatedNumber target={s.number || 0} suffix={s.suffix ?? ""} />
                   ) : (
                     `0${s.suffix ?? ""}`
                   )}
@@ -381,7 +367,7 @@ export default function AboutPage() {
               <div className={styles.tabPanel}>
                 <div className={styles.tabIcon}><IconTarget /></div>
                 <h3>Our Mission</h3>
-                <p>{data?.missionText}</p>
+                <p>{data?.missionText || "To provide world-class digital solutions."}</p>
                 <div className={styles.tabPoints}>
                   <span><IconCheck /> Result-Oriented Strategies</span>
                   <span><IconCheck /> Cutting-Edge Technology</span>
@@ -393,7 +379,7 @@ export default function AboutPage() {
               <div className={styles.tabPanel}>
                 <div className={styles.tabIcon}><IconEye /></div>
                 <h3>Our Vision</h3>
-                <p>{data?.visionText}</p>
+                <p>{data?.visionText || "To be the most trusted digital partner."}</p>
                 <div className={styles.tabPoints}>
                   <span><IconCheck /> India's Top Digital Agency</span>
                   <span><IconCheck /> Empowering Every Business</span>
@@ -405,7 +391,7 @@ export default function AboutPage() {
               <div className={styles.tabPanel}>
                 <div className={styles.tabIcon}><IconAward /></div>
                 <h3>Our Core Values</h3>
-                <p>{data?.valuesText}</p>
+                <p>{data?.valuesText || "Integrity, Innovation, and Excellence."}</p>
                 <div className={styles.tabPoints}>
                   <span><IconCheck /> 100% Transparency</span>
                   <span><IconCheck /> Ethical Practices</span>
@@ -431,7 +417,7 @@ export default function AboutPage() {
               <div className={styles.whyCard} key={i}>
                 <div className={styles.whyCardNum}>0{i + 1}</div>
                 <div className={styles.whyCardIcon}>
-                  {v.icon && v.icon.startsWith('fa-')
+                  {v.icon && typeof v.icon === "string" && v.icon.startsWith('fa-')
                     ? <i className={v.icon} />
                     : <span>{v.icon}</span>
                   }
@@ -456,7 +442,7 @@ export default function AboutPage() {
             {industryList.map((ind: any, i: number) => (
               <div className={styles.industryCard} key={i}>
                 <div className={styles.industryIconWrap}>
-                  {ind.icon && ind.icon.startsWith('fa-')
+                  {ind.icon && typeof ind.icon === "string" && ind.icon.startsWith('fa-')
                     ? <i className={ind.icon} />
                     : <span>{ind.icon || ind.emoji}</span>
                   }
@@ -476,7 +462,7 @@ export default function AboutPage() {
               <span className={styles.sectionBadge}>Our Team</span>
               <h2 className={styles.sectionTitle}>100+ Digital <span>Experts</span></h2>
               <p className={styles.teamText}>
-                {data?.teamText}
+                {data?.teamText || "Our team consists of passionate experts dedicated to your success."}
               </p>
               <div className={styles.teamPoints}>
                 <div className={styles.teamPoint}><span className={styles.teamPointDot} />Certified Google & Meta Professionals</div>
@@ -515,13 +501,13 @@ export default function AboutPage() {
         <div className={styles.container}>
           <div className={styles.ctaInner}>
             <span className={styles.ctaTag}>🚀 Ready to Grow?</span>
-            <h2 className={styles.ctaTitle} dangerouslySetInnerHTML={{ __html: data?.ctaTitle }} />
+            <h2 className={styles.ctaTitle} dangerouslySetInnerHTML={{ __html: data?.ctaTitle || "Transform Your Business To <span>Next Level</span>" }} />
             <p className={styles.ctaDesc}>
-              {data?.ctaDesc}
+              {data?.ctaDesc || "Join hands with India's most trusted digital agency."}
             </p>
             <div className={styles.ctaBtns}>
-              <Link href={data?.ctaBtnLink} className={styles.ctaBtnPrimary}>
-                {data?.ctaBtnText} <IconArrow />
+              <Link href={data?.ctaBtnLink || "/contact"} className={styles.ctaBtnPrimary}>
+                {data?.ctaBtnText || "Start Your Project"} <IconArrow />
               </Link>
               <Link href="/services" className={styles.ctaBtnOutline}>
                 Explore Services
