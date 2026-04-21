@@ -100,7 +100,7 @@ export default function ProjectDetail() {
           <section>
             <span className={styles.sectionLabel}>Overview</span>
             <h2 className={styles.sectionTitle}>Project Summary</h2>
-            <p className={styles.text}>{project.description}</p>
+            <div className={styles.text} dangerouslySetInnerHTML={{ __html: project.description }} />
           </section>
 
           {project.image && (
@@ -117,13 +117,13 @@ export default function ProjectDetail() {
             {project.challenges && (
               <section>
                 <span className={styles.sectionLabel}>The Challenge</span>
-                <p className={styles.text}>{project.challenges}</p>
+                <div className={styles.text} dangerouslySetInnerHTML={{ __html: project.challenges }} />
               </section>
             )}
             {project.solutions && (
               <section>
                 <span className={styles.sectionLabel}>The Solution</span>
-                <p className={styles.text}>{project.solutions}</p>
+                <div className={styles.text} dangerouslySetInnerHTML={{ __html: project.solutions }} />
               </section>
             )}
           </div>
@@ -133,7 +133,7 @@ export default function ProjectDetail() {
             <section style={{ background: 'rgba(200, 160, 90, 0.05)', padding: '40px', borderLeft: '4px solid #c8a05a' }}>
               <span className={styles.sectionLabel}>The Impact</span>
               <h2 className={styles.sectionTitle}>Final Outcome</h2>
-              <p className={styles.text}>{project.results}</p>
+              <div className={styles.text} dangerouslySetInnerHTML={{ __html: project.results }} />
               
               {project.stats && project.stats.length > 0 && (
                 <div className={styles.statsGrid}>

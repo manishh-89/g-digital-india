@@ -82,7 +82,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         {q}
         <span className={`${styles.faqIcon} ${open ? styles.faqIconOpen : ""}`}><IconPlus /></span>
       </button>
-      <p className={`${styles.faqA} ${open ? styles.faqAOpen : ""}`}>{a}</p>
+      <div className={`${styles.faqA} ${open ? styles.faqAOpen : ""}`} dangerouslySetInnerHTML={{ __html: a }} />
     </div>
   );
 }
@@ -198,7 +198,10 @@ export default function DynamicServiceDetail() {
                   <div key={i} className={styles.offerCard}>
                     <div className={styles.offerCardIcon}>{offerIcons[i % offerIcons.length]}</div>
                     <h3 className={styles.offerCardTitle}>{o.title}</h3>
-                    <p className={styles.offerCardText}>{o.text}</p>
+                    <div 
+                      className={styles.offerCardText} 
+                      dangerouslySetInnerHTML={{ __html: o.text }} 
+                    />
                   </div>
                 ))}
               </div>
@@ -216,7 +219,10 @@ export default function DynamicServiceDetail() {
                     <div className={styles.stepNum}>0{i + 1}</div>
                     <div>
                       <h4 className={styles.stepTitle}>{s.title}</h4>
-                      <p className={styles.stepText}>{s.text}</p>
+                      <div 
+                        className={styles.stepText} 
+                        dangerouslySetInnerHTML={{ __html: s.text }} 
+                      />
                     </div>
                   </div>
                 ))}

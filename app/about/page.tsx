@@ -367,7 +367,10 @@ export default function AboutPage() {
               <div className={styles.tabPanel}>
                 <div className={styles.tabIcon}><IconTarget /></div>
                 <h3>Our Mission</h3>
-                <p>{data?.missionText || "To provide world-class digital solutions."}</p>
+                <div 
+                  className={styles.tabDesc}
+                  dangerouslySetInnerHTML={{ __html: data?.missionText || "To provide world-class digital solutions." }} 
+                />
                 <div className={styles.tabPoints}>
                   <span><IconCheck /> Result-Oriented Strategies</span>
                   <span><IconCheck /> Cutting-Edge Technology</span>
@@ -379,7 +382,10 @@ export default function AboutPage() {
               <div className={styles.tabPanel}>
                 <div className={styles.tabIcon}><IconEye /></div>
                 <h3>Our Vision</h3>
-                <p>{data?.visionText || "To be the most trusted digital partner."}</p>
+                <div 
+                  className={styles.tabDesc}
+                  dangerouslySetInnerHTML={{ __html: data?.visionText || "To be the most trusted digital partner." }} 
+                />
                 <div className={styles.tabPoints}>
                   <span><IconCheck /> India's Top Digital Agency</span>
                   <span><IconCheck /> Empowering Every Business</span>
@@ -391,7 +397,10 @@ export default function AboutPage() {
               <div className={styles.tabPanel}>
                 <div className={styles.tabIcon}><IconAward /></div>
                 <h3>Our Core Values</h3>
-                <p>{data?.valuesText || "Integrity, Innovation, and Excellence."}</p>
+                <div 
+                  className={styles.tabDesc}
+                  dangerouslySetInnerHTML={{ __html: data?.valuesText || "Integrity, Innovation, and Excellence." }} 
+                />
                 <div className={styles.tabPoints}>
                   <span><IconCheck /> 100% Transparency</span>
                   <span><IconCheck /> Ethical Practices</span>
@@ -461,9 +470,10 @@ export default function AboutPage() {
             <div className={styles.teamContent}>
               <span className={styles.sectionBadge}>Our Team</span>
               <h2 className={styles.sectionTitle}>100+ Digital <span>Experts</span></h2>
-              <p className={styles.teamText}>
-                {data?.teamText || "Our team consists of passionate experts dedicated to your success."}
-              </p>
+              <div 
+                className={styles.teamText}
+                dangerouslySetInnerHTML={{ __html: data?.teamText || "Our team consists of passionate experts dedicated to your success." }} 
+              />
               <div className={styles.teamPoints}>
                 <div className={styles.teamPoint}><span className={styles.teamPointDot} />Certified Google & Meta Professionals</div>
                 <div className={styles.teamPoint}><span className={styles.teamPointDot} />Dedicated Account Managers</div>

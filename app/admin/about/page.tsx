@@ -1,8 +1,21 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+const ReactQuill = dynamic(() => import('react-quill-new'), { 
+  ssr: false,
+  loading: () => <div style={{ height: '150px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e2e8f0', borderRadius: 8 }}>Loading Editor...</div>
+})
+import 'react-quill-new/dist/quill.snow.css'
 
-
+const quillModules = {
+  toolbar: [
+    [{ 'header': [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['link', 'clean']
+  ],
+}
 /* ── Font Awesome icon suggestions for "Why Choose Us" ── */
 const FA_VALUE_ICONS = [
   { cls: 'fa-solid fa-user-tie',         label: 'Professional' },
@@ -335,23 +348,27 @@ export default function AdminAbout() {
             </div>
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label">Paragraph 1</label>
-              <textarea 
-                className="admin-textarea" 
-                rows={8} 
-                placeholder="Enter paragraph 1 content..."
-                value={formData.para1} 
-                onChange={e => setFormData({ ...formData, para1: e.target.value })} 
-              />
+              <div style={{ background: '#fff' }}>
+                <ReactQuill
+                  theme="snow"
+                  modules={quillModules}
+                  value={formData.para1}
+                  onChange={val => setFormData({ ...formData, para1: val })}
+                  style={{ height: 'auto' }}
+                />
+              </div>
             </div>
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label">Paragraph 2</label>
-              <textarea 
-                className="admin-textarea" 
-                rows={8} 
-                placeholder="Enter paragraph 2 content..."
-                value={formData.para2} 
-                onChange={e => setFormData({ ...formData, para2: e.target.value })} 
-              />
+              <div style={{ background: '#fff' }}>
+                <ReactQuill
+                  theme="snow"
+                  modules={quillModules}
+                  value={formData.para2}
+                  onChange={val => setFormData({ ...formData, para2: val })}
+                  style={{ height: 'auto' }}
+                />
+              </div>
             </div>
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label">Main Section Image</label>
@@ -383,18 +400,30 @@ export default function AdminAbout() {
             <p style={{ margin: 0, fontSize: 13, color: '#94a3b8' }}>These texts appear in the tabbed section on the About page.</p>
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label"><i className="fa-solid fa-bullseye" style={{ marginRight: 6, color: '#f97316' }} />Our Mission Text</label>
-              <textarea className="admin-textarea" rows={5} placeholder="Describe your mission..."
-                value={formData.missionText} onChange={e => setFormData({ ...formData, missionText: e.target.value })} />
+              <div style={{ background: '#fff' }}>
+                <ReactQuill 
+                  theme="snow" modules={quillModules}
+                  value={formData.missionText} onChange={val => setFormData({ ...formData, missionText: val })} 
+                />
+              </div>
             </div>
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label"><i className="fa-solid fa-eye" style={{ marginRight: 6, color: '#f97316' }} />Our Vision Text</label>
-              <textarea className="admin-textarea" rows={5} placeholder="Describe your vision..."
-                value={formData.visionText} onChange={e => setFormData({ ...formData, visionText: e.target.value })} />
+              <div style={{ background: '#fff' }}>
+                <ReactQuill 
+                  theme="snow" modules={quillModules}
+                  value={formData.visionText} onChange={val => setFormData({ ...formData, visionText: val })} 
+                />
+              </div>
             </div>
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label"><i className="fa-solid fa-award" style={{ marginRight: 6, color: '#f97316' }} />Core Values Text</label>
-              <textarea className="admin-textarea" rows={5} placeholder="Describe your core values..."
-                value={formData.valuesText} onChange={e => setFormData({ ...formData, valuesText: e.target.value })} />
+              <div style={{ background: '#fff' }}>
+                <ReactQuill 
+                  theme="snow" modules={quillModules}
+                  value={formData.valuesText} onChange={val => setFormData({ ...formData, valuesText: val })} 
+                />
+              </div>
             </div>
           </div>
         )}
@@ -504,8 +533,12 @@ export default function AdminAbout() {
             </h3>
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label">Team Description Text</label>
-              <textarea className="admin-textarea" rows={5} placeholder="Describe your team..."
-                value={formData.teamText} onChange={e => setFormData({ ...formData, teamText: e.target.value })} />
+              <div style={{ background: '#fff' }}>
+                <ReactQuill 
+                  theme="snow" modules={quillModules}
+                  value={formData.teamText} onChange={val => setFormData({ ...formData, teamText: val })} 
+                />
+              </div>
             </div>
           </div>
         )}

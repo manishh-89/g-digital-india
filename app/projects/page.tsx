@@ -18,6 +18,11 @@ const IcExLink = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="non
 
 const FILTERS = ["All", "Website Design", "Digital Marketing", "CRM & Software"];
 
+const stripHtml = (html: string) => {
+  if (!html) return "";
+  return html.replace(/<[^>]*>?/gm, '');
+};
+
 // ── Component ──────────────────────────────────────────────
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<any[]>([]);
@@ -157,7 +162,7 @@ export default function ProjectsPage() {
                     <span className={styles.cardNum}>{String(i + 1).padStart(2, "0")}</span>
                   </div>
                   <h2 className={styles.cardTitle}>{project.title}</h2>
-                  <p className={styles.cardDesc}>{project.description}</p>
+                  <div className={styles.cardDesc} dangerouslySetInnerHTML={{ __html: stripHtml(project.description) }} />
                 </div>
 
                 <div className={styles.cardBottom}>

@@ -4,8 +4,20 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+const ReactQuill = dynamic(() => import('react-quill-new'), { 
+  ssr: false,
+  loading: () => <div style={{ height: '150px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e2e8f0', borderRadius: 8 }}>Loading Editor...</div>
+})
+import 'react-quill-new/dist/quill.snow.css'
 
-
+const quillModules = {
+  toolbar: [
+    [{ 'header': [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['link', 'clean']
+  ],
+}
 
 interface Project {
   _id: string
@@ -180,7 +192,9 @@ export default function EditProject() {
 
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">Project Description (Mini Intro)</label>
-            <textarea className="admin-textarea" rows={3} value={formData.description} onChange={e => set('description', e.target.value)} />
+            <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+              <ReactQuill theme="snow" modules={quillModules} value={formData.description} onChange={val => set('description', val)} />
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
@@ -201,15 +215,21 @@ export default function EditProject() {
           {/* LARGE CONTENT SECTIONS */}
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">The Challenges</label>
-            <textarea className="admin-textarea" rows={4} placeholder="What were the problems?" value={formData.challenges} onChange={e => set('challenges', e.target.value)} />
+            <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+              <ReactQuill theme="snow" modules={quillModules} value={formData.challenges} onChange={val => set('challenges', val)} />
+            </div>
           </div>
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">The Solutions</label>
-            <textarea className="admin-textarea" rows={4} placeholder="How did we solve them?" value={formData.solutions} onChange={e => set('solutions', e.target.value)} />
+            <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+              <ReactQuill theme="snow" modules={quillModules} value={formData.solutions} onChange={val => set('solutions', val)} />
+            </div>
           </div>
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">The Results</label>
-            <textarea className="admin-textarea" rows={4} placeholder="What was the outcome?" value={formData.results} onChange={e => set('results', e.target.value)} />
+            <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+              <ReactQuill theme="snow" modules={quillModules} value={formData.results} onChange={val => set('results', val)} />
+            </div>
           </div>
 
           {/* STATS SECTION */}

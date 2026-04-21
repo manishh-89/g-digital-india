@@ -1,7 +1,21 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+const ReactQuill = dynamic(() => import('react-quill-new'), { 
+  ssr: false,
+  loading: () => <div style={{ height: '200px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e2e8f0', borderRadius: 8 }}>Loading Editor...</div>
+})
+import 'react-quill-new/dist/quill.snow.css'
 
+const quillModules = {
+  toolbar: [
+    [{ 'header': [1, 2, 3, 4, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['link', 'image', 'clean']
+  ],
+}
 
 interface Blog {
   _id: string
@@ -18,8 +32,6 @@ interface Blog {
 }
 
 const empty = { slug: '', category: '', title: '', excerpt: '', author: '', date: '', readTime: '', image: '', content: '', featured: false }
-
-// No modules needed for CKEditor here
 
 export default function AdminBlogs() {
   const [blogs, setBlogs] = useState<Blog[]>([])
@@ -58,7 +70,6 @@ export default function AdminBlogs() {
     const method = editingId ? 'PUT' : 'POST'
     const url = editingId ? `/api/blogs/${editingId}` : '/api/blogs'
     
-    // Auto-generate slug if not present
     const payload = { ...formData }
     if (!payload.slug && payload.title) {
         payload.slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
@@ -166,14 +177,15 @@ export default function AdminBlogs() {
 
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label">Full Content *</label>
-              <textarea 
-                required 
-                className="admin-textarea" 
-                rows={15} 
-                placeholder="Write your full blog content here (HTML allowed)..."
-                value={formData.content} 
-                onChange={e => setFormData({...formData, content: e.target.value})} 
-              />
+              <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+                <ReactQuill 
+                  theme="snow"
+                  modules={quillModules}
+                  placeholder="Write your full blog content here..."
+                  value={formData.content} 
+                  onChange={val => setFormData({...formData, content: val})} 
+                />
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: '20px' }}>

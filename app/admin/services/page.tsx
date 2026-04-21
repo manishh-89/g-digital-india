@@ -1,12 +1,28 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+const ReactQuill = dynamic(() => import('react-quill-new'), { 
+  ssr: false,
+  loading: () => <div style={{ height: '200px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #e2e8f0', borderRadius: 8 }}>Loading Editor...</div>
+})
+import 'react-quill-new/dist/quill.snow.css'
 
+const quillModules = {
+  toolbar: [
+    [{ 'header': [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['link', 'clean']
+  ],
+}
 
 interface Service {
   _id: string
   title: string
   slug: string
+  category: string
+  industry: string
   short: string
   description: string
   highlight: string
@@ -20,7 +36,7 @@ interface Service {
 }
 
 const empty = { 
-  title: '', slug: '', short: '', description: '', highlight: '', tags: [], image: '', 
+  title: '', slug: '', category: '', industry: '', short: '', description: '', highlight: '', tags: [], image: '', 
   heroStats: [], offers: [], steps: [], faqs: [], order: 0 
 }
 
@@ -93,6 +109,8 @@ export default function AdminServices() {
       title: s.title,
       slug: s.slug || '',
       short: s.short,
+      category: s.category || '',
+      industry: s.industry || '',
       description: s.description,
       highlight: s.highlight,
       image: s.image || '',
@@ -177,13 +195,9 @@ export default function AdminServices() {
 
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label">Description</label>
-              <textarea 
-                className="admin-textarea" 
-                rows={5} 
-                placeholder="Enter service description (HTML allowed)..."
-                value={formData.description} 
-                onChange={e => setFormData({...formData, description: e.target.value})} 
-              />
+              <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+                <ReactQuill theme="snow" modules={quillModules} value={formData.description} onChange={val => setFormData({...formData, description: val})} />
+              </div>
             </div>
 
             <div className="admin-form-group" style={{ margin: 0 }}>
@@ -221,7 +235,9 @@ export default function AdminServices() {
                      <input style={{ flex: 1 }} className="admin-input" placeholder="Offer Title" value={s.title} onChange={e => updateArrayItem('offers', i, 'title', e.target.value)} />
                      <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('offers', i)}>🗑️</button>
                    </div>
-                   <textarea className="admin-textarea" rows={2} placeholder="Description" value={s.text} onChange={e => updateArrayItem('offers', i, 'text', e.target.value)} />
+                   <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+                    <ReactQuill theme="snow" modules={quillModules} value={s.text} onChange={val => updateArrayItem('offers', i, 'text', val)} />
+                   </div>
                  </div>
                ))}
             </div>
@@ -239,7 +255,9 @@ export default function AdminServices() {
                      <input style={{ flex: 1 }} className="admin-input" placeholder="Step Title" value={s.title} onChange={e => updateArrayItem('steps', i, 'title', e.target.value)} />
                      <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('steps', i)}>🗑️</button>
                    </div>
-                   <textarea className="admin-textarea" rows={2} placeholder="Description" value={s.text} onChange={e => updateArrayItem('steps', i, 'text', e.target.value)} />
+                   <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+                    <ReactQuill theme="snow" modules={quillModules} value={s.text} onChange={val => updateArrayItem('steps', i, 'text', val)} />
+                   </div>
                  </div>
                ))}
             </div>
@@ -257,7 +275,9 @@ export default function AdminServices() {
                      <input style={{ flex: 1 }} className="admin-input" placeholder="Question" value={s.q} onChange={e => updateArrayItem('faqs', i, 'q', e.target.value)} />
                      <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('faqs', i)}>🗑️</button>
                    </div>
-                   <textarea className="admin-textarea" rows={2} placeholder="Answer" value={s.a} onChange={e => updateArrayItem('faqs', i, 'a', e.target.value)} />
+                   <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
+                    <ReactQuill theme="snow" modules={quillModules} value={s.a} onChange={val => updateArrayItem('faqs', i, 'a', val)} />
+                   </div>
                  </div>
                ))}
             </div>
@@ -322,9 +342,10 @@ export default function AdminServices() {
                   <h3 style={{ margin: 0, fontSize: 18, color: 'var(--admin-text-primary)' }}>{s.title}</h3>
                   <span className="admin-badge primary">{s.short}</span>
                 </div>
-                <p style={{ margin: '0 0 12px 0', fontSize: 14, color: 'var(--admin-text-secondary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {s.description}
-                </p>
+                <div 
+                  style={{ margin: '0 0 12px 0', fontSize: 14, color: 'var(--admin-text-secondary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                  dangerouslySetInnerHTML={{ __html: s.description }}
+                />
                 <div style={{ display: 'flex', gap: 6 }}>
                   {s.tags?.map((t, i) => <span key={i} className="admin-badge info" style={{ fontSize: 11 }}>{t}</span>)}
                 </div>
