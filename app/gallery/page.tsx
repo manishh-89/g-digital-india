@@ -1,18 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "../components/Gallery/Gallery.module.css";
-
-// Gallery ke liye sample data - apne actual images se replace karo
-// Gallery ka data ab khali hai, aap admin se upload kar sakte hain (ya main API integrate kar sakta hoon)
-const galleryItems: any[] = [];
 
 const filters = ["All", "Events", "Infrastructure", "Projects"];
 
 export default function Gallery() {
+  const [galleryItems, setGalleryItems] = useState<any[]>([]);
   const [activeFilter, setActiveFilter] = useState("All");
-  const [lightboxItem, setLightboxItem] = useState<(typeof galleryItems)[0] | null>(null);
+  const [lightboxItem, setLightboxItem] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const res = await fetch('/api/gallery');
+        if (res.ok) {
+          const data = await res.json();
+          // Map DB 'url' to frontend 'src'
+          const formatted = data.map((item: any) => ({
+            ...item,
+            src: item.url
+          }));
+          setGalleryItems(formatted);
+        }
+      } catch (err) {
+        console.error("Failed to fetch gallery:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchImages();
+  }, []);
 
   const filtered =
     activeFilter === "All"
@@ -20,7 +40,7 @@ export default function Gallery() {
       : galleryItems.filter((item) => item.category === activeFilter);
 
   return (
-    <section className={styles.gallerySection} id="gallery" style={{paddingTop:"150px",}}>
+    <section className={styles.gallerySection} id="gallery" style={{paddingTop:"150px", minHeight: '80vh'}}>
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
@@ -48,49 +68,57 @@ export default function Gallery() {
           ))}
         </div>
 
-        {/* Masonry Grid */}
-        <div className={styles.grid}>
-          {filtered.map((item, index) => {
-            const isTall = index % 3 === 0;
-            const isWide = index === 4;
-            return (
-              <div
-                key={item.id}
-                className={`${styles.gridItem} ${isTall ? styles.gridItemTall : ""} ${
-                  isWide ? styles.gridItemWide : ""
-                }`}
-                onClick={() => setLightboxItem(item)}
-              >
-                <Image
-                  src={item.src}
-                  alt={item.title}
-                  width={900}
-                  height={600}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  style={{ objectFit: "cover" }}
-                />
-                <div className={styles.overlay}>
-                  <div className={styles.overlayContent}>
-                    <span className={styles.itemCategory}>{item.category}</span>
-                    <h3 className={styles.itemTitle}>{item.title}</h3>
-                    <button className={styles.viewBtn}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
-                      </svg>
-                      View
-                    </button>
+        {/* Loading / Empty State */}
+        {loading ? (
+           <div style={{ textAlign: 'center', padding: '50px', color: '#fff' }}>Loading images...</div>
+        ) : filtered.length === 0 ? (
+           <div style={{ textAlign: 'center', padding: '50px', color: '#888' }}>No images found in this category.</div>
+        ) : (
+          <div className={styles.grid}>
+            {filtered.map((item, index) => {
+              const isTall = index % 3 === 0;
+              const isWide = index === 4;
+              return (
+                <div
+                  key={item._id || index}
+                  className={`${styles.gridItem} ${isTall ? styles.gridItemTall : ""} ${
+                    isWide ? styles.gridItemWide : ""
+                  }`}
+                  onClick={() => setLightboxItem(item)}
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.title || "Gallery"}
+                    width={900}
+                    height={600}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className={styles.overlay}>
+                    <div className={styles.overlayContent}>
+                      <span className={styles.itemCategory}>{item.category}</span>
+                      <h3 className={styles.itemTitle}>{item.title}</h3>
+                      <button className={styles.viewBtn}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        View
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
-        {/* Load More */}
-        <div className={styles.loadMore}>
-          <button className={styles.loadMoreBtn}>Load More Photos</button>
-        </div>
+        {/* Load More (Optional, hidden if all shown) */}
+        {!loading && galleryItems.length > 50 && (
+          <div className={styles.loadMore}>
+            <button className={styles.loadMoreBtn}>Load More Photos</button>
+          </div>
+        )}
       </div>
 
       {/* Lightbox */}
@@ -105,9 +133,9 @@ export default function Gallery() {
             </button>
             <Image
               src={lightboxItem.src}
-              alt={lightboxItem.title}
-              width={900}
-              height={600}
+              alt={lightboxItem.title || "Gallery"}
+              width={1200}
+              height={800}
               className={styles.lightboxImage}
               style={{ objectFit: "contain" }}
             />
