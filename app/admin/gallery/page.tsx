@@ -6,6 +6,7 @@ interface GalleryImage {
   _id: string
   url: string
   title?: string
+  category?: string
 }
 
 export default function AdminGallery() {
