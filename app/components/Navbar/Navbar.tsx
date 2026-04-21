@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/images/logo.png";
+import { useEnquiry } from "../../context/EnquiryContext";
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { openModal } = useEnquiry();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -23,24 +25,27 @@ const Navbar = () => {
         </div>
 
         <div className={`${styles["navbar-links"]} ${menuOpen ? styles.open : ""}`}>
-          <Link href="/">Home</Link>
-          <Link href="/about">About Us</Link>
-          <Link href="/services">Services</Link>
-          <Link href="/projects">Our Projects</Link>
-          <Link href="/gallery">Gallery</Link>
-          <Link href="/contact">Contact Us</Link>
+          <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link href="/about" onClick={() => setMenuOpen(false)}>About Us</Link>
+          <Link href="/services" onClick={() => setMenuOpen(false)}>Services</Link>
+          <Link href="/projects" onClick={() => setMenuOpen(false)}>Our Projects</Link>
+          <Link href="/gallery" onClick={() => setMenuOpen(false)}>Gallery</Link>
+          <Link href="/contact" onClick={() => setMenuOpen(false)}>Contact Us</Link>
 
           <div className={`${styles["navbar-buttons"]} ${styles["mobile-only"]}`}>
-            <Link href="#" className={styles["btn-filled"]}>
+            <button 
+              className={styles["btn-filled"]} 
+              onClick={() => { openModal(); setMenuOpen(false); }}
+            >
               Enquiry Now
-            </Link>
+            </button>
           </div>
         </div>
 
         <div className={`${styles["navbar-buttons"]} ${styles["desktop-only"]}`}>
-          <Link href="#" className={styles["btn-filled"]}>
+          <button className={styles["btn-filled"]} onClick={openModal}>
             Enquiry Now
-          </Link>
+          </button>
         </div>
 
         <div

@@ -1,10 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useEnquiry } from "../../context/EnquiryContext"
 import styles from "./FloatingActions.module.css"
 
 export default function FloatingActions() {
   const [settings, setSettings] = useState<any>(null)
+  const { openModal } = useEnquiry()
   
   useEffect(() => {
     fetch("/api/settings", { cache: 'no-store' })
@@ -20,6 +22,18 @@ export default function FloatingActions() {
 
   return (
     <div className={styles.floatingContainer}>
+      {/* Enquiry Button */}
+      <button 
+        className={`${styles.actionBtn} ${styles.enquiryBtn}`}
+        onClick={openModal}
+        title="Enquiry Now"
+      >
+        <div className={styles.iconBox}>
+          <i className="fa-solid fa-paper-plane"></i>
+        </div>
+        <span className={styles.label}>Enquiry Now</span>
+      </button>
+
       {/* WhatsApp Button */}
       {whatsappNumber && (
         <a 
