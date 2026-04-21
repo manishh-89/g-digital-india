@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useEnquiry } from "../../context/EnquiryContext";
 import styles from "./Footer.module.css"
 import Link from "next/link"
 
@@ -38,6 +39,7 @@ export default function Footer(){
 
 const [email,setEmail] = useState("")
 const [submitted,setSubmitted] = useState(false)
+const { openModal } = useEnquiry();
 const [settings, setSettings] = useState<any>({
   phones: ["+91 98765 43210"],
   emails: ["hello@gdigitalindia.com"],
@@ -100,12 +102,10 @@ return(
         <br/>
         Our experts are ready to help your brand grow.
       </p>
-      <Link href="/contact" style={{ textDecoration: 'none' }}>
-        <button className={styles["ft-cta-btn"]}>
-          Start Your Project
-          <span className={styles["ft-cta-btn-arrow"]}>↗</span> 
-        </button>
-      </Link>
+      <button className={styles["ft-cta-btn"]} onClick={openModal}>
+        Start Your Project
+        <span className={styles["ft-cta-btn-arrow"]}>↗</span> 
+      </button>
     </div>
   </div>
   <div className={styles["ft-cta-line"]}/>
