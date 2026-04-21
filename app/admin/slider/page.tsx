@@ -97,17 +97,27 @@ export default function AdminSlider() {
 
   return (
     <div>
-      <div className="admin-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="admin-page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h1 className="admin-page-title">🎬 Hero Slider</h1>
-          <p className="admin-page-subtitle">Manage homepage hero slides</p>
+          <p className="admin-page-subtitle">Manage homepage hero slide (Single)</p>
         </div>
-        <button className={showForm && !editingId ? 'admin-btn-secondary' : 'admin-btn-primary'} 
-          onClick={() => { 
-            setShowForm(!showForm); setFormData(empty); setEditingId(null); 
-          }}>
-          {showForm ? '✖ Cancel' : '➕ Add Slide'}
-        </button>
+        
+        {/* Only show Add button if no slides exist. Otherwise, only show Cancel if currently editing/forming. */}
+        {sliders.length === 0 ? (
+          <button className={showForm ? 'admin-btn-secondary' : 'admin-btn-primary'} 
+            onClick={() => { 
+              setShowForm(!showForm); setFormData(empty); setEditingId(null); 
+            }}>
+            {showForm ? '✖ Cancel' : '➕ Add Slide'}
+          </button>
+        ) : (
+          showForm && (
+            <button className='admin-btn-secondary' onClick={() => { setShowForm(false); setEditingId(null); }}>
+              ✖ Cancel
+            </button>
+          )
+        )}
       </div>
 
       {showForm && (
