@@ -8,37 +8,18 @@ interface Counter {
   value: string
 }
 
-const clientLogos = [
-  { name: "FreshCart", industry: "D2C / Grocery", icon: "🛒" },
-  { name: "NovaPay", industry: "Fintech", icon: "💳" },
-  { name: "LuxeWear", industry: "Fashion", icon: "👗" },
-  { name: "BuildRight", industry: "Construction", icon: "🏗️" },
-  { name: "EduSpark", industry: "EdTech", icon: "🎓" },
-  { name: "ZenSpa", industry: "Wellness", icon: "🧘" },
-  { name: "MediCore", industry: "Healthcare", icon: "🏥" },
-  { name: "AutoElite", industry: "Automobile", icon: "🚗" },
-]
-
-const clientLogos2 = [
-  { name: "TechNova", industry: "SaaS / Tech", icon: "💻" },
-  { name: "GreenLeaf", industry: "Sustainability", icon: "🌿" },
-  { name: "UrbanNest", industry: "Real Estate", icon: "🏠" },
-  { name: "SpiceRoute", industry: "F&B / Restaurant", icon: "🍽️" },
-  { name: "FitPulse", industry: "Health & Fitness", icon: "💪" },
-  { name: "LegalEdge", industry: "Legal Services", icon: "⚖️" },
-  { name: "CraftBrew", industry: "Beverage", icon: "🍺" },
-  { name: "PixelForge", industry: "Creative Agency", icon: "🎨" },
-]
-
 export default function Clients() {
+  const [clients, setClients] = useState<any[]>([])
   const [stats, setStats] = useState<Counter[]>([
     { value: "150+", label: "Happy Clients" },
     { value: "₹50Cr+", label: "Revenue Generated" },
     { value: "12", label: "Industries Served" },
     { value: "98%", label: "Retention Rate" }
   ])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Fetch stats
     fetch("/api/settings", { cache: 'no-store' })
       .then(res => res.json())
       .then(data => {
@@ -47,7 +28,24 @@ export default function Clients() {
         }
       })
       .catch(err => console.error("Failed to fetch client stats:", err))
+
+    // Fetch clients
+    fetch("/api/clients")
+      .then(res => res.json())
+      .then(data => {
+        if(Array.isArray(data)) setClients(data)
+      })
+      .catch(err => console.error("Failed to fetch clients:", err))
+      .finally(() => setLoading(false))
   }, [])
+
+  // Split clients into two halves for the two marquee rows
+  const half = Math.ceil(clients.length / 2)
+  const row1 = clients.slice(0, half)
+  const row2 = clients.slice(half)
+
+  // If no clients yet and still loading, show a placeholder row or loading state
+  if (clients.length === 0 && loading) return null;
 
   return (
     <section className={styles.cl}>
@@ -87,45 +85,53 @@ export default function Clients() {
           ))}
         </div>
 
-        {/* Marquee Row 1 */}
-        <div className={styles["cl-marquee-wrap"]}>
-          <div className={styles["cl-fade-left"]} />
-          <div className={styles["cl-fade-right"]} />
+        {clients.length > 0 && (
+          <>
+            {/* Marquee Row 1 */}
+            <div className={styles["cl-marquee-wrap"]}>
+              <div className={styles["cl-fade-left"]} />
+              <div className={styles["cl-fade-right"]} />
 
-          <div className={styles["cl-marquee"]}>
-            <div className={`${styles["cl-marquee-track"]} ${styles["cl-track-fwd"]}`}>
-              {[...clientLogos, ...clientLogos].map((c, i) => (
-                <div className={styles["cl-logo-card"]} key={i}>
-                  <div className={styles["cl-logo-inner"]}>
-                    <span className={styles["cl-logo-icon"]}>{c.icon}</span>
-                    <span className={styles["cl-logo-name"]}>{c.name}</span>
-                    <span className={styles["cl-logo-industry"]}>{c.industry}</span>
-                  </div>
+              <div className={styles["cl-marquee"]}>
+                <div className={`${styles["cl-marquee-track"]} ${styles["cl-track-fwd"]}`}>
+                  {[...row1, ...row1, ...row1].map((c, i) => (
+                    <div className={styles["cl-logo-card"]} key={i}>
+                      <div className={styles["cl-logo-inner"]}>
+                        <div style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                          <img src={c.logoUrl} alt={c.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(1) brightness(1.5)', opacity: 0.8 }} />
+                        </div>
+                        <span className={styles["cl-logo-name"]}>{c.name}</span>
+                        <span className={styles["cl-logo-industry"]}>{c.industry}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Marquee Row 2 */}
-        <div className={styles["cl-marquee-wrap"]}>
-          <div className={styles["cl-fade-left"]} />
-          <div className={styles["cl-fade-right"]} />
+            {/* Marquee Row 2 */}
+            <div className={styles["cl-marquee-wrap"]} style={{ marginTop: 20 }}>
+              <div className={styles["cl-fade-left"]} />
+              <div className={styles["cl-fade-right"]} />
 
-          <div className={styles["cl-marquee"]}>
-            <div className={`${styles["cl-marquee-track"]} ${styles["cl-track-rev"]}`}>
-              {[...clientLogos2, ...clientLogos2].map((c, i) => (
-                <div className={styles["cl-logo-card"]} key={i}>
-                  <div className={styles["cl-logo-inner"]}>
-                    <span className={styles["cl-logo-icon"]}>{c.icon}</span>
-                    <span className={styles["cl-logo-name"]}>{c.name}</span>
-                    <span className={styles["cl-logo-industry"]}>{c.industry}</span>
-                  </div>
+              <div className={styles["cl-marquee"]}>
+                <div className={`${styles["cl-marquee-track"]} ${styles["cl-track-rev"]}`}>
+                  {[...row2, ...row2, ...row2].map((c, i) => (
+                    <div className={styles["cl-logo-card"]} key={i}>
+                      <div className={styles["cl-logo-inner"]}>
+                        <div style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                          <img src={c.logoUrl} alt={c.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(1) brightness(1.5)', opacity: 0.8 }} />
+                        </div>
+                        <span className={styles["cl-logo-name"]}>{c.name}</span>
+                        <span className={styles["cl-logo-industry"]}>{c.industry}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
 
         {/* CTA */}
         <div className={styles["cl-bottom"]}>
@@ -133,7 +139,7 @@ export default function Clients() {
             Ready to join them?
           </p>
 
-          <button className={styles["cl-cta"]}>
+          <button className={styles["cl-cta"]} onClick={() => window.location.href = '/contact'}>
             Start Your Growth Journey →
           </button>
         </div>
