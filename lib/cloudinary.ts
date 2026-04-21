@@ -20,8 +20,7 @@ export async function uploadBuffer(buffer: Buffer, folder: string): Promise<stri
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: `gdi/${folder}`,
-        quality: 'auto',
-        fetch_format: 'auto',
+        resource_type: 'auto',
       },
       (error, result) => {
         if (error) return reject(error)

@@ -169,21 +169,7 @@ export default function AdminSlider() {
               </div>
             </div>
             
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <label className="admin-label">Media URL (Manual Entry)</label>
-              <input className="admin-input" placeholder="https://..."
-                value={formData.mediaUrl} onChange={e => setFormData({...formData, mediaUrl: e.target.value})} />
-            </div>
-
-            <div className="admin-form-group" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
-                <input 
-                    type="checkbox" 
-                    id="isVideo" 
-                    checked={formData.isVideo} 
-                    onChange={e => setFormData({...formData, isVideo: e.target.checked})} 
-                />
-                <label htmlFor="isVideo" className="admin-label" style={{ margin: 0, cursor: 'pointer' }}>Is Background a Video?</label>
-            </div>
+            {/* Manual entry removed for cleaner UI */}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
               <button type="submit" disabled={submitting || uploading} className="admin-btn-primary" style={{ padding: '10px 24px' }}>
