@@ -113,23 +113,25 @@ export default function AboutSection() {
               <p className={styles["ab-para"]} dangerouslySetInnerHTML={createMarkup(content.para2)} />
             )}
 
-            <div className={styles["ab-values"]}>
-              {(content.values && content.values.length > 0 ? content.values : defaultValues).map((v: any, idx: number) => (
-                <div className={styles["ab-val-item"]} key={idx}>
-                  <span className={styles["ab-val-icon"]}>
-                    {v.icon && v.icon.includes('fa-') ? <i className={v.icon}></i> : v.icon}
-                  </span>
-                  <div>
-                    <strong className={styles["ab-val-title"]}>
-                      {v.title}
-                    </strong>
-                    <p className={styles["ab-val-desc"]}>
-                      {v.desc}
-                    </p>
+            {content.values && content.values.length > 0 && (
+              <div className={styles["ab-values"]}>
+                {content.values.map((v: any, idx: number) => (
+                  <div className={styles["ab-val-item"]} key={idx}>
+                    <span className={styles["ab-val-icon"]}>
+                      {v.icon && v.icon.includes('fa-') ? <i className={v.icon}></i> : v.icon}
+                    </span>
+                    <div>
+                      <strong className={styles["ab-val-title"]}>
+                        {v.title}
+                      </strong>
+                      <p className={styles["ab-val-desc"]}>
+                        {v.desc}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             <button className={styles["ab-btn"]} onClick={() => { window.location.href = content.btnLink }}>
               {content.btnText}

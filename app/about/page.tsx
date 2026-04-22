@@ -201,8 +201,8 @@ export default function AboutPage() {
     : data.para2;
 
   const serviceList = dbServices.length > 0 ? dbServices.map(s => s.title) : defaultServices;
-  const valueList = (data?.values && data.values.length > 0) ? data.values : defaultValues;
-  const industryList = (data?.industries && data.industries.length > 0) ? data.industries : defaultIndustries;
+  const valueList = (data?.values && data.values.length > 0) ? data.values : [];
+  const industryList = (data?.industries && data.industries.length > 0) ? data.industries : [];
   const statList = (settings?.counters && settings.counters.length > 0)
     ? settings.counters.map((c: any, i: number) => ({
         icon: <span style={{ fontSize: 26 }}>{c.icon || "⭐"}</span>,
@@ -413,32 +413,34 @@ export default function AboutPage() {
       </section>
 
       {/* ════ WHY CHOOSE US ════ */}
-      <section className={styles.whySection}>
-        <div className={styles.container}>
-          <div className={styles.whyHead}>
-            <span className={styles.sectionBadge}>Why Choose Us</span>
-            <h2 className={styles.sectionTitle}>What Makes Us <span>Stand Out</span></h2>
-            <p className={styles.whySubtitle}>We do not just promise results — we deliver them. Here is why hundreds of businesses trust us.</p>
-          </div>
+      {valueList.length > 0 && (
+        <section className={styles.whySection}>
+          <div className={styles.container}>
+            <div className={styles.whyHead}>
+              <span className={styles.sectionBadge}>Why Choose Us</span>
+              <h2 className={styles.sectionTitle}>What Makes Us <span>Stand Out</span></h2>
+              <p className={styles.whySubtitle}>We do not just promise results — we deliver them. Here is why hundreds of businesses trust us.</p>
+            </div>
 
-          <div className={styles.whyGrid}>
-            {valueList.map((v: any, i: number) => (
-              <div className={styles.whyCard} key={i}>
-                <div className={styles.whyCardNum}>0{i + 1}</div>
-                <div className={styles.whyCardIcon}>
-                  {v.icon && typeof v.icon === "string" && v.icon.startsWith('fa-')
-                    ? <i className={v.icon} />
-                    : <span>{v.icon}</span>
-                  }
+            <div className={styles.whyGrid}>
+              {valueList.map((v: any, i: number) => (
+                <div className={styles.whyCard} key={i}>
+                  <div className={styles.whyCardNum}>0{i + 1}</div>
+                  <div className={styles.whyCardIcon}>
+                    {v.icon && typeof v.icon === "string" && v.icon.startsWith('fa-')
+                      ? <i className={v.icon} />
+                      : <span>{v.icon}</span>
+                    }
+                  </div>
+                  <h3 className={styles.whyCardTitle}>{v.title || v.name}</h3>
+                  <p className={styles.whyCardDesc}>{v.desc}</p>
+                  <div className={styles.whyCardLine} />
                 </div>
-                <h3 className={styles.whyCardTitle}>{v.title || v.name}</h3>
-                <p className={styles.whyCardDesc}>{v.desc}</p>
-                <div className={styles.whyCardLine} />
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ════ INDUSTRIES WE SERVE ════ */}
       <section className={styles.industrySection}>

@@ -316,7 +316,7 @@
 }
 .whoGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(360px, 1fr) 1.2fr;
   gap: 72px;
   align-items: center;
 }

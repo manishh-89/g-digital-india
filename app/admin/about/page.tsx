@@ -167,11 +167,11 @@ export default function AdminAbout() {
         if (Object.keys(data).length > 0) {
           setFormData({
             ...data,
-            values:     data.values?.length     > 0 ? data.values     : defaultValues,
-            industries: data.industries?.length  > 0 ? data.industries : defaultIndustries,
+            values:     data.values || [],
+            industries: data.industries || [],
           })
         } else {
-          setFormData((p: any) => ({ ...p, values: defaultValues, industries: defaultIndustries }))
+          setFormData((p: any) => ({ ...p, values: [], industries: [] }))
         }
       }
     } catch (e) { console.error(e) }
