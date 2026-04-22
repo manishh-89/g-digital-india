@@ -315,7 +315,7 @@
 }
 .whoGrid {
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) 1.2fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   gap: 72px;
   align-items: center;
 }
@@ -402,6 +402,8 @@
   font-size: 1rem;
   line-height: 1.88;
   margin-bottom: 14px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 .whoText strong { color: var(--heading); font-weight: 600; }
 
@@ -424,7 +426,7 @@
 /* Service Grid */
 .serviceGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 10px;
   margin-bottom: 28px;
 }
@@ -496,7 +498,7 @@
 }
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
   position: relative;
   z-index: 1;
@@ -637,6 +639,7 @@
   font-size: 0.98rem;
   line-height: 1.9;
   margin: 0 0 28px;
+  overflow-wrap: break-word;
 }
 .tabPoints {
   display: flex;
@@ -675,7 +678,7 @@
 }
 .whyGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 .whyCard {
@@ -750,7 +753,7 @@
 }
 .industryGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 .industryCard {
@@ -809,7 +812,7 @@
 }
 .teamGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 72px;
   align-items: center;
 }
@@ -819,6 +822,7 @@
   font-size: 1rem;
   line-height: 1.88;
   margin-bottom: 28px;
+  overflow-wrap: break-word;
 }
 .teamPoints {
   display: flex;
@@ -843,7 +847,7 @@
 .teamImageWrap { display: flex; align-items: center; justify-content: center; }
 .teamImageGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 16px;
   width: 100%;
 }
@@ -929,6 +933,7 @@
   line-height: 1.8;
   max-width: 520px;
   margin: 0 auto 36px;
+  overflow-wrap: break-word;
 }
 .ctaBtns {
   display: flex;
@@ -977,15 +982,15 @@
    RESPONSIVE
    ═══════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
-  .statsGrid { grid-template-columns: repeat(4, 1fr); }
-  .industryGrid { grid-template-columns: repeat(4, 1fr); }
-  .whyGrid { grid-template-columns: repeat(2, 1fr); }
+  .statsGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .industryGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .whyGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 900px) {
-  .whoGrid { grid-template-columns: 1fr; gap: 60px; }
-  .teamGrid { grid-template-columns: 1fr; }
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+  .whoGrid { grid-template-columns: minmax(0, 1fr); gap: 60px; }
+  .teamGrid { grid-template-columns: minmax(0, 1fr); }
+  .statsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ratingFloat { display: none; }
   .expBadge { bottom: -10px; left: 10px; }
 }
@@ -993,9 +998,9 @@
 @media (max-width: 768px) {
   .hero { padding: 110px 20px 80px; }
   .heroWatermark { display: none; }
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
-  .industryGrid { grid-template-columns: repeat(2, 1fr); }
-  .whyGrid { grid-template-columns: 1fr; }
+  .statsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .industryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .whyGrid { grid-template-columns: minmax(0, 1fr); }
   .tabPanel { padding: 32px 24px; }
   .tabPoints { flex-direction: column; align-items: center; gap: 12px; }
 }
@@ -1003,9 +1008,9 @@
 @media (max-width: 560px) {
   .heroActions { flex-direction: column; }
   .heroBtnPrimary, .heroBtnOutline { justify-content: center; }
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
-  .serviceGrid { grid-template-columns: 1fr; }
-  .industryGrid { grid-template-columns: repeat(2, 1fr); }
-  .teamImageGrid { grid-template-columns: 1fr 1fr; }
+  .statsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .serviceGrid { grid-template-columns: minmax(0, 1fr); }
+  .industryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .teamImageGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ctaBtns { flex-direction: column; align-items: center; }
 }
