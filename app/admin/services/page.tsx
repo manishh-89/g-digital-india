@@ -28,16 +28,13 @@ interface Service {
   highlight: string
   tags: string[]
   image: string
-  heroStats: { num: string; label: string }[]
-  offers: { title: string; text: string; icon: string }[]
-  steps: { title: string; text: string }[]
   faqs: { q: string; a: string }[]
   order: number
 }
 
 const empty = { 
   title: '', slug: '', category: '', industry: '', short: '', description: '', highlight: '', tags: [], image: '', 
-  heroStats: [], offers: [], steps: [], faqs: [], order: 0 
+  faqs: [], order: 0 
 }
 
 export default function AdminServices() {
@@ -119,9 +116,6 @@ export default function AdminServices() {
       description: s.description,
       highlight: s.highlight,
       image: s.image || '',
-      heroStats: s.heroStats || [],
-      offers: s.offers || [],
-      steps: s.steps || [],
       faqs: s.faqs || [],
       order: s.order || 0
     })
@@ -218,61 +212,6 @@ export default function AdminServices() {
                 value={formData.highlight} onChange={e => setFormData({...formData, highlight: e.target.value})} />
             </div>
 
-            {/* HERO STATS SECTION */}
-            <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                 <h4 style={{ margin: 0 }}>📊 Hero Stats</h4>
-                 <button type="button" className="admin-btn-secondary" style={{ padding: '4px 10px', fontSize: 12 }}
-                   onClick={() => addArrayItem('heroStats', { num: '', label: '' })}>+ Add Stat</button>
-               </div>
-               {formData.heroStats.map((s: any, i: number) => (
-                 <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 2fr auto', gap: 10, marginBottom: 8 }}>
-                   <input className="admin-input" placeholder="Value (e.g. 3x)" value={s.num} onChange={e => updateArrayItem('heroStats', i, 'num', e.target.value)} />
-                   <input className="admin-input" placeholder="Label (e.g. Traffic Increase)" value={s.label} onChange={e => updateArrayItem('heroStats', i, 'label', e.target.value)} />
-                   <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('heroStats', i)}>🗑️</button>
-                 </div>
-               ))}
-            </div>
-
-            {/* OFFERS SECTION */}
-            <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                 <h4 style={{ margin: 0 }}>🎁 What We Offer</h4>
-                 <button type="button" className="admin-btn-secondary" style={{ padding: '4px 10px', fontSize: 12 }}
-                   onClick={() => addArrayItem('offers', { title: '', text: '' })}>+ Add Offer</button>
-               </div>
-               {formData.offers.map((s: any, i: number) => (
-                 <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 10, border: '1px solid #e2e8f0', borderRadius: 8, marginBottom: 10 }}>
-                   <div style={{ display: 'flex', gap: 10 }}>
-                     <input style={{ flex: 1 }} className="admin-input" placeholder="Offer Title" value={s.title} onChange={e => updateArrayItem('offers', i, 'title', e.target.value)} />
-                     <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('offers', i)}>🗑️</button>
-                   </div>
-                   <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-                    <ReactQuill theme="snow" modules={quillModules} value={s.text} onChange={val => updateArrayItem('offers', i, 'text', val)} />
-                   </div>
-                 </div>
-               ))}
-            </div>
-
-            {/* STEPS SECTION */}
-            <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                 <h4 style={{ margin: 0 }}>🚀 Process Steps</h4>
-                 <button type="button" className="admin-btn-secondary" style={{ padding: '4px 10px', fontSize: 12 }}
-                   onClick={() => addArrayItem('steps', { title: '', text: '' })}>+ Add Step</button>
-               </div>
-               {formData.steps.map((s: any, i: number) => (
-                 <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 10, border: '1px solid #e2e8f0', borderRadius: 8, marginBottom: 10 }}>
-                   <div style={{ display: 'flex', gap: 10 }}>
-                     <input style={{ flex: 1 }} className="admin-input" placeholder="Step Title" value={s.title} onChange={e => updateArrayItem('steps', i, 'title', e.target.value)} />
-                     <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('steps', i)}>🗑️</button>
-                   </div>
-                   <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-                    <ReactQuill theme="snow" modules={quillModules} value={s.text} onChange={val => updateArrayItem('steps', i, 'text', val)} />
-                   </div>
-                 </div>
-               ))}
-            </div>
 
             {/* FAQS SECTION */}
             <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>

@@ -64,9 +64,6 @@ interface Service {
   highlight: string;
   tags: string[];
   image: string;
-  heroStats: { num: string; label: string }[];
-  offers: { title: string; text: string; icon?: string }[];
-  steps: { title: string; text: string }[];
   faqs: { q: string; a: string }[];
 }
 
@@ -150,17 +147,7 @@ export default function DynamicServiceDetail() {
           </div>
         </div>
 
-        {/* Stats bar */}
-        {service.heroStats && service.heroStats.length > 0 && (
-          <div className={styles.heroStats}>
-            {service.heroStats.map((s, i) => (
-              <div key={i} className={styles.heroStat}>
-                <div className={styles.heroStatNum}>{s.num}</div>
-                <div className={styles.heroStatLabel}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        )}
+
       </section>
 
       {/* ═══ MAIN BODY ═══ */}
@@ -188,47 +175,6 @@ export default function DynamicServiceDetail() {
             />
           )}
 
-          {/* Section 2 — What We Offer */}
-          {service.offers && service.offers.length > 0 && (
-            <>
-              <span className={styles.sectionLabel} style={{ marginTop: '40px', display: 'block' }}>What We Offer</span>
-              <h2 className={styles.contentTitle}>Our {service.short} Solutions</h2>
-              <div className={styles.offerGrid}>
-                {service.offers.map((o, i) => (
-                  <div key={i} className={styles.offerCard}>
-                    <div className={styles.offerCardIcon}>{offerIcons[i % offerIcons.length]}</div>
-                    <h3 className={styles.offerCardTitle}>{o.title}</h3>
-                    <div 
-                      className={styles.offerCardText} 
-                      dangerouslySetInnerHTML={{ __html: o.text }} 
-                    />
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {/* Section 3 — Process */}
-          {service.steps && service.steps.length > 0 && (
-            <div className={styles.processSection}>
-              <span className={styles.sectionLabel}>Our Process</span>
-              <h2 className={styles.contentTitle}>How We Deliver Results</h2>
-              <div className={styles.steps}>
-                {service.steps.map((s, i) => (
-                  <div key={i} className={styles.step}>
-                    <div className={styles.stepNum}>0{i + 1}</div>
-                    <div>
-                      <h4 className={styles.stepTitle}>{s.title}</h4>
-                      <div 
-                        className={styles.stepText} 
-                        dangerouslySetInnerHTML={{ __html: s.text }} 
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Section 4 — FAQ */}
           {service.faqs && service.faqs.length > 0 && (
