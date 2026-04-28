@@ -22,9 +22,9 @@ const navLinks = {
     { label: "Contact Us", href: "/contact" }
   ],
   Legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Use", href: "#" },
-    { label: "Refund Policy", href: "#" }
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Use", href: "/terms-of-use" },
+    { label: "Refund Policy", href: "/refund-policy" }
   ]
 }
 
@@ -230,9 +230,9 @@ return(
     <span className={styles["ft-copy"]}>© {new Date().getFullYear()} G-Digital India.</span>
     <span className={styles["ft-bottom-mid"]}>Made with ♥ in India</span>
     <div className={styles["ft-bottom-links"]}>
-      <Link href="/" className={styles["ft-bottom-link"]}>Privacy</Link>
+      <Link href="/privacy-policy" className={styles["ft-bottom-link"]}>Privacy</Link>
       <span className={styles["ft-bottom-sep"]}>·</span>
-      <Link href="/" className={styles["ft-bottom-link"]}>Terms</Link>
+      <Link href="/terms-of-use" className={styles["ft-bottom-link"]}>Terms</Link>
     </div>
   </div>
 </div>
