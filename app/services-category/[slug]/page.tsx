@@ -83,27 +83,7 @@ export default async function CategoryDetail({ params }: { params: Promise<{ slu
       </section>
 
       {/* ═══ TOP FULL WIDTH AREA ═══ */}
-      <div className={styles.mainTopFull} style={{ paddingBottom: '70px' }}>
-        <div className={styles.topSideBySide}>
-          <div className={styles.topContentLeft}>
-            <span className={styles.sectionLabel}>About the Category</span>
-            <div 
-              className={styles.contentText}
-              dangerouslySetInnerHTML={{ __html: category.description || "" }}
-            />
-          </div>
-          {category.image && (
-            <div className={styles.topImageRight}>
-              <Image
-                src={category.image}
-                alt={category.title || category.name}
-                width={800} height={500}
-                className={styles.topImgObj}
-                style={{ objectFit: 'cover' }}
-              />
-            </div>
-          )}
-        </div>
+
 
         {/* Alternating Content Blocks */}
         {category.contentBlocks && category.contentBlocks.length > 0 && (
@@ -132,7 +112,6 @@ export default async function CategoryDetail({ params }: { params: Promise<{ slu
             })}
           </div>
         )}
-      </div>
 
       {/* ═══ SERVICES IN THIS CATEGORY ═══ */}
       {relatedServices.length > 0 && (
