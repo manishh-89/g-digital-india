@@ -389,7 +389,7 @@ a.ft-contact-item:hover { color: #f0ece3; }
   padding: 0 60px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 20px;
 }
 .ft-copy,

@@ -228,12 +228,6 @@ return(
 <div className={styles["ft-bottom"]}>
   <div className={styles["ft-bottom-inner"]}>
     <span className={styles["ft-copy"]}>© {new Date().getFullYear()} G-Digital India.</span>
-    <span className={styles["ft-bottom-mid"]}>Made with ♥ in India</span>
-    <div className={styles["ft-bottom-links"]}>
-      <Link href="/privacy-policy" className={styles["ft-bottom-link"]}>Privacy</Link>
-      <span className={styles["ft-bottom-sep"]}>·</span>
-      <Link href="/terms-of-use" className={styles["ft-bottom-link"]}>Terms</Link>
-    </div>
   </div>
 </div>
 
