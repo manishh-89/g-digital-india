@@ -73,11 +73,12 @@ export default async function DynamicServiceDetail({ params }: { params: Promise
             <span className={styles.heroDot} /> {service.short} Services
           </div>
           <h1 className={styles.heroTitle}>
-            {service.title}
+            {service.descriptionHeading || service.title}
           </h1>
-          <p className={styles.heroDesc}>
-            {service.highlight || "Professional solutions tailored to grow your business sustainably."}
-          </p>
+          <div 
+            className={styles.heroDesc}
+            dangerouslySetInnerHTML={{ __html: service.description || service.highlight || "Professional solutions tailored to grow your business sustainably." }}
+          />
           <div className={styles.heroActions}>
             <Link href="/contact" className={styles.btnPrimary}>
               Get Free Consultation <IconArrow size={13} />
@@ -86,32 +87,7 @@ export default async function DynamicServiceDetail({ params }: { params: Promise
         </div>
       </section>
 
-      {/* ═══ TOP FULL WIDTH AREA ═══ */}
-      <div className={styles.mainTopFull}>
-        <div className={styles.topSideBySide}>
-          <div className={styles.topContentLeft}>
-            {service.descriptionHeading ? (
-              <h2 className={styles.contentTitle}>{service.descriptionHeading}</h2>
-            ) : (
-              <h2 className={styles.contentTitle}>{service.title}</h2>
-            )}
-            <div 
-              className={styles.contentText}
-              dangerouslySetInnerHTML={{ __html: service.description }}
-            />
-          </div>
-          {service.image && (
-            <div className={styles.topImageRight}>
-              <Image
-                src={service.image}
-                alt={service.title}
-                width={800} height={500}
-                className={styles.topImgObj}
-                style={{ objectFit: 'cover' }}
-              />
-            </div>
-          )}
-        </div>
+
 
         {/* Alternating Content Blocks */}
         {service.contentBlocks && service.contentBlocks.length > 0 && (
@@ -140,7 +116,6 @@ export default async function DynamicServiceDetail({ params }: { params: Promise
             })}
           </div>
         )}
-      </div>
 
       {/* ═══ BOTTOM BODY (FAQs + Sidebar) ═══ */}
       <div className={styles.main}>
