@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import ServiceCategory from '@/models/ServiceCategory'
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, context: { params: Promise<{ id: string }> }) {
   try {
     await connectDB()
     const data = await req.json()
-    const updated = await ServiceCategory.findByIdAndUpdate(params.id, data, { new: true })
+    const { id } = await context.params
+    const updated = await ServiceCategory.findByIdAndUpdate(id, data, { new: true })
     if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(updated)
   } catch (error: any) {
@@ -14,10 +15,11 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, context: { params: Promise<{ id: string }> }) {
   try {
     await connectDB()
-    const deleted = await ServiceCategory.findByIdAndDelete(params.id)
+    const { id } = await context.params
+    const deleted = await ServiceCategory.findByIdAndDelete(id)
     if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json({ message: 'Deleted successfully' })
   } catch (error: any) {
