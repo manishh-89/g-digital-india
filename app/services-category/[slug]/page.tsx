@@ -27,8 +27,14 @@ export default async function CategoryDetail({ params }: { params: Promise<{ slu
   const { slug } = await params;
 
   // Fetch the category by slug or id
+  const decodedSlug = decodeURIComponent(slug);
   const catData = await ServiceCategory.findOne({ 
-    $or: [{ slug: slug }, { _id: slug.match(/^[0-9a-fA-F]{24}$/) ? slug : null }] 
+    $or: [
+      { slug: { $regex: new RegExp('^' + decodedSlug + '$', 'i') } },
+      { name: { $regex: new RegExp('^' + decodedSlug + '$', 'i') } },
+      { slug: { $regex: new RegExp('^' + decodedSlug.replace(/ /g, '-') + '$', 'i') } },
+      { _id: decodedSlug.match(/^[0-9a-fA-F]{24}$/) ? decodedSlug : null }
+    ] 
   }).lean();
 
   if (!catData) {

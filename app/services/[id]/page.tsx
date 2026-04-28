@@ -31,9 +31,15 @@ export default async function DynamicServiceDetail({ params }: { params: Promise
   await connectDB();
   const { id } = await params;
 
+  const decodedId = decodeURIComponent(id);
   // Fetch the service by slug or id
   const serviceData = await Service.findOne({ 
-    $or: [{ slug: id }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }] 
+    $or: [
+      { slug: { $regex: new RegExp('^' + decodedId + '$', 'i') } },
+      { title: { $regex: new RegExp('^' + decodedId + '$', 'i') } },
+      { slug: { $regex: new RegExp('^' + decodedId.replace(/ /g, '-') + '$', 'i') } },
+      { _id: decodedId.match(/^[0-9a-fA-F]{24}$/) ? decodedId : null }
+    ] 
   }).lean();
 
   if (!serviceData) {
