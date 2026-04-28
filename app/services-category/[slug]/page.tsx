@@ -1,9 +1,8 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { connectDB } from "@/lib/mongodb";
+import ServiceCategory from "@/models/ServiceCategory";
+import Service from "@/models/Service";
 import styles from "../../service-detail/ServiceDetail.module.css";
 
 // ── Inline SVG Icons ───────────────────────────────────────
@@ -23,53 +22,24 @@ const IconArrow = ({ size = 14 }: { size?: number }) => (
   </svg>
 );
 
-interface ServiceCategory {
-  _id: string;
-  name: string;
-  slug: string;
-  title: string;
-  description: string;
-  image: string;
-  contentBlocks: { title: string; text: string; image: string }[];
-}
+export default async function CategoryDetail({ params }: { params: Promise<{ slug: string }> }) {
+  await connectDB();
+  const { slug } = await params;
 
-export default function CategoryDetail() {
-  const params = useParams();
-  const slug = params.slug as string;
+  // Fetch the category by slug or id
+  const catData = await ServiceCategory.findOne({ 
+    $or: [{ slug: slug }, { _id: slug.match(/^[0-9a-fA-F]{24}$/) ? slug : null }] 
+  }).lean();
 
-  const [category, setCategory] = useState<ServiceCategory | null>(null);
-  const [relatedServices, setRelatedServices] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  if (!catData) {
+    return <div style={{ padding: '100px', textAlign: 'center' }}>Category not found</div>;
+  }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [catRes, svcRes] = await Promise.all([
-          fetch(`/api/service-categories/${slug}`),
-          fetch('/api/services')
-        ]);
-        
-        let fetchedCat = null;
-        if (catRes.ok) {
-          fetchedCat = await catRes.json();
-          setCategory(fetchedCat);
-        }
-        
-        if (svcRes.ok && fetchedCat) {
-          const allServices = await svcRes.json();
-          setRelatedServices(allServices.filter((s: any) => s.category === fetchedCat.name));
-        }
-      } catch (err) {
-        console.error("Error fetching category data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [slug]);
+  const category = JSON.parse(JSON.stringify(catData));
 
-  if (loading) return <div style={{ padding: '100px', textAlign: 'center' }}>Loading...</div>;
-  if (!category) return <div style={{ padding: '100px', textAlign: 'center' }}>Category not found</div>;
+  // Fetch services that belong to this category
+  const servicesData = await Service.find({ category: category.name }).sort({ order: 1 }).lean();
+  const relatedServices = JSON.parse(JSON.stringify(servicesData));
 
   return (
     <div className={styles.page}>
@@ -127,7 +97,7 @@ export default function CategoryDetail() {
         {/* Alternating Content Blocks */}
         {category.contentBlocks && category.contentBlocks.length > 0 && (
           <div className={styles.contentBlocks}>
-            {category.contentBlocks.map((block, i) => {
+            {category.contentBlocks.map((block: any, i: number) => {
               const isReverse = i % 2 === 0;
               return (
                 <div key={i} className={`${styles.contentBlock} ${isReverse ? styles.contentBlockReverse : ""}`}>
@@ -160,7 +130,7 @@ export default function CategoryDetail() {
             <span className={styles.sectionLabel}>Our Services</span>
             <h2 className={styles.contentTitle}>Services in {category.name}</h2>
             <div className={styles.relatedGrid}>
-              {relatedServices.map((s) => (
+              {relatedServices.map((s: any) => (
                 <Link key={s._id} href={`/services/${s.slug || s._id}`} className={styles.relatedCard}>
                   <Image 
                     src={s.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop"} 

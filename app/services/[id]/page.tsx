@@ -1,9 +1,8 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { connectDB } from "@/lib/mongodb";
+import Service from "@/models/Service";
+import FaqItem from "@/app/components/FaqItem/FaqItem";
 import styles from "../../service-detail/ServiceDetail.module.css";
 
 // ── Inline SVG Icons ───────────────────────────────────────
@@ -22,98 +21,30 @@ const IconArrow = ({ size = 14 }: { size?: number }) => (
     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
   </svg>
 );
-const IconPlus = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-  </svg>
-);
 const IconPhone = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.15 1.19 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.86-.86a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
   </svg>
 );
 
-// Offer card icons
-const IconSearch = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-  </svg>
-);
-const IconLink = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
-  </svg>
-);
-const IconMap = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-  </svg>
-);
-const IconCode = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-  </svg>
-);
+export default async function DynamicServiceDetail({ params }: { params: Promise<{ id: string }> }) {
+  await connectDB();
+  const { id } = await params;
 
-interface Service {
-  _id: string;
-  title: string;
-  slug: string;
-  short: string;
-  description: string;
-  highlight: string;
-  tags: string[];
-  image: string;
-  contentBlocks: { title: string; text: string; image: string }[];
-  faqs: { q: string; a: string }[];
-}
+  // Fetch the service by slug or id
+  const serviceData = await Service.findOne({ 
+    $or: [{ slug: id }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }] 
+  }).lean();
 
-// Offer icons mapping fallback
-const offerIcons = [<IconSearch />, <IconLink />, <IconCode />, <IconMap />];
+  if (!serviceData) {
+    return <div style={{ padding: '100px', textAlign: 'center' }}>Service not found</div>;
+  }
 
-// ── FAQ Item ───────────────────────────────────────────────
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className={styles.faqItem}>
-      <button className={`${styles.faqQ} ${open ? styles.faqQActive : ""}`} onClick={() => setOpen(!open)}>
-        {q}
-        <span className={`${styles.faqIcon} ${open ? styles.faqIconOpen : ""}`}><IconPlus /></span>
-      </button>
-      <div className={`${styles.faqA} ${open ? styles.faqAOpen : ""}`} dangerouslySetInnerHTML={{ __html: a }} />
-    </div>
-  );
-}
+  const servicesData = await Service.find().sort({ order: 1 }).lean();
 
-export default function DynamicServiceDetail() {
-  const params = useParams();
-  const idOrSlug = params.id as string;
-
-  const [service, setService] = useState<Service | null>(null);
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [resSvc, resAll] = await Promise.all([
-          fetch(`/api/services/${idOrSlug}`),
-          fetch('/api/services')
-        ]);
-        
-        if (resSvc.ok) setService(await resSvc.json());
-        if (resAll.ok) setServices(await resAll.json());
-      } catch (err) {
-        console.error("Error fetching service:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [idOrSlug]);
-
-  if (loading) return <div style={{ padding: '100px', textAlign: 'center' }}>Loading...</div>;
-  if (!service) return <div style={{ padding: '100px', textAlign: 'center' }}>Service not found</div>;
+  // Convert data to plain JS objects to prevent Next.js Serialization error
+  const service = JSON.parse(JSON.stringify(serviceData));
+  const services = JSON.parse(JSON.stringify(servicesData));
 
   return (
     <div className={styles.page}>
@@ -147,8 +78,6 @@ export default function DynamicServiceDetail() {
             </Link>
           </div>
         </div>
-
-
       </section>
 
       {/* ═══ TOP FULL WIDTH AREA ═══ */}
@@ -178,7 +107,7 @@ export default function DynamicServiceDetail() {
         {/* Alternating Content Blocks */}
         {service.contentBlocks && service.contentBlocks.length > 0 && (
           <div className={styles.contentBlocks}>
-            {service.contentBlocks.map((block, i) => {
+            {service.contentBlocks.map((block: any, i: number) => {
               const isReverse = i % 2 === 0;
               return (
                 <div key={i} className={`${styles.contentBlock} ${isReverse ? styles.contentBlockReverse : ""}`}>
@@ -216,14 +145,14 @@ export default function DynamicServiceDetail() {
               <span className={styles.sectionLabel}>FAQs</span>
               <h2 className={styles.contentTitle}>Frequently Asked Questions</h2>
               <div className={styles.faqList}>
-                {service.faqs.map((f, i) => <FaqItem key={i} q={f.q} a={f.a} />)}
+                {service.faqs.map((f: any, i: number) => <FaqItem key={i} q={f.q} a={f.a} />)}
               </div>
             </div>
           )}
 
           {/* Tags */}
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '40px' }}>
-            {service.tags?.map(tag => (
+            {service.tags?.map((tag: string) => (
               <span key={tag} style={{ background: '#f0f0f0', padding: '5px 12px', borderRadius: '20px', fontSize: '13px' }}>
                 {tag}
               </span>
@@ -263,7 +192,7 @@ export default function DynamicServiceDetail() {
           <div className={styles.sideCard}>
             <p className={styles.sideCardTitle}>Other Services</p>
             <div className={styles.relatedList}>
-              {services.filter(s => s._id !== service._id).slice(0, 7).map((s) => (
+              {services.filter((s: any) => s._id !== service._id).slice(0, 7).map((s: any) => (
                 <Link key={s._id} href={`/services/${s.slug || s._id}`} className={styles.relatedLink}>
                   {s.title} <IconChevron />
                 </Link>
@@ -292,13 +221,16 @@ export default function DynamicServiceDetail() {
           <span className={styles.sectionLabel}>Related Services</span>
           <h2 className={styles.contentTitle}>You Might Also Need</h2>
           <div className={styles.relatedGrid}>
-            {services.filter(s => s._id !== service._id).slice(0, 3).map((s) => (
+            {services.filter((s: any) => s._id !== service._id).slice(0, 3).map((s: any) => (
               <Link key={s._id} href={`/services/${s.slug || s._id}`} className={styles.relatedCard}>
                 <Image src={s.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop"} alt={s.title} width={600} height={160} className={styles.relatedCardImg} style={{ objectFit: 'cover' }} />
                 <div className={styles.relatedCardBody}>
                   <span className={styles.relatedCardTag}>{s.short}</span>
                   <h3 className={styles.relatedCardTitle}>{s.title}</h3>
-                  <p className={styles.relatedCardText}>{s.highlight || s.short}</p>
+                  <p className={styles.relatedCardDesc}>
+                    {s.highlight || (s.description && s.description.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...')}
+                  </p>
+                  <span className={styles.relatedCardLink}>Read More <IconArrow size={12} /></span>
                 </div>
               </Link>
             ))}
