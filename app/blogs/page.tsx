@@ -1,35 +1,14 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { connectDB } from "@/lib/mongodb";
+import Blog from "@/models/Blog";
 import styles from "./blog-list.module.css";
 
-interface Blog {
-  _id: string;
-  slug: string;
-  category: string;
-  title: string;
-  excerpt: string;
-  author: string;
-  date: string;
-  readTime: string;
-  image: string;
-}
+export default async function BlogListPage() {
+  await connectDB();
 
-export default function BlogListPage() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/blogs")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setBlogs(data);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  const data = await Blog.find().sort({ createdAt: -1 }).lean();
+  const blogs = JSON.parse(JSON.stringify(data));
 
   return (
     <main className={styles.blogPage}>
@@ -48,12 +27,7 @@ export default function BlogListPage() {
       {/* Blog Grid */}
       <section className={styles.blogGridSection}>
         <div className={styles.container}>
-          {loading ? (
-            <div className={styles.loading}>
-              <div className={styles.spinner}></div>
-              <p>Loading our latest stories...</p>
-            </div>
-          ) : blogs.length === 0 ? (
+          {blogs.length === 0 ? (
             <div className={styles.noBlogs}>
               <h2>No articles available yet.</h2>
               <p>We are currently working on some amazing content for you. Stay tuned!</p>
@@ -61,7 +35,7 @@ export default function BlogListPage() {
             </div>
           ) : (
             <div className={styles.grid}>
-              {blogs.map((blog) => (
+              {blogs.map((blog: any) => (
                 <Link href={`/blogs/${blog.slug}`} key={blog._id} className={styles.blogCard}>
                   <div className={styles.imageWrap}>
                     <Image
