@@ -252,8 +252,18 @@
     display: none;
   }
 
+  .navbar {
+    padding: 15px 20px;
+  }
+
   .navbar-logo {
-    width: 145px;
+    width: 150px;
+  }
+  
+  .navbar-logo img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain;
   }
 
   .hamburger {
