@@ -8,12 +8,23 @@ import Testimonials from "./components/Testimonials/Testimonials";
 import Gallery from "./components/Gallery/Gallery";
 import BlogSection from "./components/Blog/Blog";
 import Reels from "./components/Reels/Reels";
+import { connectDB } from "@/lib/mongodb";
+import SliderModel from "@/models/Slider";
 
+// Configure Next.js to revalidate the page every 60 seconds (or 0 for dynamic)
+// 60 means it will fetch fresh data every minute, ensuring fast TTFB while keeping data relatively fresh.
+export const revalidate = 60; 
 
-export default function Home() {
+export default async function Home() {
+  await connectDB();
+  const sliders = await SliderModel.find().lean();
+  
+  // Safely serialize for Client Component
+  const initialSliderData = sliders.length > 0 ? JSON.parse(JSON.stringify(sliders[0])) : null;
+
   return (
     <>
-      <Slider />
+      <Slider initialData={initialSliderData} />
       <About />
       {/* <Counters /> */}
       <Services />
@@ -23,7 +34,6 @@ export default function Home() {
       <BlogSection/>
       <Reels />
       <Testimonials />
-
     </>
   );
 }

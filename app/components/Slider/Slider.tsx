@@ -13,10 +13,10 @@ interface SliderData {
   isVideo: boolean;
 }
 
-export default function Slider() {
+export default function Slider({ initialData }: { initialData?: SliderData | null }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [visible, setVisible] = useState(false);
-  const [sliderData, setSliderData] = useState<SliderData | null>(null);
+  const [sliderData, setSliderData] = useState<SliderData | null>(initialData || null);
 
   useEffect(() => {
     // Fetch slider data
@@ -33,7 +33,9 @@ export default function Slider() {
         console.error("Failed to fetch slider data:", err);
       }
     };
-    fetchSlider();
+    if (!initialData) {
+      fetchSlider();
+    }
 
     const t = setTimeout(() => setVisible(true), 80);
     return () => clearTimeout(t);
