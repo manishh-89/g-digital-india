@@ -179,7 +179,7 @@ export default function DynamicServiceDetail() {
         {service.contentBlocks && service.contentBlocks.length > 0 && (
           <div className={styles.contentBlocks}>
             {service.contentBlocks.map((block, i) => {
-              const isReverse = i % 2 !== 0;
+              const isReverse = i % 2 === 0;
               return (
                 <div key={i} className={`${styles.contentBlock} ${isReverse ? styles.contentBlockReverse : ""}`}>
                   <div className={styles.blockText}>
