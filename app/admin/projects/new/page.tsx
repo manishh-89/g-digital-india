@@ -17,7 +17,17 @@ const quillModules = {
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     ['link', 'clean']
   ],
+  clipboard: {
+    matchVisual: false,
+  }
 }
+
+const quillFormats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike',
+  'list', 'bullet',
+  'link'
+]
 
 const empty = {
   title: '', slug: '', category: '', industry: '', image: '', description: '',
@@ -123,7 +133,7 @@ export default function NewProject() {
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">Project Description (Mini Intro)</label>
             <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-              <ReactQuill theme="snow" modules={quillModules} value={formData.description} onChange={val => set('description', val)} />
+              <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={formData.description} onChange={val => set('description', val)} />
             </div>
           </div>
 
@@ -145,19 +155,19 @@ export default function NewProject() {
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">The Challenges</label>
             <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-              <ReactQuill theme="snow" modules={quillModules} value={formData.challenges} onChange={val => set('challenges', val)} />
+              <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={formData.challenges} onChange={val => set('challenges', val)} />
             </div>
           </div>
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">The Solutions</label>
             <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-              <ReactQuill theme="snow" modules={quillModules} value={formData.solutions} onChange={val => set('solutions', val)} />
+              <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={formData.solutions} onChange={val => set('solutions', val)} />
             </div>
           </div>
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">The Results</label>
             <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-              <ReactQuill theme="snow" modules={quillModules} value={formData.results} onChange={val => set('results', val)} />
+              <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={formData.results} onChange={val => set('results', val)} />
             </div>
           </div>
 

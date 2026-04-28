@@ -15,7 +15,18 @@ const quillModules = {
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     ['link', 'clean']
   ],
+  clipboard: {
+    // This will clean up pasted HTML
+    matchVisual: false,
+  }
 }
+
+const quillFormats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike',
+  'list', 'bullet',
+  'link'
+]
 
 interface Service {
   _id: string
@@ -217,7 +228,7 @@ export default function AdminServices() {
             <div className="admin-form-group" style={{ margin: 0 }}>
               <label className="admin-label">Description</label>
               <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-                <ReactQuill theme="snow" modules={quillModules} value={formData.description} onChange={val => setFormData({...formData, description: val})} />
+                <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={formData.description} onChange={val => setFormData({...formData, description: val})} />
               </div>
             </div>
 
@@ -255,7 +266,7 @@ export default function AdminServices() {
                      </div>
                      {/* Editor */}
                      <div style={{ flex: 1, borderRadius: 8, overflow: 'hidden' }}>
-                      <ReactQuill theme="snow" modules={quillModules} value={s.text} onChange={val => updateArrayItem('contentBlocks', i, 'text', val)} />
+                      <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={s.text} onChange={val => updateArrayItem('contentBlocks', i, 'text', val)} />
                      </div>
                    </div>
                  </div>
@@ -277,7 +288,7 @@ export default function AdminServices() {
                      <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('faqs', i)}>🗑️</button>
                    </div>
                    <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-                    <ReactQuill theme="snow" modules={quillModules} value={s.a} onChange={val => updateArrayItem('faqs', i, 'a', val)} />
+                    <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={s.a} onChange={val => updateArrayItem('faqs', i, 'a', val)} />
                    </div>
                  </div>
                ))}

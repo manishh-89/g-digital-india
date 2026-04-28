@@ -15,7 +15,17 @@ const quillModules = {
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     ['link', 'image', 'clean']
   ],
+  clipboard: {
+    matchVisual: false,
+  }
 }
+
+const quillFormats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike',
+  'list', 'bullet',
+  'link', 'image'
+]
 
 interface Blog {
   _id: string
@@ -181,6 +191,7 @@ export default function AdminBlogs() {
                 <ReactQuill 
                   theme="snow"
                   modules={quillModules}
+                  formats={quillFormats}
                   placeholder="Write your full blog content here..."
                   value={formData.content} 
                   onChange={val => setFormData({...formData, content: val})} 

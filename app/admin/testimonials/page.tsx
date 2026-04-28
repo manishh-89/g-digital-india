@@ -14,7 +14,16 @@ const quillModules = {
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     ['link', 'clean']
   ],
+  clipboard: {
+    matchVisual: false,
+  }
 }
+
+const quillFormats = [
+  'bold', 'italic', 'underline', 'strike',
+  'list', 'bullet',
+  'link'
+]
 
 interface Testimonial {
   _id: string
@@ -193,7 +202,7 @@ export default function AdminTestimonials() {
             <div className="admin-form-group">
               <label className="admin-label">Full Review *</label>
               <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden' }}>
-                <ReactQuill theme="snow" modules={quillModules} value={formData.review} onChange={val => setFormData({...formData, review: val})} />
+                <ReactQuill theme="snow" modules={quillModules} formats={quillFormats} value={formData.review} onChange={val => setFormData({...formData, review: val})} />
               </div>
             </div>
 

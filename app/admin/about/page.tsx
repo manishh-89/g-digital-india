@@ -15,7 +15,17 @@ const quillModules = {
     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     ['link', 'clean']
   ],
+  clipboard: {
+    matchVisual: false,
+  }
 }
+
+const quillFormats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike',
+  'list', 'bullet',
+  'link'
+]
 /* ── Font Awesome icon suggestions for "Why Choose Us" ── */
 const FA_VALUE_ICONS = [
   { cls: 'fa-solid fa-user-tie',         label: 'Professional' },
@@ -352,6 +362,7 @@ export default function AdminAbout() {
                 <ReactQuill
                   theme="snow"
                   modules={quillModules}
+                  formats={quillFormats}
                   value={formData.para1}
                   onChange={val => setFormData({ ...formData, para1: val })}
                   style={{ height: 'auto' }}
@@ -364,6 +375,7 @@ export default function AdminAbout() {
                 <ReactQuill
                   theme="snow"
                   modules={quillModules}
+                  formats={quillFormats}
                   value={formData.para2}
                   onChange={val => setFormData({ ...formData, para2: val })}
                   style={{ height: 'auto' }}
@@ -402,7 +414,7 @@ export default function AdminAbout() {
               <label className="admin-label"><i className="fa-solid fa-bullseye" style={{ marginRight: 6, color: '#f97316' }} />Our Mission Text</label>
               <div style={{ background: '#fff' }}>
                 <ReactQuill 
-                  theme="snow" modules={quillModules}
+                  theme="snow" modules={quillModules} formats={quillFormats}
                   value={formData.missionText} onChange={val => setFormData({ ...formData, missionText: val })} 
                 />
               </div>
@@ -411,7 +423,7 @@ export default function AdminAbout() {
               <label className="admin-label"><i className="fa-solid fa-eye" style={{ marginRight: 6, color: '#f97316' }} />Our Vision Text</label>
               <div style={{ background: '#fff' }}>
                 <ReactQuill 
-                  theme="snow" modules={quillModules}
+                  theme="snow" modules={quillModules} formats={quillFormats}
                   value={formData.visionText} onChange={val => setFormData({ ...formData, visionText: val })} 
                 />
               </div>
@@ -420,7 +432,7 @@ export default function AdminAbout() {
               <label className="admin-label"><i className="fa-solid fa-award" style={{ marginRight: 6, color: '#f97316' }} />Core Values Text</label>
               <div style={{ background: '#fff' }}>
                 <ReactQuill 
-                  theme="snow" modules={quillModules}
+                  theme="snow" modules={quillModules} formats={quillFormats}
                   value={formData.valuesText} onChange={val => setFormData({ ...formData, valuesText: val })} 
                 />
               </div>
@@ -535,7 +547,7 @@ export default function AdminAbout() {
               <label className="admin-label">Team Description Text</label>
               <div style={{ background: '#fff' }}>
                 <ReactQuill 
-                  theme="snow" modules={quillModules}
+                  theme="snow" modules={quillModules} formats={quillFormats}
                   value={formData.teamText} onChange={val => setFormData({ ...formData, teamText: val })} 
                 />
               </div>
