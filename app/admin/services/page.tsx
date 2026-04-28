@@ -36,6 +36,7 @@ interface Service {
   industry: string
   short: string
   description: string
+  descriptionHeading: string
   highlight: string
   tags: string[]
   image: string
@@ -45,7 +46,7 @@ interface Service {
 }
 
 const empty = { 
-  title: '', slug: '', category: '', industry: '', short: '', description: '', highlight: '', tags: [], image: '', 
+  title: '', slug: '', category: '', industry: '', short: '', description: '', descriptionHeading: '', highlight: '', tags: [], image: '', 
   contentBlocks: [], faqs: [], order: 0 
 }
 
@@ -126,6 +127,7 @@ export default function AdminServices() {
       category: s.category || '',
       industry: s.industry || '',
       description: s.description,
+      descriptionHeading: s.descriptionHeading || '',
       highlight: s.highlight,
       image: s.image || '',
       contentBlocks: s.contentBlocks || [],
@@ -223,6 +225,12 @@ export default function AdminServices() {
                   {categories.map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
                 </select>
               </div>
+            </div>
+
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Description Heading (Replaces 'About the Service')</label>
+              <input className="admin-input" placeholder="e.g. Google Ads"
+                value={formData.descriptionHeading} onChange={e => setFormData({...formData, descriptionHeading: e.target.value})} />
             </div>
 
             <div className="admin-form-group" style={{ margin: 0 }}>

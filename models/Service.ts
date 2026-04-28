@@ -7,6 +7,7 @@ const ServiceSchema = new mongoose.Schema({
   category:    { type: String, default: '' },
   industry:    { type: String, default: '' },
   description: { type: String, default: '' },
+  descriptionHeading: { type: String, default: '' },
   highlight:   { type: String, default: '' },
   tags:        [{ type: String }],
   image:       { type: String, default: '' },

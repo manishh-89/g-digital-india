@@ -90,8 +90,11 @@ export default async function DynamicServiceDetail({ params }: { params: Promise
       <div className={styles.mainTopFull}>
         <div className={styles.topSideBySide}>
           <div className={styles.topContentLeft}>
-            <span className={styles.sectionLabel}>About the Service</span>
-            <h2 className={styles.contentTitle}>{service.title}</h2>
+            {service.descriptionHeading ? (
+              <h2 className={styles.contentTitle}>{service.descriptionHeading}</h2>
+            ) : (
+              <h2 className={styles.contentTitle}>{service.title}</h2>
+            )}
             <div 
               className={styles.contentText}
               dangerouslySetInnerHTML={{ __html: service.description }}
