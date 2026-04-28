@@ -73,11 +73,11 @@ export default function Slider({ initialData }: { initialData?: SliderData | nul
         
         {displayData.mediaUrl ? (
           displayData.isVideo ? (
-            <video key={displayData.mediaUrl} ref={videoRef} autoPlay loop muted playsInline className={styles["sl-video"]}>
+            <video key={displayData.mediaUrl} ref={videoRef} autoPlay loop muted playsInline preload="auto" className={styles["sl-video"]}>
               <source src={displayData.mediaUrl} />
             </video>
           ) : (
-            <img src={displayData.mediaUrl} alt="Hero Slider" className={styles["sl-video"]} style={{ objectFit: 'cover' }} />
+            <img src={displayData.mediaUrl} alt="Hero Slider" fetchPriority="high" loading="eager" className={styles["sl-video"]} style={{ objectFit: 'cover' }} />
           )
         ) : (
           <div className={styles["sl-video"]} style={{ background: '#000' }} />

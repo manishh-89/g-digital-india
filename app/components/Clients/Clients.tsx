@@ -98,7 +98,7 @@ export default function Clients() {
                     <div className={styles["cl-logo-card"]} key={i}>
                       <div className={styles["cl-logo-inner"]}>
                         <div style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                          <img src={c.logoUrl} alt={c.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(1) brightness(1.5)', opacity: 0.8 }} />
+                          <img src={c.logoUrl} alt={c.name} loading="lazy" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(1) brightness(1.5)', opacity: 0.8 }} />
                         </div>
                         <span className={styles["cl-logo-name"]}>{c.name}</span>
                         <span className={styles["cl-logo-industry"]}>{c.industry}</span>
@@ -120,7 +120,7 @@ export default function Clients() {
                     <div className={styles["cl-logo-card"]} key={i}>
                       <div className={styles["cl-logo-inner"]}>
                         <div style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                          <img src={c.logoUrl} alt={c.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(1) brightness(1.5)', opacity: 0.8 }} />
+                          <img src={c.logoUrl} alt={c.name} loading="lazy" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'grayscale(1) brightness(1.5)', opacity: 0.8 }} />
                         </div>
                         <span className={styles["cl-logo-name"]}>{c.name}</span>
                         <span className={styles["cl-logo-industry"]}>{c.industry}</span>
