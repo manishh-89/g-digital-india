@@ -38,15 +38,29 @@ export default function CategoryDetail() {
   const slug = params.slug as string;
 
   const [category, setCategory] = useState<ServiceCategory | null>(null);
+  const [relatedServices, setRelatedServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/service-categories/${slug}`);
-        if (res.ok) setCategory(await res.json());
+        const [catRes, svcRes] = await Promise.all([
+          fetch(`/api/service-categories/${slug}`),
+          fetch('/api/services')
+        ]);
+        
+        let fetchedCat = null;
+        if (catRes.ok) {
+          fetchedCat = await catRes.json();
+          setCategory(fetchedCat);
+        }
+        
+        if (svcRes.ok && fetchedCat) {
+          const allServices = await svcRes.json();
+          setRelatedServices(allServices.filter((s: any) => s.category === fetchedCat.name));
+        }
       } catch (err) {
-        console.error("Error fetching category:", err);
+        console.error("Error fetching category data:", err);
       } finally {
         setLoading(false);
       }
@@ -138,6 +152,37 @@ export default function CategoryDetail() {
           </div>
         )}
       </div>
+
+      {/* ═══ SERVICES IN THIS CATEGORY ═══ */}
+      {relatedServices.length > 0 && (
+        <section className={styles.relatedSection}>
+          <div className={styles.relatedInner}>
+            <span className={styles.sectionLabel}>Our Services</span>
+            <h2 className={styles.contentTitle}>Services in {category.name}</h2>
+            <div className={styles.relatedGrid}>
+              {relatedServices.map((s) => (
+                <Link key={s._id} href={`/services/${s.slug || s._id}`} className={styles.relatedCard}>
+                  <Image 
+                    src={s.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop"} 
+                    alt={s.title} 
+                    width={600} height={160} 
+                    className={styles.relatedCardImg} 
+                    style={{ objectFit: 'cover' }} 
+                  />
+                  <div className={styles.relatedCardBody}>
+                    <span className={styles.relatedCardTag}>{s.short}</span>
+                    <h3 className={styles.relatedCardTitle}>{s.title}</h3>
+                    <p className={styles.relatedCardDesc}>
+                      {s.highlight || (s.description && s.description.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...')}
+                    </p>
+                    <span className={styles.relatedCardLink}>Read More <IconArrow size={12} /></span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
     </div>
   );

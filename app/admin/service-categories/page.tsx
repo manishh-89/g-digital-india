@@ -283,7 +283,6 @@ export default function AdminServiceCategories() {
                 <p style={{ margin: 0, fontSize: 12, color: 'var(--admin-text-secondary)' }}>Order: {c.order}</p>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
-                <a href={`/services-category/${c.slug || c._id}`} target="_blank" rel="noreferrer" className="admin-btn-secondary" style={{ textDecoration: 'none', padding: '6px 10px', fontSize: 12 }}>👁️ View</a>
                 <button onClick={() => editOne(c)} className="admin-btn-secondary" style={{ padding: '6px 10px', fontSize: 12 }}>✏️ Edit</button>
                 <button onClick={() => deleteOne(c._id)} className="admin-btn-danger" style={{ padding: '6px 10px', fontSize: 12 }}>🗑️ Delete</button>
               </div>

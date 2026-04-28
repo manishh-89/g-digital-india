@@ -124,6 +124,16 @@
   margin-top: 0;
 }
 
+.megaMenuCategory a {
+  color: #ff6600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.megaMenuCategory a:hover {
+  opacity: 0.8;
+}
+
 .megaMenuList {
   list-style: none;
   padding: 0;

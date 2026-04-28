@@ -65,7 +65,11 @@ export default function Navbar() {
               <div className={styles.megaMenuContainer}>
                 {megaMenuData.map(group => (
                   <div key={group.category._id} className={styles.megaMenuColumn}>
-                    <h3 className={styles.megaMenuCategory}>{group.category.name}</h3>
+                    <h3 className={styles.megaMenuCategory}>
+                      <Link href={`/services-category/${group.category.slug || group.category._id}`} onClick={() => { setMenuOpen(false); setServicesOpen(false); }}>
+                        {group.category.name}
+                      </Link>
+                    </h3>
                     <ul className={styles.megaMenuList}>
                       {group.services.map(s => (
                         <li key={s._id}>
