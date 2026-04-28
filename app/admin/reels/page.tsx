@@ -91,8 +91,9 @@ export default function AdminReels() {
               </div>
             <a href={r.url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: 'var(--admin-primary)', wordBreak: 'break-all' }}>{r.url}</a>
             <button onClick={() => deleteReel(r._id)} className="admin-btn-danger" style={{ width: '100%', marginTop: 15, fontSize: 12, padding: '8px' }}>🗑️ Delete</button>
-          </div>
-        ))}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
