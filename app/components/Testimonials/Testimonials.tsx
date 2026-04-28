@@ -58,8 +58,7 @@ export default function Testimonials() {
   }, [])
 
   const goTo = useCallback((idx: number, dir: string) => {
-
-    if (animating || idx === active) return
+    if (animating || idx === active || testimonials.length === 0) return
 
     setAnimDir(dir)
     setAnimating(true)
@@ -68,36 +67,55 @@ export default function Testimonials() {
       setActive(idx)
       setAnimating(false)
     }, 320)
-
-  }, [animating, active])
+  }, [animating, active, testimonials.length])
 
   const next = useCallback(() => {
+    if (testimonials.length === 0) return
     const index = (active + 1) % testimonials.length
     goTo(index, "next")
-  }, [active, goTo])
+  }, [active, goTo, testimonials.length])
 
   const prev = useCallback(() => {
+    if (testimonials.length === 0) return
     const index = (active - 1 + testimonials.length) % testimonials.length
     goTo(index, "prev")
-  }, [active, goTo])
+  }, [active, goTo, testimonials.length])
 
   useEffect(() => {
-
     if (testimonials.length === 0) return
 
-    autoRef.current = setInterval(next, 5500)
+    autoRef.current = setInterval(() => {
+      setActive((curr) => {
+        const nextIdx = (curr + 1) % testimonials.length
+        setAnimDir("next")
+        setAnimating(true)
+        setTimeout(() => {
+          setAnimating(false)
+        }, 320)
+        return nextIdx
+      })
+    }, 5500)
 
     return () => {
       if (autoRef.current) clearInterval(autoRef.current)
     }
-
-  }, [next, testimonials.length])
+  }, [testimonials.length])
 
   const resetTimer = () => {
-
     if (autoRef.current) clearInterval(autoRef.current)
-    if (testimonials.length > 0) autoRef.current = setInterval(next, 5500)
+    if (testimonials.length === 0) return
 
+    autoRef.current = setInterval(() => {
+      setActive((curr) => {
+        const nextIdx = (curr + 1) % testimonials.length
+        setAnimDir("next")
+        setAnimating(true)
+        setTimeout(() => {
+          setAnimating(false)
+        }, 320)
+        return nextIdx
+      })
+    }, 5500)
   }
 
   if (loading) return (
