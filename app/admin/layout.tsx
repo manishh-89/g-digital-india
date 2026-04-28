@@ -47,6 +47,7 @@ export default function AdminLayout({
     { href: '/admin/clients', label: 'Clients', icon: <i className="fa-solid fa-handshake"></i> },
     { href: '/admin/reels', label: 'Instagram Reels', icon: <i className="fa-solid fa-play"></i> },
     { href: '/admin/blogs', label: 'Blogs', icon: <i className="fa-solid fa-pen-nib"></i> },
+    { href: '/admin/legal', label: 'Legal Policies', icon: <i className="fa-solid fa-shield-halved"></i> },
     { href: '/admin/enquiries', label: 'Enquiries', icon: <i className="fa-solid fa-envelope"></i> },
     { href: '/admin/settings', label: 'Settings', icon: <i className="fa-solid fa-gear"></i> },
   ]

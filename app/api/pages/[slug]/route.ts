@@ -61,3 +61,25 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function POST(req: Request, { params }: { params: Promise<{ slug: string }> }) {
+  try {
+    await connectDB();
+    const { slug } = await params;
+    const body = await req.json();
+
+    const updatedPage = await Page.findOneAndUpdate(
+      { slug },
+      { 
+        title: body.title, 
+        content: body.content 
+      },
+      { new: true, upsert: true }
+    );
+
+    return NextResponse.json(updatedPage);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
