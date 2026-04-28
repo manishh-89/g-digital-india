@@ -54,8 +54,8 @@ export default function AdminReels() {
   return (
     <div>
       <div className="admin-page-header">
-        <h1 className="admin-page-title">📱 YouTube Shorts & Reels</h1>
-        <p className="admin-page-subtitle">Manage your Video Shorts section</p>
+        <h1 className="admin-page-title">📱 YouTube Shorts</h1>
+        <p className="admin-page-subtitle">Manage your YouTube Shorts section</p>
       </div>
 
       <div className="admin-card" style={{ maxWidth: 600 }}>
