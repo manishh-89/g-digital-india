@@ -45,6 +45,7 @@ export default function AdminServices() {
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState<any>(empty)
+  const [categories, setCategories] = useState<any[]>([])
   const [tagsInput, setTagsInput] = useState('')
   const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -54,8 +55,12 @@ export default function AdminServices() {
 
   const fetchAll = async () => {
     try {
-      const res = await fetch('/api/services')
+      const [res, catRes] = await Promise.all([
+        fetch('/api/services'),
+        fetch('/api/service-categories')
+      ])
       if (res.ok) setServices(await res.json())
+      if (catRes.ok) setCategories(await catRes.json())
     } catch (e) { console.error(e) }
     finally { setLoading(false) }
   }
@@ -175,7 +180,7 @@ export default function AdminServices() {
           </h2>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 16 }}>
               <div className="admin-form-group" style={{ margin: 0 }}>
                 <label className="admin-label">Service Title *</label>
                 <input required className="admin-input" placeholder="e.g. Search Engine Optimization"
@@ -190,6 +195,13 @@ export default function AdminServices() {
                 <label className="admin-label">Short Name *</label>
                 <input required className="admin-input" placeholder="e.g. SEO"
                   value={formData.short} onChange={e => setFormData({...formData, short: e.target.value})} />
+              </div>
+              <div className="admin-form-group" style={{ margin: 0 }}>
+                <label className="admin-label">Category (For Mega Menu) *</label>
+                <select required className="admin-input" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                  <option value="">-- Select Category --</option>
+                  {categories.map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
+                </select>
               </div>
             </div>
 
@@ -341,6 +353,7 @@ export default function AdminServices() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                   <h3 style={{ margin: 0, fontSize: 18, color: 'var(--admin-text-primary)' }}>{s.title}</h3>
                   <span className="admin-badge primary">{s.short}</span>
+                  {s.category && <span className="admin-badge" style={{ background: '#e2e8f0', color: '#475569' }}>{s.category}</span>}
                 </div>
                 <div 
                   className="admin-preview-text"
