@@ -212,11 +212,46 @@
 .main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 70px 24px;
+  padding: 40px 24px 70px;
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 60px;
   align-items: start;
+}
+
+/* ── MAIN TOP FULL WIDTH ── */
+.mainTopFull {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 70px 24px 0;
+}
+
+.topSideBySide {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.topContentLeft {
+  flex: 1;
+}
+
+.topImageRight {
+  flex: 1;
+}
+
+.topImgObj {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 900px) {
+  .topSideBySide {
+    flex-direction: column;
+  }
 }
 
 /* ── LEFT CONTENT ── */

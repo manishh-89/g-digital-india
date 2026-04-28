@@ -151,58 +151,64 @@ export default function DynamicServiceDetail() {
 
       </section>
 
-      {/* ═══ MAIN BODY ═══ */}
-      <div className={styles.main}>
-
-        {/* ── LEFT CONTENT ── */}
-        <div className={styles.content}>
-
-          {/* Section 1 */}
-          <span className={styles.sectionLabel}>About the Service</span>
-          <h2 className={styles.contentTitle}>{service.title}</h2>
-          
-          <div 
-            className={styles.contentText}
-            dangerouslySetInnerHTML={{ __html: service.description }}
-          />
-
-          {service.image && (
-            <Image
-              src={service.image}
-              alt={service.title}
-              width={900} height={450}
-              className={styles.contentImg}
-              style={{ objectFit: 'cover' }}
+      {/* ═══ TOP FULL WIDTH AREA ═══ */}
+      <div className={styles.mainTopFull}>
+        <div className={styles.topSideBySide}>
+          <div className={styles.topContentLeft}>
+            <span className={styles.sectionLabel}>About the Service</span>
+            <h2 className={styles.contentTitle}>{service.title}</h2>
+            <div 
+              className={styles.contentText}
+              dangerouslySetInnerHTML={{ __html: service.description }}
             />
-          )}
-
-          {/* Alternating Content Blocks */}
-          {service.contentBlocks && service.contentBlocks.length > 0 && (
-            <div className={styles.contentBlocks}>
-              {service.contentBlocks.map((block, i) => {
-                const isReverse = i % 2 !== 0;
-                return (
-                  <div key={i} className={`${styles.contentBlock} ${isReverse ? styles.contentBlockReverse : ""}`}>
-                    <div className={styles.blockText}>
-                      {block.title && <h3>{block.title}</h3>}
-                      <div dangerouslySetInnerHTML={{ __html: block.text }} />
-                    </div>
-                    {block.image && (
-                      <div className={styles.blockImageWrapper}>
-                        <Image
-                          src={block.image}
-                          alt={block.title || "Service Content"}
-                          width={400} height={300}
-                          className={styles.blockImage}
-                          style={{ objectFit: 'cover' }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+          </div>
+          {service.image && (
+            <div className={styles.topImageRight}>
+              <Image
+                src={service.image}
+                alt={service.title}
+                width={800} height={500}
+                className={styles.topImgObj}
+                style={{ objectFit: 'cover' }}
+              />
             </div>
           )}
+        </div>
+
+        {/* Alternating Content Blocks */}
+        {service.contentBlocks && service.contentBlocks.length > 0 && (
+          <div className={styles.contentBlocks}>
+            {service.contentBlocks.map((block, i) => {
+              const isReverse = i % 2 !== 0;
+              return (
+                <div key={i} className={`${styles.contentBlock} ${isReverse ? styles.contentBlockReverse : ""}`}>
+                  <div className={styles.blockText}>
+                    {block.title && <h3>{block.title}</h3>}
+                    <div dangerouslySetInnerHTML={{ __html: block.text }} />
+                  </div>
+                  {block.image && (
+                    <div className={styles.blockImageWrapper}>
+                      <Image
+                        src={block.image}
+                        alt={block.title || "Service Content"}
+                        width={600} height={400}
+                        className={styles.blockImage}
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ═══ BOTTOM BODY (FAQs + Sidebar) ═══ */}
+      <div className={styles.main}>
+
+        {/* ── LEFT CONTENT (FAQs) ── */}
+        <div className={styles.content}>
 
           {/* Section 4 — FAQ */}
           {service.faqs && service.faqs.length > 0 && (
