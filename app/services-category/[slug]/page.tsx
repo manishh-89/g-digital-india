@@ -62,6 +62,12 @@ export default async function CategoryDetail({ params }: { params: Promise<{ slu
           <h1 className={styles.heroTitle}>
             {category.title || category.name}
           </h1>
+          <p className={styles.heroDesc}>
+            {category.description 
+              ? category.description.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim().substring(0, 180) + (category.description.replace(/<[^>]*>/g, '').length > 180 ? '...' : '')
+              : "Professional solutions tailored to grow your business sustainably."
+            }
+          </p>
           <div className={styles.heroActions}>
             <Link href="/contact" className={styles.btnPrimary}>
               Get Free Consultation <IconArrow size={13} />
@@ -75,7 +81,6 @@ export default async function CategoryDetail({ params }: { params: Promise<{ slu
         <div className={styles.topSideBySide}>
           <div className={styles.topContentLeft}>
             <span className={styles.sectionLabel}>About the Category</span>
-            <h2 className={styles.contentTitle}>{category.title || category.name}</h2>
             <div 
               className={styles.contentText}
               dangerouslySetInnerHTML={{ __html: category.description || "" }}
