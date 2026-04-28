@@ -28,13 +28,14 @@ interface Service {
   highlight: string
   tags: string[]
   image: string
+  contentBlocks: { title: string; text: string; image: string }[]
   faqs: { q: string; a: string }[]
   order: number
 }
 
 const empty = { 
   title: '', slug: '', category: '', industry: '', short: '', description: '', highlight: '', tags: [], image: '', 
-  faqs: [], order: 0 
+  contentBlocks: [], faqs: [], order: 0 
 }
 
 export default function AdminServices() {
@@ -116,6 +117,7 @@ export default function AdminServices() {
       description: s.description,
       highlight: s.highlight,
       image: s.image || '',
+      contentBlocks: s.contentBlocks || [],
       faqs: s.faqs || [],
       order: s.order || 0
     })
@@ -143,6 +145,19 @@ export default function AdminServices() {
     const updated = [...formData[key]]
     updated[idx] = { ...updated[idx], [field]: val }
     setFormData({ ...formData, [key]: updated })
+  }
+
+  const handleBlockImageUpload = async (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; if (!file) return
+    setUploading(true)
+    const fd = new FormData(); fd.append('file', file); fd.append('folder', 'services/blocks')
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) throw new Error('Upload failed')
+      const { url } = await res.json()
+      updateArrayItem('contentBlocks', idx, 'image', url)
+    } catch (err) { alert('Upload failed') }
+    setUploading(false)
   }
 
   if (loading) return (
@@ -210,6 +225,41 @@ export default function AdminServices() {
               <label className="admin-label">Highlight Stats/Text</label>
               <input className="admin-input" placeholder="e.g. Avg. 340% increase in organic traffic"
                 value={formData.highlight} onChange={e => setFormData({...formData, highlight: e.target.value})} />
+            </div>
+
+            {/* CONTENT BLOCKS SECTION */}
+            <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                 <h4 style={{ margin: 0 }}>📝 Alternating Content Blocks</h4>
+                 <button type="button" className="admin-btn-secondary" style={{ padding: '4px 10px', fontSize: 12 }}
+                   onClick={() => addArrayItem('contentBlocks', { title: '', text: '', image: '' })}>+ Add Block</button>
+               </div>
+               {formData.contentBlocks.map((s: any, i: number) => (
+                 <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 15, border: '1px solid #e2e8f0', borderRadius: 8, marginBottom: 15, background: '#fff' }}>
+                   <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                     <input style={{ flex: 1 }} className="admin-input" placeholder="Block Title" value={s.title} onChange={e => updateArrayItem('contentBlocks', i, 'title', e.target.value)} />
+                     <button type="button" className="admin-btn-danger" onClick={() => removeArrayItem('contentBlocks', i)}>🗑️</button>
+                   </div>
+                   <div style={{ display: 'flex', gap: 15 }}>
+                     {/* Image Upload for Block */}
+                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '200px' }}>
+                        {s.image ? (
+                          <img src={s.image} alt="Block Image" style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 8 }} />
+                        ) : (
+                          <div style={{ width: '100%', height: 120, background: '#f1f5f9', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No Image</div>
+                        )}
+                        <input type="file" accept="image/*" id={`block-img-${i}`} style={{ display: 'none' }} onChange={(e) => handleBlockImageUpload(i, e)} />
+                        <label htmlFor={`block-img-${i}`} className="admin-btn-secondary" style={{ cursor: 'pointer', textAlign: 'center', fontSize: 12 }}>
+                           Choose Image
+                        </label>
+                     </div>
+                     {/* Editor */}
+                     <div style={{ flex: 1, borderRadius: 8, overflow: 'hidden' }}>
+                      <ReactQuill theme="snow" modules={quillModules} value={s.text} onChange={val => updateArrayItem('contentBlocks', i, 'text', val)} />
+                     </div>
+                   </div>
+                 </div>
+               ))}
             </div>
 
 

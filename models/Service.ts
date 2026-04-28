@@ -10,6 +10,7 @@ const ServiceSchema = new mongoose.Schema({
   highlight:   { type: String, default: '' },
   tags:        [{ type: String }],
   image:       { type: String, default: '' },
+  contentBlocks: [{ title: String, text: String, image: String }],
   faqs:        [{ q: String, a: String }],
   order:       { type: Number, default: 0 },
   createdAt:   { type: Date,   default: Date.now },

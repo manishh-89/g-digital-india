@@ -263,6 +263,54 @@
   display: block;
 }
 
+/* ── ALTERNATING BLOCKS ── */
+.contentBlocks {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin: 40px 0;
+}
+
+.contentBlock {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.contentBlockReverse {
+  flex-direction: row-reverse;
+}
+
+.blockText {
+  flex: 1;
+  color: #64748b;
+  font-size: 0.96rem;
+  line-height: 1.88;
+}
+
+.blockText h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #f1f5f9;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.blockImageWrapper {
+  flex: 1;
+}
+
+.blockImage {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .contentBlock, .contentBlockReverse {
+    flex-direction: column;
+  }
+}
+
 /* ── WHAT WE OFFER GRID ── */
 .offerGrid {
   display: grid;

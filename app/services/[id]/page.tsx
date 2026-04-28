@@ -64,6 +64,7 @@ interface Service {
   highlight: string;
   tags: string[];
   image: string;
+  contentBlocks: { title: string; text: string; image: string }[];
   faqs: { q: string; a: string }[];
 }
 
@@ -175,6 +176,33 @@ export default function DynamicServiceDetail() {
             />
           )}
 
+          {/* Alternating Content Blocks */}
+          {service.contentBlocks && service.contentBlocks.length > 0 && (
+            <div className={styles.contentBlocks}>
+              {service.contentBlocks.map((block, i) => {
+                const isReverse = i % 2 !== 0;
+                return (
+                  <div key={i} className={`${styles.contentBlock} ${isReverse ? styles.contentBlockReverse : ""}`}>
+                    <div className={styles.blockText}>
+                      {block.title && <h3>{block.title}</h3>}
+                      <div dangerouslySetInnerHTML={{ __html: block.text }} />
+                    </div>
+                    {block.image && (
+                      <div className={styles.blockImageWrapper}>
+                        <Image
+                          src={block.image}
+                          alt={block.title || "Service Content"}
+                          width={400} height={300}
+                          className={styles.blockImage}
+                          style={{ objectFit: 'cover' }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Section 4 — FAQ */}
           {service.faqs && service.faqs.length > 0 && (
