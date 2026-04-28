@@ -24,12 +24,16 @@ export default function Reels() {
 
   const getEmbedUrl = (url: string) => {
     try {
-      // Extract the shortcode from URLs like:
-      // https://www.instagram.com/reels/C8Sj_xXSb9y/
-      // https://www.instagram.com/reel/C8Sj_xXSb9y/?igsh=...
-      const match = url.match(/(?:reels?|p)\/([A-Za-z0-9_-]+)/);
-      if (match && match[1]) {
-        return `https://www.instagram.com/reel/${match[1]}/embed/`;
+      // YouTube Shorts
+      const ytMatch = url.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]+)/) || url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+      if (ytMatch && ytMatch[1]) {
+        return `https://www.youtube.com/embed/${ytMatch[1]}`;
+      }
+
+      // Instagram
+      const igMatch = url.match(/(?:reels?|p)\/([A-Za-z0-9_-]+)/);
+      if (igMatch && igMatch[1]) {
+        return `https://www.instagram.com/reel/${igMatch[1]}/embed/`;
       }
       return url;
     } catch (e) {
@@ -45,9 +49,9 @@ export default function Reels() {
       
       <div className={styles.reelsWrap}>
         <div className={styles.header}>
-          <span className={styles.eyebrow}>Social Proof</span>
+          <span className={styles.eyebrow}>Watch & Learn</span>
           <h2 className={styles.title}>
-            Trending <em>Inspiration</em>
+            Trending <em>Shorts & Reels</em>
           </h2>
         </div>
 
