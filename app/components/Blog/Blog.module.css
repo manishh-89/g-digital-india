@@ -159,7 +159,7 @@
 /* ── FEATURED POST ────────────────────────────── */
 .bl-featured {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.07);
@@ -286,6 +286,7 @@
   line-height: 1.75;
   color: #6b7280;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .bl-feat-footer {
@@ -319,7 +320,7 @@
 /* ── GRID CARDS ───────────────────────────────── */
 .bl-grid-posts {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   animation: fadeUp 0.8s ease 0.3s both;
 }
@@ -416,6 +417,7 @@
   color: #4b5563;
   margin: 0;
   flex: 1;
+  overflow-wrap: break-word;
 }
 
 .bl-card-footer {
@@ -518,13 +520,13 @@
 /* ── RESPONSIVE ───────────────────────────────── */
 @media (max-width: 900px) {
   .bl-featured {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .bl-feat-img-wrap {
     min-height: 260px;
   }
   .bl-grid-posts {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -533,7 +535,7 @@
     padding: 72px 20px 0;
   }
   .bl-grid-posts {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .bl-feat-content {
     padding: 28px 24px 32px;

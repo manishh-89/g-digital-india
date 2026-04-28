@@ -102,6 +102,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           .blog-content h3 { font-size: 24px; }
           .blog-content p {
             margin-bottom: 1.5em;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
           }
           .blog-content a {
             color: #4f46e5;

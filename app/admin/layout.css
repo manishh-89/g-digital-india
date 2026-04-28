@@ -32,6 +32,9 @@
 .admin-root * {
   font-family: 'Inter', 'Segoe UI', sans-serif;
   box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ===== WRAPPER ===== */
@@ -269,6 +272,7 @@
   flex: 1;
   padding: 28px;
   overflow-x: hidden;
+  min-width: 0;
 }
 
 /* ===== PAGE HEADER ===== */

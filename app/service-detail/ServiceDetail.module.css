@@ -220,7 +220,9 @@
 }
 
 /* ── LEFT CONTENT ── */
-.content {}
+.content {
+  min-width: 0;
+}
 
 .sectionLabel {
   font-size: 0.68rem;
@@ -246,6 +248,9 @@
   color: #64748b;
   line-height: 1.88;
   margin: 0 0 16px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .contentImg {
@@ -302,6 +307,9 @@
   color: #64748b;
   line-height: 1.7;
   margin: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ── PROCESS STEPS ── */
@@ -348,6 +356,9 @@
   color: #64748b;
   line-height: 1.75;
   margin: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ── FAQ ── */
@@ -395,6 +406,9 @@
   padding: 0 0 18px;
   margin: 0;
   display: none;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .faqAOpen { display: block; }
