@@ -343,6 +343,7 @@ export default function AdminServices() {
                   <span className="admin-badge primary">{s.short}</span>
                 </div>
                 <div 
+                  className="admin-preview-text"
                   style={{ margin: '0 0 12px 0', fontSize: 14, color: 'var(--admin-text-secondary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                   dangerouslySetInnerHTML={{ __html: s.description }}
                 />

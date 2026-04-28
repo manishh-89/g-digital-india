@@ -253,7 +253,7 @@ export default function AdminTestimonials() {
               </div>
               <div style={{ background: '#f9fafb', padding: 12, borderRadius: 8, border: '1px inset #eee' }}>
                 {t.short && <strong style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--admin-primary)' }}>"{t.short}"</strong>}
-                <div style={{ fontSize: 14, color: 'var(--admin-text-primary)', fontStyle: 'italic', lineHeight: 1.6, margin: 0 }} dangerouslySetInnerHTML={{ __html: t.review }} />
+                <div className="admin-preview-text" style={{ fontSize: 14, color: 'var(--admin-text-primary)', fontStyle: 'italic', lineHeight: 1.6, margin: 0 }} dangerouslySetInnerHTML={{ __html: t.review }} />
               </div>
             </div>
           ))}
