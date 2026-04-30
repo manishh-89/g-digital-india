@@ -94,25 +94,7 @@ export default function Projects() {
 
         </div>
 
-        {/* Filters */}
 
-        <div className={styles["pj-filters"]}>
-
-          {categories.map((f) => (
-
-            <button
-              key={f}
-              onClick={() => setPjFilter(f)}
-              className={`${styles["pj-filter"]} ${
-                pjFilter === f ? styles["pj-filter-active"] : ""
-              }`}
-            >
-              {f}
-            </button>
-
-          ))}
-
-        </div>
 
         {/* Grid */}
 

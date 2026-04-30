@@ -86,20 +86,6 @@ export default function ProjectsPageClient({ initialProjects }: { initialProject
         </div>
       </section>
 
-      <div className={styles.filterBar}>
-        <div className={styles.filterBarInner}>
-          {FILTERS.map((f) => (
-            <button
-              key={f}
-              className={`${styles.fTab} ${activeFilter === f ? styles.fTabActive : ""}`}
-              onClick={() => setActiveFilter(f)}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <main className={styles.main}>
         <div className={styles.countRow}>
           <p className={styles.countText}>
