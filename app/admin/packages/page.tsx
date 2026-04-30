@@ -24,6 +24,11 @@ interface Package {
   metaKeywords?: string
 }
 
+interface PackageCategory {
+  _id: string
+  name: string
+}
+
 const emptyPlan = { name: '', priceMonthly: '', priceYearly: '', features: [], isPopular: false, ctaText: 'Enquiry Now' }
 const empty = { 
   title: '', slug: '', category: '', description: '', plans: [], order: 0, 
@@ -32,6 +37,7 @@ const empty = {
 
 export default function AdminPackages() {
   const [packages, setPackages] = useState<Package[]>([])
+  const [categories, setCategories] = useState<PackageCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState<any>(empty)
@@ -42,8 +48,12 @@ export default function AdminPackages() {
 
   const fetchAll = async () => {
     try {
-      const res = await fetch('/api/packages')
-      if (res.ok) setPackages(await res.json())
+      const [pkgRes, catRes] = await Promise.all([
+        fetch('/api/packages'),
+        fetch('/api/package-categories')
+      ])
+      if (pkgRes.ok) setPackages(await pkgRes.json())
+      if (catRes.ok) setCategories(await catRes.json())
     } catch (e) { console.error(e) }
     finally { setLoading(false) }
   }
@@ -161,10 +171,9 @@ export default function AdminPackages() {
                 <label className="admin-label">Category *</label>
                 <select required className="admin-input" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
                   <option value="">-- Select Category --</option>
-                  <option value="SEO">SEO</option>
-                  <option value="SMO">SMO</option>
-                  <option value="PPC">PPC</option>
-                  <option value="Website">Website</option>
+                  {categories.map(c => (
+                    <option key={c._id} value={c.name}>{c.name}</option>
+                  ))}
                 </select>
               </div>
               <div className="admin-form-group" style={{ margin: 0 }}>
