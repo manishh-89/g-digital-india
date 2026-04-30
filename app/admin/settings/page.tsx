@@ -231,7 +231,6 @@ export default function AdminSettings() {
               </div>
             ))}
           </div>
-          </div>
         </div>
 
         {/* ── SEO Metadata ── */}
