@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import ClientLayout from "./ClientLayout";
 import "./globals.css";
+import Script from "next/script";
 import { connectDB } from "@/lib/mongodb";
 import ServiceCategory from "@/models/ServiceCategory";
 import Service from "@/models/Service";
@@ -47,10 +48,10 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/c37a9f31696dbcc8b86a42827beae565?family=Europa+Grotesk+SH+DemBol" />
       </head>
       <body>
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" strategy="afterInteractive" />
         <ClientLayout menuData={menuData}>
           {children}
         </ClientLayout>

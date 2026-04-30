@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useEnquiry } from "../../context/EnquiryContext";
 import styles from "./slider.module.css";
 
@@ -77,7 +78,15 @@ export default function Slider({ initialData }: { initialData?: SliderData | nul
               <source src={displayData.mediaUrl} />
             </video>
           ) : (
-            <img src={displayData.mediaUrl} alt="Hero Slider" fetchPriority="high" loading="eager" className={styles["sl-video"]} style={{ objectFit: 'cover' }} />
+            <Image 
+              src={displayData.mediaUrl} 
+              alt="Hero Slider" 
+              fill
+              priority
+              fetchPriority="high"
+              className={styles["sl-video"]} 
+              style={{ objectFit: 'cover' }} 
+            />
           )
         ) : (
           <div className={styles["sl-video"]} style={{ background: '#000' }} />
