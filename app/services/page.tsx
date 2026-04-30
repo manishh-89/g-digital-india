@@ -38,28 +38,29 @@ export default function Services() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await fetch("/api/services")
-        if (!res.ok) throw new Error("Failed to fetch services")
+        const res = await fetch("/api/service-categories")
+        if (!res.ok) throw new Error("Failed to fetch categories")
         const data = await res.json()
         
         // Transform API data to match component expectations and add colors
-        const transformedData = data.map((service: any, index: number) => ({
-          _id: service._id,
+        const transformedData = data.map((category: any, index: number) => ({
+          _id: category._id,
           id: String(index + 1).padStart(2, "0"),
-          title: service.title,
-          short: service.short,
-          desc: service.description || "",
-          highlight: service.highlight || "",
-          tags: service.tags || [],
-          img: service.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop",
+          title: category.title || category.name,
+          short: category.name || category.title,
+          desc: category.description || "",
+          highlight: category.highlight || "",
+          tags: category.tags || [],
+          img: category.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop",
           color: colorPalette[index % colorPalette.length],
+          slug: category.slug,
         }))
         
         setServices(transformedData)
         setLoading(false)
       } catch (err) {
-        console.error("Error fetching services:", err)
-        setError("Failed to load services")
+        console.error("Error fetching categories:", err)
+        setError("Failed to load categories")
         setLoading(false)
       }
     }
@@ -256,7 +257,7 @@ export default function Services() {
                     </div>
                   )}
 
-                  <Link href={`/services/${svc.slug || svc._id}`} className={styles["sv-cta"]}>
+                  <Link href={`/services-category/${svc.slug || svc._id}`} className={styles["sv-cta"]}>
                     Get Started →
                   </Link>
 
