@@ -31,7 +31,7 @@ export default function Services() {
   const [animating, setAnimating] = useState(false)
 
   useEffect(() => {
-    fetch('/api/services')
+    fetch('/api/service-categories')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
@@ -39,8 +39,8 @@ export default function Services() {
             id: (i + 1).toString().padStart(2, '0'),
             _id: s._id,
             slug: s.slug || s._id,
-            title: s.title || 'Untitled Service',
-            short: s.short || 'SRV',
+            title: s.title || s.name || 'Untitled Category',
+            short: s.name || s.title || 'CAT',
             desc: s.description || '',
             highlight: s.highlight || '',
             tags: s.tags || [],
@@ -222,7 +222,7 @@ export default function Services() {
                 ))}
               </div>
 
-              <Link href={`/services/${svc.slug}`} className={styles["sv-cta"]}>
+              <Link href={`/services-category/${svc.slug}`} className={styles["sv-cta"]}>
                 Get Started →
               </Link>
 
