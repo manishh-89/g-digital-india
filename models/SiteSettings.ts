@@ -27,6 +27,9 @@ const SiteSettingsSchema = new mongoose.Schema({
     youtube:   { type: String, default: '' },
     whatsapp:  { type: String, default: '' },
   },
+  metaTitle: { type: String, default: 'G Digital India | Best Digital Marketing Agency' },
+  metaDescription: { type: String, default: 'We provide the best SEO, Web Design and PPC services.' },
+  metaKeywords: { type: String, default: 'digital marketing, seo, web design' },
   updatedAt: { type: Date, default: Date.now },
 }, { 
   timestamps: true,

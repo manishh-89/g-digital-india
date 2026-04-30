@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { connectDB } from "@/lib/mongodb";
 import Page from "@/models/Page";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  await connectDB();
+  const page = await Page.findOne({ slug: "refund-policy" }).lean() as any;
+  return {
+    title: page?.metaTitle || "Refund Policy | G Digital India",
+    description: page?.metaDescription || "Read our refund policy for G Digital India services.",
+    keywords: page?.metaKeywords || "refund policy, G Digital India",
+  };
+}
 
 export default async function RefundPolicy() {
   await connectDB();

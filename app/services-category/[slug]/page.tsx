@@ -5,6 +5,29 @@ import ServiceCategory from "@/models/ServiceCategory";
 import Service from "@/models/Service";
 import styles from "../../service-detail/ServiceDetail.module.css";
 import ConsultationButton from "@/app/components/ConsultationButton/ConsultationButton";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
+  await connectDB();
+  const category = await ServiceCategory.findOne({ 
+    $or: [
+      { slug: { $regex: new RegExp('^' + decodedSlug + '$', 'i') } },
+      { name: { $regex: new RegExp('^' + decodedSlug + '$', 'i') } },
+      { slug: { $regex: new RegExp('^' + decodedSlug.replace(/ /g, '-') + '$', 'i') } },
+      { _id: decodedSlug.match(/^[0-9a-fA-F]{24}$/) ? decodedSlug : null }
+    ] 
+  }).lean() as any;
+
+  if (!category) return { title: "Category Not Found" };
+
+  return {
+    title: category.metaTitle || `${category.name} | G Digital India`,
+    description: category.metaDescription || (category.description && category.description.replace(/<[^>]*>?/gm, '').substring(0, 160)),
+    keywords: category.metaKeywords || category.name,
+  };
+}
 
 // ── Inline SVG Icons ───────────────────────────────────────
 const IconHome = () => (

@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { connectDB } from "@/lib/mongodb";
 import Page from "@/models/Page";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  await connectDB();
+  const page = await Page.findOne({ slug: "terms-of-use" }).lean() as any;
+  return {
+    title: page?.metaTitle || "Terms of Use | G Digital India",
+    description: page?.metaDescription || "Read our terms of use for using G Digital India services.",
+    keywords: page?.metaKeywords || "terms of use, G Digital India",
+  };
+}
 
 export default async function TermsOfUse() {
   await connectDB();

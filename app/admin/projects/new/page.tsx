@@ -32,7 +32,8 @@ const quillFormats = [
 const empty = {
   title: '', slug: '', category: '', industry: '', image: '', description: '',
   technologies: '', liveUrl: '', githubUrl: '', challenges: '', solutions: '', results: '',
-  stats: [], clientName: '', duration: '', order: 0
+  stats: [], clientName: '', duration: '', order: 0,
+  metaTitle: '', metaDescription: '', metaKeywords: ''
 }
 
 export default function NewProject() {
@@ -189,6 +190,28 @@ export default function NewProject() {
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">Technologies (comma separated)</label>
             <input className="admin-input" placeholder="React, Node.js, etc." value={formData.technologies} onChange={e => set('technologies', e.target.value)} />
+          </div>
+
+          {/* SEO METADATA SECTION */}
+          <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
+             <h4 style={{ margin: '0 0 10px 0' }}>🔍 SEO Metadata</h4>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Title</label>
+                 <input className="admin-input" placeholder="e.g. Project Name | G Digital India Portfolio"
+                   value={formData.metaTitle} onChange={e => set('metaTitle', e.target.value)} />
+               </div>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Description</label>
+                 <textarea className="admin-input" placeholder="e.g. Case study of..." style={{ minHeight: 80, resize: 'vertical' }}
+                   value={formData.metaDescription} onChange={e => set('metaDescription', e.target.value)} />
+               </div>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Keywords</label>
+                 <input className="admin-input" placeholder="e.g. web design project, SEO case study"
+                   value={formData.metaKeywords} onChange={e => set('metaKeywords', e.target.value)} />
+               </div>
+             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>

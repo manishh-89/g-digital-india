@@ -12,6 +12,9 @@ const ServiceCategorySchema = new mongoose.Schema({
     image: String
   }],
   order: { type: Number, default: 0 },
+  metaTitle: { type: String, default: '' },
+  metaDescription: { type: String, default: '' },
+  metaKeywords: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
 })
 

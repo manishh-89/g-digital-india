@@ -3,6 +3,21 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { connectDB } from '@/lib/mongodb'
 import Blog from '@/models/Blog'
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  await connectDB();
+  const blog = await Blog.findOne({ slug }).lean() as any;
+  
+  if (!blog) return { title: 'Blog Not Found' };
+
+  return {
+    title: blog.metaTitle || `${blog.title} | Blog | G Digital India`,
+    description: blog.metaDescription || blog.excerpt,
+    keywords: blog.metaKeywords || blog.category,
+  };
+}
 
 export const dynamic = 'force-dynamic'
 

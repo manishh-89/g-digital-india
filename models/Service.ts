@@ -14,6 +14,9 @@ const ServiceSchema = new mongoose.Schema({
   contentBlocks: [{ title: String, text: String, image: String }],
   faqs:        [{ q: String, a: String }],
   order:       { type: Number, default: 0 },
+  metaTitle:       { type: String, default: '' },
+  metaDescription: { type: String, default: '' },
+  metaKeywords:    { type: String, default: '' },
   createdAt:   { type: Date,   default: Date.now },
 })
 

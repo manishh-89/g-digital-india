@@ -39,9 +39,12 @@ interface Blog {
   image: string
   content: string
   featured: boolean
+  metaTitle?: string
+  metaDescription?: string
+  metaKeywords?: string
 }
 
-const empty = { slug: '', category: '', title: '', excerpt: '', author: '', date: '', readTime: '', image: '', content: '', featured: false }
+const empty = { slug: '', category: '', title: '', excerpt: '', author: '', date: '', readTime: '', image: '', content: '', featured: false, metaTitle: '', metaDescription: '', metaKeywords: '' }
 
 export default function AdminBlogs() {
   const [blogs, setBlogs] = useState<Blog[]>([])
@@ -110,7 +113,10 @@ export default function AdminBlogs() {
       readTime: b.readTime,
       image: b.image || '',
       content: b.content || '',
-      featured: b.featured || false
+      featured: b.featured || false,
+      metaTitle: b.metaTitle || '',
+      metaDescription: b.metaDescription || '',
+      metaKeywords: b.metaKeywords || ''
     })
     setEditingId(b._id)
     setShowForm(true)
@@ -220,6 +226,28 @@ export default function AdminBlogs() {
                     onChange={e => setFormData({...formData, featured: e.target.checked})} 
                 />
                 <label htmlFor="featured" className="admin-label" style={{ margin: 0, cursor: 'pointer' }}>Set as Featured Post</label>
+            </div>
+
+            {/* SEO METADATA SECTION */}
+            <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
+               <h4 style={{ margin: '0 0 10px 0' }}>🔍 SEO Metadata</h4>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+                 <div className="admin-form-group" style={{ margin: 0 }}>
+                   <label className="admin-label">Meta Title</label>
+                   <input className="admin-input" placeholder="e.g. AI Revolution in 2025 | Blog"
+                     value={formData.metaTitle} onChange={e => setFormData({...formData, metaTitle: e.target.value})} />
+                 </div>
+                 <div className="admin-form-group" style={{ margin: 0 }}>
+                   <label className="admin-label">Meta Description</label>
+                   <textarea className="admin-input" placeholder="e.g. Read about the upcoming AI revolution..." style={{ minHeight: 80, resize: 'vertical' }}
+                     value={formData.metaDescription} onChange={e => setFormData({...formData, metaDescription: e.target.value})} />
+                 </div>
+                 <div className="admin-form-group" style={{ margin: 0 }}>
+                   <label className="admin-label">Meta Keywords</label>
+                   <input className="admin-input" placeholder="e.g. AI, Revolution, 2025, technology"
+                     value={formData.metaKeywords} onChange={e => setFormData({...formData, metaKeywords: e.target.value})} />
+                 </div>
+               </div>
             </div>
 
             <div className="admin-form-group" style={{ margin: 0 }}>

@@ -47,6 +47,9 @@ interface Project {
   clientName: string
   duration: string
   order: number
+  metaTitle?: string
+  metaDescription?: string
+  metaKeywords?: string
 }
 
 const empty = {
@@ -90,7 +93,10 @@ export default function EditProject() {
           stats: p.stats || [],
           clientName: p.clientName || '',
           duration: p.duration || '',
-          order: p.order || 0
+          order: p.order || 0,
+          metaTitle: p.metaTitle || '',
+          metaDescription: p.metaDescription || '',
+          metaKeywords: p.metaKeywords || ''
         })
       } else {
         alert('Project not found')
@@ -260,6 +266,28 @@ export default function EditProject() {
           <div className="admin-form-group" style={{ margin: 0 }}>
             <label className="admin-label">Technologies (comma separated)</label>
             <input className="admin-input" value={formData.technologies} onChange={e => set('technologies', e.target.value)} />
+          </div>
+
+          {/* SEO METADATA SECTION */}
+          <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
+             <h4 style={{ margin: '0 0 10px 0' }}>🔍 SEO Metadata</h4>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Title</label>
+                 <input className="admin-input" placeholder="e.g. Project Name | G Digital India Portfolio"
+                   value={formData.metaTitle} onChange={e => set('metaTitle', e.target.value)} />
+               </div>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Description</label>
+                 <textarea className="admin-input" placeholder="e.g. Case study of..." style={{ minHeight: 80, resize: 'vertical' }}
+                   value={formData.metaDescription} onChange={e => set('metaDescription', e.target.value)} />
+               </div>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Keywords</label>
+                 <input className="admin-input" placeholder="e.g. web design project, SEO case study"
+                   value={formData.metaKeywords} onChange={e => set('metaKeywords', e.target.value)} />
+               </div>
+             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>

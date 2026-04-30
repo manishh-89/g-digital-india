@@ -47,6 +47,11 @@ const AboutSchema = new mongoose.Schema(
     ctaDesc:    { type: String, default: "Our team is ready to help you dominate the digital space. Get a free consultation and discover how we can transform your business." },
     ctaBtnText: { type: String, default: "Contact Us Today" },
     ctaBtnLink: { type: String, default: "/contact" },
+
+    // ── SEO Metadata ───────────────────────────────
+    metaTitle: { type: String, default: '' },
+    metaDescription: { type: String, default: '' },
+    metaKeywords: { type: String, default: '' },
   },
   { timestamps: true }
 );

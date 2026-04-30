@@ -23,6 +23,9 @@ const ProjectSchema = new mongoose.Schema({
   duration:   { type: String },
   featured:   { type: Boolean, default: false },
   order:      { type: Number,  default: 0 },
+  metaTitle:       { type: String, default: '' },
+  metaDescription: { type: String, default: '' },
+  metaKeywords:    { type: String, default: '' },
   createdAt:  { type: Date,    default: Date.now },
 })
 

@@ -42,6 +42,9 @@ export default function LegalAdmin() {
   const [slug, setSlug] = useState("privacy-policy");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
+  const [metaKeywords, setMetaKeywords] = useState("");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -53,6 +56,9 @@ export default function LegalAdmin() {
         const data = await res.json();
         setTitle(data.title || "");
         setContent(data.content || "");
+        setMetaTitle(data.metaTitle || "");
+        setMetaDescription(data.metaDescription || "");
+        setMetaKeywords(data.metaKeywords || "");
       }
     } catch (error) {
       console.error("Error loading page:", error);
@@ -71,7 +77,7 @@ export default function LegalAdmin() {
       const res = await fetch(`/api/pages/${slug}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({ title, content, metaTitle, metaDescription, metaKeywords }),
       });
       if (res.ok) {
         setMsg("✅ Saved successfully!");
@@ -130,6 +136,28 @@ export default function LegalAdmin() {
                 style={{ minHeight: "300px" }}
               />
             </div>
+          </div>
+
+          {/* SEO METADATA SECTION */}
+          <div className="admin-card" style={{ background: '#f8fafc', padding: 15, marginBottom: 20 }}>
+             <h4 style={{ margin: '0 0 10px 0' }}>🔍 SEO Metadata</h4>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Title</label>
+                 <input className="admin-input" placeholder="e.g. Privacy Policy | G Digital India"
+                   value={metaTitle} onChange={e => setMetaTitle(e.target.value)} />
+               </div>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Description</label>
+                 <textarea className="admin-input" placeholder="e.g. Our privacy policy..." style={{ minHeight: 80, resize: 'vertical' }}
+                   value={metaDescription} onChange={e => setMetaDescription(e.target.value)} />
+               </div>
+               <div className="admin-form-group" style={{ margin: 0 }}>
+                 <label className="admin-label">Meta Keywords</label>
+                 <input className="admin-input" placeholder="e.g. privacy policy, terms"
+                   value={metaKeywords} onChange={e => setMetaKeywords(e.target.value)} />
+               </div>
+             </div>
           </div>
 
           {msg && (

@@ -21,13 +21,17 @@ interface Settings {
     youtube: string
     whatsapp: string
   }
+  metaTitle?: string
+  metaDescription?: string
+  metaKeywords?: string
 }
 
 const defaultSettings: Settings = {
   phones: [], emails: [], address: '', counters: [],
   socials: {
     facebook: '', instagram: '', linkedin: '', twitter: '', youtube: '', whatsapp: ''
-  }
+  },
+  metaTitle: '', metaDescription: '', metaKeywords: ''
 }
 
 export default function AdminSettings() {
@@ -226,6 +230,35 @@ export default function AdminSettings() {
                 <button type="button" onClick={() => removeCounter(i)} className="admin-btn-danger" style={{ padding: '10px 12px' }}>🗑️</button>
               </div>
             ))}
+          </div>
+          </div>
+        </div>
+
+        {/* ── SEO Metadata ── */}
+        <div className="admin-card">
+          <div className="admin-card-header">
+            <h2 className="admin-card-title">🔍 SEO Metadata (Homepage)</h2>
+            <span className="admin-badge primary">SEO Ready</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Meta Title</label>
+              <input className="admin-input" placeholder="e.g. Best Digital Marketing Agency in Jaipur"
+                value={settings.metaTitle}
+                onChange={e => setSettings(s => ({ ...s, metaTitle: e.target.value }))} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Meta Description</label>
+              <textarea className="admin-textarea" rows={3} placeholder="e.g. We provide the best SEO, Web Design and PPC services..."
+                value={settings.metaDescription}
+                onChange={e => setSettings(s => ({ ...s, metaDescription: e.target.value }))} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Meta Keywords</label>
+              <input className="admin-input" placeholder="e.g. digital marketing, seo, web design"
+                value={settings.metaKeywords}
+                onChange={e => setSettings(s => ({ ...s, metaKeywords: e.target.value }))} />
+            </div>
           </div>
         </div>
 

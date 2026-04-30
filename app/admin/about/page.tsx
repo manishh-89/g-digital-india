@@ -159,9 +159,10 @@ export default function AdminAbout() {
     industries: [],
     teamText: '',
     ctaTitle: '', ctaDesc: '', ctaBtnText: '', ctaBtnLink: '',
+    metaTitle: '', metaDescription: '', metaKeywords: ''
   })
 
-  const [activeTab, setActiveTab] = useState<'hero' | 'whoweare' | 'mvv' | 'whychoose' | 'industries' | 'team' | 'cta'>('hero')
+  const [activeTab, setActiveTab] = useState<'hero' | 'whoweare' | 'mvv' | 'whychoose' | 'industries' | 'team' | 'cta' | 'seo'>('hero')
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -248,6 +249,7 @@ export default function AdminAbout() {
     { key: 'industries', label: 'Industries',     fa: 'fa-solid fa-industry' },
     { key: 'team',       label: 'Team',           fa: 'fa-solid fa-people-group' },
     { key: 'cta',        label: 'CTA Section',    fa: 'fa-solid fa-rocket' },
+    { key: 'seo',        label: 'SEO Metadata',   fa: 'fa-solid fa-magnifying-glass' },
   ]
 
   return (
@@ -582,6 +584,30 @@ export default function AdminAbout() {
                 <input className="admin-input" placeholder="e.g. /contact"
                   value={formData.ctaBtnLink} onChange={e => setFormData({ ...formData, ctaBtnLink: e.target.value })} />
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ══ SEO ══ */}
+        {activeTab === 'seo' && (
+          <div className="admin-card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <h3 style={{ margin: 0, fontSize: 15, color: '#1e293b', borderBottom: '1px solid #e2e8f0', paddingBottom: 12 }}>
+              <i className="fa-solid fa-magnifying-glass" style={{ marginRight: 8, color: '#f97316' }} />SEO Metadata
+            </h3>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Meta Title</label>
+              <input className="admin-input" placeholder="e.g. Best Digital Marketing Agency in Jaipur | G Digital India"
+                value={formData.metaTitle} onChange={e => setFormData({ ...formData, metaTitle: e.target.value })} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Meta Description</label>
+              <textarea className="admin-input" placeholder="e.g. We are the leading agency..." style={{ minHeight: 80, resize: 'vertical' }}
+                value={formData.metaDescription} onChange={e => setFormData({ ...formData, metaDescription: e.target.value })} />
+            </div>
+            <div className="admin-form-group" style={{ margin: 0 }}>
+              <label className="admin-label">Meta Keywords</label>
+              <input className="admin-input" placeholder="e.g. digital marketing, Jaipur, SEO agency"
+                value={formData.metaKeywords} onChange={e => setFormData({ ...formData, metaKeywords: e.target.value })} />
             </div>
           </div>
         )}

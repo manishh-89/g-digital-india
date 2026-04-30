@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { connectDB } from "@/lib/mongodb";
 import Page from "@/models/Page";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  await connectDB();
+  const page = await Page.findOne({ slug: "privacy-policy" }).lean() as any;
+  return {
+    title: page?.metaTitle || "Privacy Policy | G Digital India",
+    description: page?.metaDescription || "Read our privacy policy to understand how we handle your data.",
+    keywords: page?.metaKeywords || "privacy policy, G Digital India",
+  };
+}
 
 export default async function PrivacyPolicy() {
   await connectDB();

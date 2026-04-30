@@ -36,10 +36,14 @@ interface ServiceCategory {
   image: string
   contentBlocks: { title: string; text: string; image: string }[]
   order: number
+  metaTitle?: string
+  metaDescription?: string
+  metaKeywords?: string
 }
 
 const empty = { 
-  name: '', slug: '', title: '', description: '', image: '', contentBlocks: [], order: 0 
+  name: '', slug: '', title: '', description: '', image: '', contentBlocks: [], order: 0,
+  metaTitle: '', metaDescription: '', metaKeywords: '' 
 }
 
 export default function AdminServiceCategories() {
@@ -113,7 +117,10 @@ export default function AdminServiceCategories() {
       description: c.description || '', 
       image: c.image || '', 
       contentBlocks: c.contentBlocks || [],
-      order: c.order || 0 
+      order: c.order || 0,
+      metaTitle: c.metaTitle || '',
+      metaDescription: c.metaDescription || '',
+      metaKeywords: c.metaKeywords || '' 
     })
     setEditingId(c._id)
     setShowForm(true)
@@ -188,6 +195,28 @@ export default function AdminServiceCategories() {
                 <label className="admin-label">Order</label>
                 <input type="number" className="admin-input" value={formData.order} onChange={e => setFormData({...formData, order: parseInt(e.target.value)})} />
               </div>
+            </div>
+
+            {/* SEO METADATA SECTION */}
+            <div className="admin-card" style={{ background: '#f8fafc', padding: 15 }}>
+               <h4 style={{ margin: '0 0 10px 0' }}>🔍 SEO Metadata</h4>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+                 <div className="admin-form-group" style={{ margin: 0 }}>
+                   <label className="admin-label">Meta Title</label>
+                   <input className="admin-input" placeholder="e.g. Best SEO Services in Jaipur | G Digital India"
+                     value={formData.metaTitle} onChange={e => setFormData({...formData, metaTitle: e.target.value})} />
+                 </div>
+                 <div className="admin-form-group" style={{ margin: 0 }}>
+                   <label className="admin-label">Meta Description</label>
+                   <textarea className="admin-input" placeholder="e.g. We provide top-notch SEO services..." style={{ minHeight: 80, resize: 'vertical' }}
+                     value={formData.metaDescription} onChange={e => setFormData({...formData, metaDescription: e.target.value})} />
+                 </div>
+                 <div className="admin-form-group" style={{ margin: 0 }}>
+                   <label className="admin-label">Meta Keywords</label>
+                   <input className="admin-input" placeholder="e.g. SEO services, digital marketing, Jaipur SEO"
+                     value={formData.metaKeywords} onChange={e => setFormData({...formData, metaKeywords: e.target.value})} />
+                 </div>
+               </div>
             </div>
 
             <div className="admin-form-group" style={{ margin: 0 }}>

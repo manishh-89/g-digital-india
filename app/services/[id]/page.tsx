@@ -5,6 +5,29 @@ import Service from "@/models/Service";
 import FaqItem from "@/app/components/FaqItem/FaqItem";
 import styles from "../../service-detail/ServiceDetail.module.css";
 import ConsultationButton from "@/app/components/ConsultationButton/ConsultationButton";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const decodedId = decodeURIComponent(id);
+  await connectDB();
+  const service = await Service.findOne({ 
+    $or: [
+      { slug: { $regex: new RegExp('^' + decodedId + '$', 'i') } },
+      { title: { $regex: new RegExp('^' + decodedId + '$', 'i') } },
+      { slug: { $regex: new RegExp('^' + decodedId.replace(/ /g, '-') + '$', 'i') } },
+      { _id: decodedId.match(/^[0-9a-fA-F]{24}$/) ? decodedId : null }
+    ] 
+  }).lean() as any;
+
+  if (!service) return { title: "Service Not Found" };
+
+  return {
+    title: service.metaTitle || `${service.title} | G Digital India`,
+    description: service.metaDescription || (service.description && service.description.replace(/<[^>]*>?/gm, '').substring(0, 160)),
+    keywords: service.metaKeywords || (service.tags && service.tags.join(', ')),
+  };
+}
 
 // ── Inline SVG Icons ───────────────────────────────────────
 const IconHome = () => (
