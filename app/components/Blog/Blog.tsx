@@ -25,12 +25,14 @@ interface Blog {
   featured: boolean
 }
 
-export default function BlogSection() {
-  const [blogs, setBlogs] = useState<Blog[]>([])
-  const [loading, setLoading] = useState(true)
+export default function BlogSection({ initialData }: { initialData?: Blog[] }) {
+  const [blogs, setBlogs] = useState<Blog[]>(initialData || [])
+  const [loading, setLoading] = useState(!initialData)
 
   useEffect(() => {
+    if (initialData && initialData.length > 0) return;
     const fetchBlogs = async () => {
+
       try {
         const res = await fetch("/api/blogs")
         if (res.ok) {

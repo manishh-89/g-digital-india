@@ -1,6 +1,6 @@
 
-/* @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap"); */
-@import url(https://db.onlinewebfonts.com/c/c37a9f31696dbcc8b86a42827beae565?family=Europa+Grotesk+SH+DemBol);
+/* Fonts are now handled via next/font in layout.tsx */
+
 * {
   margin: 0;
   padding: 0;
@@ -30,7 +30,7 @@ li {
 }
 
 body {
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-playfair), serif;
   background-color: #f6f6f6;
 }
 

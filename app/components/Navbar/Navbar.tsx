@@ -7,14 +7,17 @@ import logo from "../../../public/images/logo.png";
 import { useEnquiry } from "../../context/EnquiryContext";
 import styles from "./Navbar.module.css";
 
-export default function Navbar() {
+export default function Navbar({ initialMenuData }: { initialMenuData?: any[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false); // For mobile toggle
-  const [megaMenuData, setMegaMenuData] = useState<{ category: any, services: any[] }[]>([]);
+  const [megaMenuData, setMegaMenuData] = useState<{ category: any, services: any[] }[]>(initialMenuData || []);
   const { openModal } = useEnquiry();
 
   useEffect(() => {
+    if (initialMenuData && initialMenuData.length > 0) return;
+
     async function fetchMenuData() {
+
       try {
         const [catRes, svcRes] = await Promise.all([
           fetch('/api/service-categories'),

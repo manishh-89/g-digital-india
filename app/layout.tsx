@@ -1,53 +1,59 @@
-'use client'
+import { Metadata } from "next";
+import { Playfair_Display, Inter } from "next/font/google";
+import ClientLayout from "./ClientLayout";
+import "./globals.css";
+import { connectDB } from "@/lib/mongodb";
+import ServiceCategory from "@/models/ServiceCategory";
+import Service from "@/models/Service";
 
-import Footer from "./components/Footer/Footer";
-import Navbar from "./components/Navbar/Navbar";
-import FloatingActions from "./components/FloatingActions/FloatingActions";
-import { EnquiryProvider } from "./context/EnquiryContext";
-import "./globals.css"
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
-import Lenis from "lenis";
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
+});
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isAdmin = pathname?.startsWith('/admin');
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
-  useEffect(() => {
-    if (isAdmin) return;
+export const metadata: Metadata = {
+  title: "G Digital India | Best Digital Marketing Agency",
+  description: "G Digital India provides top-notch SEO, Web Development, and Digital Marketing solutions.",
+  icons: {
+    icon: "/images/logo.png",
+  },
+};
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
-      smoothWheel: true,
-    });
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  await connectDB();
+  const [categories, services] = await Promise.all([
+    ServiceCategory.find().lean(),
+    Service.find().lean()
+  ]);
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, [isAdmin]);
+  const menuData = JSON.parse(JSON.stringify(
+    categories.map((cat: any) => ({
+      category: cat,
+      services: services.filter((s: any) => s.category === cat.name)
+    }))
+  ));
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <head>
-        <title>G Digital India</title>
-        <link rel="icon" href="/images/logo.png" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/c37a9f31696dbcc8b86a42827beae565?family=Europa+Grotesk+SH+DemBol" />
       </head>
       <body>
-        <EnquiryProvider>
-          {!isAdmin && <Navbar />}
+        <ClientLayout menuData={menuData}>
           {children}
-          {!isAdmin && <FloatingActions />}
-          {!isAdmin && <Footer />}
-        </EnquiryProvider>
+        </ClientLayout>
       </body>
     </html>
   );

@@ -4,6 +4,8 @@ import { connectDB } from "@/lib/mongodb";
 import Blog from "@/models/Blog";
 import styles from "./blog-list.module.css";
 
+export const revalidate = 60; 
+
 export default async function BlogListPage() {
   await connectDB();
 

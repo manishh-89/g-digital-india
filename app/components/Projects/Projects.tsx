@@ -7,13 +7,19 @@ import Link from "next/link"
 
 const colors = ["#6de8b8", "#6d9fe8", "#e86d9f", "#b86de8"]
 
-export default function Projects() {
+export default function Projects({ initialData }: { initialData?: any[] }) {
   const [pjFilter, setPjFilter] = useState("All")
-  const [projects, setProjects] = useState<any[]>([])
+  const [projects, setProjects] = useState<any[]>(initialData || [])
   const [categories, setCategories] = useState<string[]>(["All"])
 
   useEffect(() => {
+    if (initialData && initialData.length > 0) {
+      const cats = new Set(initialData.map(item => item.category));
+      setCategories(["All", ...Array.from(cats) as string[]]);
+      return;
+    }
     fetch('/api/projects')
+
       .then(res => res.json())
       .then(data => {
         if (!Array.isArray(data)) return;

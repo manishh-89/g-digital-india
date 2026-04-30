@@ -2,6 +2,8 @@ import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import ProjectsPageClient from "./ProjectsPageClient";
 
+export const revalidate = 60; 
+
 export default async function ProjectsPage() {
   await connectDB();
   

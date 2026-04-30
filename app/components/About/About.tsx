@@ -4,12 +4,14 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import styles from "./About.module.css"
 
-export default function AboutSection() {
-  const [data, setData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+export default function AboutSection({ initialData }: { initialData?: any }) {
+  const [data, setData] = useState<any>(initialData || null)
+  const [loading, setLoading] = useState(!initialData)
   
   useEffect(() => {
+    if (initialData) return;
     const fetchAbout = async () => {
+
       try {
         const res = await fetch('/api/about')
         if (res.ok) {

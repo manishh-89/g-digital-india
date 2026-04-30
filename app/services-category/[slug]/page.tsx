@@ -7,6 +7,8 @@ import styles from "../../service-detail/ServiceDetail.module.css";
 import ConsultationButton from "@/app/components/ConsultationButton/ConsultationButton";
 import { Metadata } from "next";
 
+export const revalidate = 60; 
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);

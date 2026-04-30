@@ -22,16 +22,17 @@ const defaultServices = [
 
 const colors = ["#e8b86d", "#6d9fe8", "#e86d9f", "#6de8b8", "#b86de8", "#e8d06d"]
 
-export default function Services() {
-
+export default function Services({ initialData }) {
   const canvasRef = useRef(null)
 
-  const [services, setServices] = useState(defaultServices)
+  const [services, setServices] = useState(initialData || defaultServices)
   const [active, setActive] = useState(0)
   const [animating, setAnimating] = useState(false)
 
   useEffect(() => {
+    if (initialData && initialData.length > 0) return;
     fetch('/api/service-categories')
+
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
