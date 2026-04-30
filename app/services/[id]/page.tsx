@@ -211,8 +211,8 @@ export default async function DynamicServiceDetail({ params }: { params: Promise
                 <div className={styles.relatedCardBody}>
                   <span className={styles.relatedCardTag}>{s.short}</span>
                   <h3 className={styles.relatedCardTitle}>{s.title}</h3>
-                  <p className={styles.relatedCardDesc}>
-                    {s.highlight || (s.description && s.description.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...')}
+                  <p className={styles.relatedCardText}>
+                    {s.highlight || (s.description && s.description.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').substring(0, 100) + '...')}
                   </p>
                   <span className={styles.relatedCardLink}>Read More <IconArrow size={12} /></span>
                 </div>
