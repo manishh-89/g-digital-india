@@ -91,6 +91,9 @@ export default function Navbar({ initialMenuData, packageData }: { initialMenuDa
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* Packages Dropdown */}
           <div className={styles.servicesDropdown}>
             <div 
               className={styles.servicesLink} 
