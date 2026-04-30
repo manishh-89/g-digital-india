@@ -7,21 +7,23 @@ import logo from "../../../public/images/logo.png";
 import { useEnquiry } from "../../context/EnquiryContext";
 import styles from "./Navbar.module.css";
 
-export default function Navbar({ initialMenuData }: { initialMenuData?: any[] }) {
+export default function Navbar({ initialMenuData, packageData }: { initialMenuData?: any[], packageData?: any[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false); // For mobile toggle
+  const [packagesOpen, setPackagesOpen] = useState(false); // For mobile toggle
   const [megaMenuData, setMegaMenuData] = useState<{ category: any, services: any[] }[]>(initialMenuData || []);
+  const [packagesList, setPackagesList] = useState<any[]>(packageData || []);
   const { openModal } = useEnquiry();
 
   useEffect(() => {
-    if (initialMenuData && initialMenuData.length > 0) return;
+    if (initialMenuData && initialMenuData.length > 0 && packageData && packageData.length > 0) return;
 
     async function fetchMenuData() {
-
       try {
-        const [catRes, svcRes] = await Promise.all([
+        const [catRes, svcRes, pkgRes] = await Promise.all([
           fetch('/api/service-categories'),
-          fetch('/api/services')
+          fetch('/api/services'),
+          fetch('/api/packages')
         ]);
         if (catRes.ok && svcRes.ok) {
           const categories = await catRes.json();
@@ -32,6 +34,9 @@ export default function Navbar({ initialMenuData }: { initialMenuData?: any[] })
             services: services.filter((s: any) => s.category === cat.name)
           }));
           setMegaMenuData(grouped);
+        }
+        if (pkgRes.ok) {
+          setPackagesList(await pkgRes.json());
         }
       } catch (e) {
         console.error("Failed to load mega menu", e);
@@ -84,6 +89,29 @@ export default function Navbar({ initialMenuData }: { initialMenuData?: any[] })
                     </ul>
                   </div>
                 ))}
+              </div>
+            </div>
+          <div className={styles.servicesDropdown}>
+            <div 
+              className={styles.servicesLink} 
+              onClick={() => setPackagesOpen(!packagesOpen)}
+            >
+              Packages <i className={`fa-solid fa-chevron-down ${styles.dropdownIcon}`}></i>
+            </div>
+            
+            <div className={`${styles.megaMenu} ${styles.packageMenu} ${packagesOpen ? styles.mobileMegaMenuOpen : ""}`}>
+              <div className={styles.megaMenuContainer}>
+                <div className={styles.megaMenuColumn}>
+                  <ul className={styles.megaMenuList}>
+                    {packagesList.map(pkg => (
+                      <li key={pkg._id}>
+                        <Link href={`/packages/${pkg.slug}`} onClick={() => { setMenuOpen(false); setPackagesOpen(false); }}>
+                          | {pkg.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

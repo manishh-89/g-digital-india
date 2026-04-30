@@ -13,7 +13,8 @@ export default function ClientLayout({
   menuData 
 }: { 
   children: React.ReactNode, 
-  menuData: any[] 
+  menuData: any[],
+  packageData: any[]
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
@@ -41,7 +42,7 @@ export default function ClientLayout({
 
   return (
     <EnquiryProvider>
-      {!isAdmin && <Navbar initialMenuData={menuData} />}
+      {!isAdmin && <Navbar initialMenuData={menuData} packageData={packageData} />}
       {children}
       {!isAdmin && <FloatingActions />}
       {!isAdmin && <Footer />}

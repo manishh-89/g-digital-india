@@ -42,6 +42,7 @@ export default function AdminLayout({
     { href: '/admin/service-categories', label: 'Service Categories', icon: <i className="fa-solid fa-list"></i> },
     { href: '/admin/services', label: 'Service Sub Categories', icon: <i className="fa-solid fa-briefcase"></i> },
     { href: '/admin/projects', label: 'Projects', icon: <i className="fa-solid fa-folder-open"></i> },
+    { href: '/admin/packages', label: 'Packages', icon: <i className="fa-solid fa-box-open"></i> },
     {href: '/admin/gallery', label: 'Gallery', icon: <i className="fa-solid fa-images"></i> },
     { href: '/admin/testimonials', label: 'Testimonials', icon: <i className="fa-solid fa-star"></i> },
     { href: '/admin/clients', label: 'Clients', icon: <i className="fa-solid fa-handshake"></i> },

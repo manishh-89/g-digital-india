@@ -102,6 +102,13 @@
   }
 }
 
+.packageMenu {
+  width: 250px;
+  min-width: unset;
+  left: 0;
+  transform: none;
+}
+
 .megaMenuContainer {
   display: flex;
   justify-content: space-between;

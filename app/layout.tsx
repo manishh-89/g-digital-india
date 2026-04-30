@@ -6,6 +6,7 @@ import Script from "next/script";
 import { connectDB } from "@/lib/mongodb";
 import ServiceCategory from "@/models/ServiceCategory";
 import Service from "@/models/Service";
+import Package from "@/models/Package";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -33,9 +34,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   await connectDB();
-  const [categories, services] = await Promise.all([
+  const [categories, services, packages] = await Promise.all([
     ServiceCategory.find().lean(),
-    Service.find().lean()
+    Service.find().lean(),
+    Package.find().sort({ order: 1 }).lean()
   ]);
 
   const menuData = JSON.parse(JSON.stringify(
@@ -45,6 +47,8 @@ export default async function RootLayout({
     }))
   ));
 
+  const packageData = JSON.parse(JSON.stringify(packages));
+
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <head>
@@ -52,7 +56,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" strategy="afterInteractive" />
-        <ClientLayout menuData={menuData}>
+        <ClientLayout menuData={menuData} packageData={packageData}>
           {children}
         </ClientLayout>
       </body>
