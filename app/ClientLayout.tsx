@@ -10,7 +10,8 @@ import FloatingActions from "./components/FloatingActions/FloatingActions";
 
 export default function ClientLayout({ 
   children, 
-  menuData 
+  menuData,
+  packageData
 }: { 
   children: React.ReactNode, 
   menuData: any[],
