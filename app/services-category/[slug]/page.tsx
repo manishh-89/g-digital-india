@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import ServiceCategory from "@/models/ServiceCategory";
 import Service from "@/models/Service";
 import styles from "../../service-detail/ServiceDetail.module.css";
+import ConsultationButton from "@/app/components/ConsultationButton/ConsultationButton";
 
 // ── Inline SVG Icons ───────────────────────────────────────
 const IconHome = () => (
@@ -75,9 +76,9 @@ export default async function CategoryDetail({ params }: { params: Promise<{ slu
             }
           </p>
           <div className={styles.heroActions}>
-            <Link href="/contact" className={styles.btnPrimary}>
+            <ConsultationButton className={styles.btnPrimary}>
               Get Free Consultation <IconArrow size={13} />
-            </Link>
+            </ConsultationButton>
           </div>
         </div>
       </section>

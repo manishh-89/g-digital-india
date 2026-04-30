@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import Service from "@/models/Service";
 import FaqItem from "@/app/components/FaqItem/FaqItem";
 import styles from "../../service-detail/ServiceDetail.module.css";
+import ConsultationButton from "@/app/components/ConsultationButton/ConsultationButton";
 
 // ── Inline SVG Icons ───────────────────────────────────────
 const IconHome = () => (
@@ -80,9 +81,9 @@ export default async function DynamicServiceDetail({ params }: { params: Promise
             dangerouslySetInnerHTML={{ __html: service.description || service.highlight || "Professional solutions tailored to grow your business sustainably." }}
           />
           <div className={styles.heroActions}>
-            <Link href="/contact" className={styles.btnPrimary}>
+            <ConsultationButton className={styles.btnPrimary}>
               Get Free Consultation <IconArrow size={13} />
-            </Link>
+            </ConsultationButton>
           </div>
         </div>
       </section>

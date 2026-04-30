@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./ServiceDetail.module.css";
+import ConsultationButton from "@/app/components/ConsultationButton/ConsultationButton";
 
 // ── Inline SVG Icons ───────────────────────────────────────
 const IconHome = () => (
@@ -148,9 +149,9 @@ export default function ServiceDetailPage() {
             drive organic traffic, and grow your business sustainably.
           </p>
           <div className={styles.heroActions}>
-            <Link href="/contact" className={styles.btnPrimary}>
+            <ConsultationButton className={styles.btnPrimary}>
               Get Free Consultation <IconArrow size={13} />
-            </Link>
+            </ConsultationButton>
             <Link href="/packages/seo" className={styles.btnSecondary}>
               View SEO Packages
             </Link>

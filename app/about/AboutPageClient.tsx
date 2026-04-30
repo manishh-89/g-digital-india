@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import styles from "./AboutPage.module.css";
+import ConsultationButton from "@/app/components/ConsultationButton/ConsultationButton";
 
 /* ─── SVG Icons ─────────────────────────────────────────── */
 const IconHome = () => (
@@ -184,9 +185,9 @@ export default function AboutPageClient({ initialAbout, initialSettings, initial
           </div>
 
           <div className={styles.heroActions}>
-            <Link href="/contact" className={styles.heroBtnPrimary}>
+            <ConsultationButton className={styles.heroBtnPrimary}>
               Get Free Consultation <IconArrow />
-            </Link>
+            </ConsultationButton>
             <Link href="/services" className={styles.heroBtnOutline}>
               Our Services
             </Link>
