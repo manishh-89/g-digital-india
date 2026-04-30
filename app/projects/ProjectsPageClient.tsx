@@ -129,12 +129,7 @@ export default function ProjectsPageClient({ initialProjects }: { initialProject
                     ))}
                   </div>
                   <div className={styles.cardActions}>
-                    <Link
-                      href={`/projects/${project.slug || project._id}`}
-                      className={styles.viewBtn}
-                    >
-                      <IcEye /> Details
-                    </Link>
+
                     {project.liveUrl && (
                       <a
                         href={project.liveUrl}
